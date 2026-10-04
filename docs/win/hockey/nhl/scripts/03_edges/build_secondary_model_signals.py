@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import math
 import sys
 
 import traceback
@@ -15,6 +16,7 @@ import numpy as np
 import pandas as pd
 import yaml
 from scipy.optimize import minimize
+from scipy.stats import poisson, skellam
 
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
@@ -40,6 +42,15 @@ LOG_FILE = ERROR_DIR / "build_secondary_model_signals.txt"
 
 SIGNAL_VERSION = "P6-production-v1"
 EPS = 1e-6
+
+DIRECT_PROBABILITY_COLUMNS = [
+    "my_model_home_prob_moneyline",
+    "my_model_away_prob_moneyline",
+    "my_model_home_prob_puck_line",
+    "my_model_away_prob_puck_line",
+    "my_model_over_prob_total",
+    "my_model_under_prob_total",
+]
 
 SIGNAL_COLUMNS = [
     "drat_home_win_prob",
@@ -580,13 +591,293 @@ def build_signal_frame(current: pd.DataFrame, history: pd.DataFrame, config: dic
     return pd.DataFrame(rows, columns=["game_id", *SIGNAL_COLUMNS])
 
 
+
+def _derived_field(derived_model: str, weighted_field: str, meta_field: str) -> str:
+    if derived_model == "weighted":
+        return weighted_field
+    if derived_model == "meta":
+        return meta_field
+    fail(f"Unsupported secondary derived model: {derived_model!r}")
+
+
+def _puck_probability(
+    line,
+    projected_goals,
+    opponent_projected_goals,
+):
+    values = (
+        line,
+        projected_goals,
+        opponent_projected_goals,
+    )
+    if any(pd.isna(value) for value in values):
+        return np.nan
+
+    line = float(line)
+    projected_goals = float(projected_goals)
+    opponent_projected_goals = float(opponent_projected_goals)
+
+    if (
+        not math.isfinite(line)
+        or not math.isfinite(projected_goals)
+        or not math.isfinite(opponent_projected_goals)
+        or projected_goals <= 0
+        or opponent_projected_goals <= 0
+    ):
+        return np.nan
+
+    threshold = math.floor(-line)
+    probability = 1.0 - skellam.cdf(
+        threshold,
+        projected_goals,
+        opponent_projected_goals,
+    )
+    if pd.isna(probability):
+        return np.nan
+
+    return float(np.clip(probability, 0.01, 0.99))
+
+
+def _total_probabilities(total_line, projected_total):
+    if pd.isna(total_line) or pd.isna(projected_total):
+        return np.nan, np.nan
+
+    total_line = float(total_line)
+    projected_total = float(projected_total)
+
+    if (
+        not math.isfinite(total_line)
+        or not math.isfinite(projected_total)
+        or projected_total <= 0
+    ):
+        return np.nan, np.nan
+
+    if total_line.is_integer():
+        push_total = int(total_line)
+        under_prob = poisson.cdf(
+            push_total - 1,
+            projected_total,
+        )
+        over_prob = 1.0 - poisson.cdf(
+            push_total,
+            projected_total,
+        )
+        no_push_prob = under_prob + over_prob
+        if pd.isna(no_push_prob) or no_push_prob <= 0:
+            return np.nan, np.nan
+        under_prob /= no_push_prob
+        over_prob /= no_push_prob
+    else:
+        cutoff = math.floor(total_line)
+        under_prob = poisson.cdf(
+            cutoff,
+            projected_total,
+        )
+        over_prob = 1.0 - under_prob
+
+    if pd.isna(over_prob) or pd.isna(under_prob):
+        return np.nan, np.nan
+
+    return (
+        float(np.clip(over_prob, 0.01, 0.99)),
+        float(np.clip(under_prob, 0.01, 0.99)),
+    )
+
+
+def _validate_ready_probabilities(
+    df: pd.DataFrame,
+    ready: pd.Series,
+    columns: list[str],
+    market_type: str,
+) -> None:
+    missing_mask = ready & df[columns].isna().any(axis=1)
+    if missing_mask.any():
+        ids = (
+            df.loc[missing_mask, "game_id"]
+            .astype(str)
+            .tolist()
+        )
+        fail(
+            f"{market_type} secondary model is ready but direct "
+            f"model probability is unavailable for game_id values: "
+            f"{ids[:10]}"
+        )
+
+
+def add_direct_model_probabilities(
+    df: pd.DataFrame,
+    market_type: str,
+    derived_model: str,
+) -> pd.DataFrame:
+    out = df.copy()
+
+    for column in DIRECT_PROBABILITY_COLUMNS:
+        out[column] = np.nan
+
+    ready = (
+        out["secondary_model_status"]
+        .astype("string")
+        .fillna("")
+        .eq("ready")
+    )
+
+    if market_type == "moneyline":
+        probability_field = _derived_field(
+            derived_model,
+            "weighted_home_win_prob",
+            "meta_home_win_prob",
+        )
+        home_prob = pd.to_numeric(
+            out[probability_field],
+            errors="coerce",
+        ).clip(0.0, 1.0)
+
+        out.loc[
+            ready,
+            "my_model_home_prob_moneyline",
+        ] = home_prob.loc[ready]
+        out.loc[
+            ready,
+            "my_model_away_prob_moneyline",
+        ] = 1.0 - home_prob.loc[ready]
+
+        _validate_ready_probabilities(
+            out,
+            ready,
+            [
+                "my_model_home_prob_moneyline",
+                "my_model_away_prob_moneyline",
+            ],
+            market_type,
+        )
+        return out
+
+    if market_type == "puck_line":
+        required = [
+            "home_puck_line",
+            "away_puck_line",
+        ]
+        missing = [column for column in required if column not in out.columns]
+        if missing:
+            fail(
+                f"Puck-line EV file missing columns required for "
+                f"secondary model probabilities: {missing}"
+            )
+
+        margin_field = _derived_field(
+            derived_model,
+            "weighted_exp_margin",
+            "meta_exp_margin",
+        )
+        total_field = _derived_field(
+            derived_model,
+            "weighted_exp_total",
+            "meta_exp_total",
+        )
+
+        for idx in out.index[ready]:
+            margin = pd.to_numeric(
+                pd.Series([out.at[idx, margin_field]]),
+                errors="coerce",
+            ).iloc[0]
+            total = pd.to_numeric(
+                pd.Series([out.at[idx, total_field]]),
+                errors="coerce",
+            ).iloc[0]
+
+            if pd.isna(margin) or pd.isna(total):
+                continue
+
+            home_goals = (float(total) + float(margin)) / 2.0
+            away_goals = (float(total) - float(margin)) / 2.0
+
+            out.at[
+                idx,
+                "my_model_home_prob_puck_line",
+            ] = _puck_probability(
+                out.at[idx, "home_puck_line"],
+                home_goals,
+                away_goals,
+            )
+            out.at[
+                idx,
+                "my_model_away_prob_puck_line",
+            ] = _puck_probability(
+                out.at[idx, "away_puck_line"],
+                away_goals,
+                home_goals,
+            )
+
+        _validate_ready_probabilities(
+            out,
+            ready,
+            [
+                "my_model_home_prob_puck_line",
+                "my_model_away_prob_puck_line",
+            ],
+            market_type,
+        )
+        return out
+
+    if market_type == "total":
+        if "total" not in out.columns:
+            fail(
+                "Total EV file missing total column required for "
+                "secondary model probabilities"
+            )
+
+        total_field = _derived_field(
+            derived_model,
+            "weighted_exp_total",
+            "meta_exp_total",
+        )
+
+        for idx in out.index[ready]:
+            over_prob, under_prob = _total_probabilities(
+                out.at[idx, "total"],
+                out.at[idx, total_field],
+            )
+            out.at[
+                idx,
+                "my_model_over_prob_total",
+            ] = over_prob
+            out.at[
+                idx,
+                "my_model_under_prob_total",
+            ] = under_prob
+
+        _validate_ready_probabilities(
+            out,
+            ready,
+            [
+                "my_model_over_prob_total",
+                "my_model_under_prob_total",
+            ],
+            market_type,
+        )
+        return out
+
+    fail(f"Unsupported market type for secondary model probabilities: {market_type!r}")
+
+
+def _market_type_from_path(path: Path) -> str:
+    name = path.name
+    if name.endswith("_NHL_moneyline.csv"):
+        return "moneyline"
+    if name.endswith("_NHL_puck_line.csv"):
+        return "puck_line"
+    if name.endswith("_NHL_total.csv"):
+        return "total"
+    fail(f"Unable to determine market type from EV/Kelly file: {path}")
+
+
 def wipe_outputs() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for path in OUTPUT_DIR.glob("*.csv"):
         path.unlink()
 
 
-def enrich_ev_files(signals: pd.DataFrame) -> int:
+def enrich_ev_files(signals: pd.DataFrame, config: dict) -> int:
     files = sorted(EV_DIR.glob("*_NHL_*.csv"))
     if not files:
         fail(f"No EV/Kelly market files found in {EV_DIR}")
@@ -612,12 +903,33 @@ def enrich_ev_files(signals: pd.DataFrame) -> int:
             )
 
         existing_signal_columns = [
-            col for col in SIGNAL_COLUMNS if col in df.columns
+            col
+            for col in [*SIGNAL_COLUMNS, *DIRECT_PROBABILITY_COLUMNS]
+            if col in df.columns
         ]
         if existing_signal_columns:
             df = df.drop(columns=existing_signal_columns)
 
         enriched = df.merge(signals, on="game_id", how="left", validate="one_to_one")
+
+        market_type = _market_type_from_path(path)
+        derived_by_market = config.get("derived_signal_by_market", {})
+        derived_model = str(
+            derived_by_market.get(market_type, "")
+        ).strip().lower()
+
+        if derived_model not in {"weighted", "meta"}:
+            fail(
+                f"secondary_model derived signal is invalid for {market_type}: "
+                f"{derived_model!r}"
+            )
+
+        enriched = add_direct_model_probabilities(
+            enriched,
+            market_type,
+            derived_model,
+        )
+
         out_path = OUTPUT_DIR / path.name
         enriched.to_csv(out_path, index=False)
         log(f"WROTE {out_path} rows={len(enriched)}")
@@ -635,7 +947,7 @@ def main() -> None:
         signals = build_signal_frame(current, history, config)
 
         wipe_outputs()
-        written = enrich_ev_files(signals)
+        written = enrich_ev_files(signals, config)
 
         statuses = signals["secondary_model_status"].value_counts(dropna=False).to_dict()
         log(

@@ -38,6 +38,9 @@ markets:
         # based on home_model_prob_moneyline from the moneyline EV file
         prob_bands:
           - [0.0, 1.0]
+        # Direct probability produced by the configured NHL secondary model.
+        my_model_prob_bands:
+          - [0.0, 1.0]
         odds_bands:
           - [-300, 10000]
         ev_bands:
@@ -50,6 +53,9 @@ markets:
 
         # based on away_model_prob_moneyline from the moneyline EV file
         prob_bands:
+          - [0.0, 1.0]
+        # Direct probability produced by the configured NHL secondary model.
+        my_model_prob_bands:
           - [0.0, 1.0]
         odds_bands:
           - [-300, 10000]
@@ -72,6 +78,9 @@ markets:
         # based on home_model_prob_puck_line from the puck-line EV file
         prob_bands:
           - [0.0, 1.0]
+        # Direct probability produced by the configured NHL secondary model.
+        my_model_prob_bands:
+          - [0.0, 1.0]
         line_bands:
           - [-100.0, 100.0]
         odds_bands:
@@ -85,6 +94,9 @@ markets:
         enabled: true
         # based on away_model_prob_puck_line from the puck-line EV file
         prob_bands:
+          - [0.0, 1.0]
+        # Direct probability produced by the configured NHL secondary model.
+        my_model_prob_bands:
           - [0.0, 1.0]
         line_bands:
           - [-100.0, 100.0]
@@ -109,6 +121,9 @@ markets:
         # based on over_model_prob_total from the total EV file
         prob_bands:
           - [0.0, 1.0]
+        # Direct probability produced by the configured NHL secondary model.
+        my_model_prob_bands:
+          - [0.0, 1.0]
         line_bands:
           - [0.0, 100.0]
         odds_bands:
@@ -122,6 +137,9 @@ markets:
         enabled: true
         # based on under_model_prob_total from the total EV file
         prob_bands:
+          - [0.0, 1.0]
+        # Direct probability produced by the configured NHL secondary model.
+        my_model_prob_bands:
           - [0.0, 1.0]
         line_bands:
           - [0.0, 100.0]

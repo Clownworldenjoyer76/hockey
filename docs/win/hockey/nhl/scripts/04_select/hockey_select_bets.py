@@ -49,13 +49,14 @@ REJECTION_COLUMNS = [
 REJECTION_ORDER = {
     "missing_data": 0,
     "probability": 1,
-    "odds": 2,
-    "line": 3,
-    "edge": 4,
-    "ev": 5,
-    "kelly": 6,
-    "secondary_model": 7,
-    "pick_preference": 8,
+    "my_model_probability": 2,
+    "odds": 3,
+    "line": 4,
+    "edge": 5,
+    "ev": 6,
+    "kelly": 7,
+    "secondary_model": 8,
+    "pick_preference": 9,
 }
 
 SECONDARY_SIGNAL_COLUMNS = [
@@ -84,6 +85,12 @@ SECONDARY_SIGNAL_COLUMNS = [
     "meta_home_win_prob",
     "meta_exp_margin",
     "meta_exp_total",
+    "my_model_home_prob_moneyline",
+    "my_model_away_prob_moneyline",
+    "my_model_home_prob_puck_line",
+    "my_model_away_prob_puck_line",
+    "my_model_over_prob_total",
+    "my_model_under_prob_total",
     "secondary_history_max_game_date",
     "secondary_model_status",
     "secondary_signal_version",
@@ -210,6 +217,7 @@ def side_rule_failures(
     odds,
     line,
     prob,
+    my_model_prob,
     edge,
     ev,
     kelly,
@@ -243,6 +251,18 @@ def side_rule_failures(
     if not in_range(prob, rules.get("prob_bands", [])):
         failures.append("probability")
 
+    # Secondary-model probability is an additional configurable filter.
+    # Missing secondary probability follows secondary_model.unavailable_behavior
+    # and therefore does not become primary missing_data here.
+    if (
+        my_model_prob is not None
+        and not in_range(
+            my_model_prob,
+            rules.get("my_model_prob_bands", None),
+        )
+    ):
+        failures.append("my_model_probability")
+
     if not in_range(edge, rules.get("edge_bands", None)):
         failures.append("edge")
 
@@ -267,6 +287,9 @@ def market_side_values(
             "decimal": fv(row.get(f"{side}_dk_{suffix}_decimal")),
             "line": None,
             "prob": fv(row.get(f"{side}_model_prob_{suffix}")),
+            "my_model_prob": fv(
+                row.get(f"my_model_{side}_prob_moneyline")
+            ),
             "edge": fv(row.get(f"{side}_edge_pct_{suffix}")),
             "ev": fv(row.get(f"{side}_ev_{suffix}")),
             "kelly": fv(row.get(f"{side}_kelly_{suffix}")),
@@ -279,6 +302,9 @@ def market_side_values(
             "decimal": fv(row.get(f"{side}_dk_{suffix}_decimal")),
             "line": fv(row.get(f"{side}_{suffix}")),
             "prob": fv(row.get(f"{side}_model_prob_{suffix}")),
+            "my_model_prob": fv(
+                row.get(f"my_model_{side}_prob_puck_line")
+            ),
             "edge": fv(row.get(f"{side}_edge_pct_{suffix}")),
             "ev": fv(row.get(f"{side}_ev_{suffix}")),
             "kelly": fv(row.get(f"{side}_kelly_{suffix}")),
@@ -290,6 +316,9 @@ def market_side_values(
             "decimal": fv(row.get(f"dk_total_{side}_decimal")),
             "line": fv(row.get("total")),
             "prob": fv(row.get(f"{side}_model_prob_total")),
+            "my_model_prob": fv(
+                row.get(f"my_model_{side}_prob_total")
+            ),
             "edge": fv(row.get(f"{side}_edge_pct_total")),
             "ev": fv(row.get(f"{side}_ev_total")),
             "kelly": fv(row.get(f"{side}_kelly_total")),
@@ -306,6 +335,7 @@ def check_side_rules(
     odds,
     line,
     prob,
+    my_model_prob,
     edge,
     ev,
     kelly,
@@ -316,6 +346,7 @@ def check_side_rules(
         odds=odds,
         line=line,
         prob=prob,
+        my_model_prob=my_model_prob,
         edge=edge,
         ev=ev,
         kelly=kelly,
@@ -661,6 +692,7 @@ def process_market(
             odds=values["odds"],
             line=values["line"],
             prob=values["prob"],
+            my_model_prob=values["my_model_prob"],
             edge=values["edge"],
             ev=values["ev"],
             kelly=values["kelly"],
@@ -702,6 +734,9 @@ def process_market(
                 ],
                 "model_prob": values[
                     "prob"
+                ],
+                "my_model_prob": values[
+                    "my_model_prob"
                 ],
                 "edge": values[
                     "edge"

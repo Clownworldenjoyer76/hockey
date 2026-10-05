@@ -1,0 +1,630 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NHL Dashboard</title>
+<link rel="stylesheet" href="assets/css/matstheme.css">
+<style>
+:root {
+  --bg:#0e1117;
+  --panel:#161b22;
+  --panel2:#1c232c;
+  --text:#e6edf3;
+  --muted:#8b949e;
+  --accent:#58a6ff;
+  --good:#3fb950;
+  --bad:#f85149;
+  --border:#30363d;
+  --table-border:#46515e;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+header{
+  padding:18px 24px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  flex-wrap:wrap;
+}
+header h1{margin:0;font-size:20px}
+header .ts{font-size:12px;color:var(--muted)}
+.selector-bar{
+  padding:10px 24px;
+  border-bottom:1px solid var(--border);
+  background:var(--panel);
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+.selector-bar .lbl{
+  color:var(--muted);
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin-right:6px;
+}
+.season-btn{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:6px 14px;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:13px;
+}
+.season-btn.active{
+  background:var(--accent);
+  color:#0e1117;
+  border-color:var(--accent);
+  font-weight:600;
+}
+main{max-width:1500px;margin:0 auto;padding:18px 24px}
+h2{
+  font-size:16px;
+  margin:24px 0 8px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:4px;
+}
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(135px,1fr));
+  gap:10px;
+  margin:12px 0;
+}
+.kpi{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:12px;
+}
+.kpi .label{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.kpi .value{font-size:22px;font-weight:600;margin-top:4px}
+.good{color:var(--good)}
+.bad{color:var(--bad)}
+.muted{color:var(--muted)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 0}
+.tab{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:var(--muted);
+  padding:7px 12px;
+  border-radius:6px 6px 0 0;
+  cursor:pointer;
+  font-size:13px;
+}
+.tab.active{color:var(--text);border-bottom-color:var(--panel2)}
+.tab-body{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-top:none;
+  padding:14px;
+  border-radius:0 6px 6px 6px;
+}
+.controls{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.controls label{font-size:12px;color:var(--muted)}
+.controls select{
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:5px 8px;
+  border-radius:4px;
+}
+.scroll{
+  overflow:auto;
+  max-height:62vh;
+  border:1px solid var(--table-border);
+  border-radius:6px;
+}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{
+  padding:7px 9px;
+  text-align:center;
+  border:1px solid var(--table-border);
+  white-space:nowrap;
+  vertical-align:middle;
+}
+th{
+  position:sticky;
+  top:0;
+  background:var(--panel2);
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  cursor:pointer;
+  user-select:none;
+}
+td.num{text-align:center;font-variant-numeric:tabular-nums}
+.note{
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--panel);
+  color:var(--muted);
+  font-size:12px;
+}
+td.win-pct-strong{background:rgba(63,185,80,.24);color:#7ee787;font-weight:700}
+td.win-pct-green{background:rgba(63,185,80,.16);color:#56d364;font-weight:600}
+td.win-pct-light{background:rgba(63,185,80,.09);color:#8ddb8c;font-weight:600}
+td.win-pct-neutral{background:rgba(139,148,158,.09);color:#c9d1d9}
+td.win-pct-red{background:rgba(248,81,73,.14);color:#ff7b72;font-weight:600}
+</style>
+</head>
+<body>
+<div id="nav-placeholder"></div>
+
+<header>
+  <h1>NHL Dashboard</h1>
+  <span class="ts">Built 2026-10-05T22:26:03+00:00 UTC</span>
+</header>
+
+<div class="selector-bar season-bar" style="display:none">
+  <span class="lbl">Season:</span>
+  <button class="season-btn active" data-season="current" onclick="selectSeason('current')">Current</button>
+</div>
+
+<main>
+<h2>NHL Analytics</h2>
+<div class="kpis" id="headline"></div>
+
+<h2>By Market</h2>
+<div id="by-market"></div>
+
+<h2>Model Calibration</h2>
+<div id="calibration">
+  <div class="tabs">
+    <button class="tab active" data-key="metrics">Metrics</button>
+    <button class="tab" data-key="probability">Probability Buckets</button>
+    <button class="tab" data-key="expected">Expected vs Realized</button>
+    <button class="tab" data-key="walk_forward">Walk Forward</button>
+  </div>
+  <div class="tab-body">
+    <div class="tab-panel" data-key="metrics"></div>
+    <div class="tab-panel" data-key="probability" style="display:none"></div>
+    <div class="tab-panel" data-key="expected" style="display:none"></div>
+    <div class="tab-panel" data-key="walk_forward" style="display:none"></div>
+  </div>
+</div>
+
+<h2>Closing Line Value</h2>
+<div class="note">
+  Positive implied-probability CLV and positive decimal-ratio CLV mean the selected price beat the close, matching the NHL pipeline's CLV definitions.
+</div>
+<div class="kpis" id="clv-headline"></div>
+<div id="clv-table"></div>
+
+<h2>Per Market Drilldown</h2>
+<div id="markets">
+  <div class="tabs"><button class="tab active" data-key="moneyline">Moneyline</button>
+<button class="tab" data-key="puck_line">Puck Line</button>
+<button class="tab" data-key="total">Total</button></div>
+  <div class="tab-body"><div class="tab-panel market-panel-moneyline" data-key="moneyline"></div>
+<div class="tab-panel market-panel-puck_line" data-key="puck_line" style="display:none"></div>
+<div class="tab-panel market-panel-total" data-key="total" style="display:none"></div></div>
+</div>
+</main>
+
+<script src="assets/js/shared/nav.js"></script>
+<script>
+
+let ACTIVE_SEASON = null;
+
+function fmtPct(v){
+  if(v==null||isNaN(Number(v)))return "";
+  return (Number(v)*100).toFixed(2)+"%";
+}
+function fmtNum(v,d=3){
+  if(v==null||isNaN(Number(v)))return "";
+  return Number(v).toFixed(d);
+}
+function fmtInt(v){
+  if(v==null||isNaN(Number(v)))return "";
+  return Number(v).toLocaleString();
+}
+function signedClass(v){
+  if(v==null||isNaN(Number(v)))return "";
+  return Number(v)>0?"good":(Number(v)<0?"bad":"");
+}
+function winPctClass(v){
+  if(v==null||isNaN(Number(v)))return "";
+  const pct=Number(v);
+  if(pct>=0.80)return "win-pct-strong";
+  if(pct>=0.70)return "win-pct-green";
+  if(pct>=0.60)return "win-pct-light";
+  if(pct>=0.50)return "win-pct-neutral";
+  return "win-pct-red";
+}
+function showTab(host,key){
+  host.querySelectorAll(":scope > .tabs .tab").forEach(x=>{
+    x.classList.toggle("active",x.dataset.key===key);
+  });
+  host.querySelectorAll(":scope > .tab-body > .tab-panel").forEach(x=>{
+    x.style.display=x.dataset.key===key?"":"none";
+  });
+}
+function renderTable(data,columns,container){
+  if(!data||!data.length){
+    container.innerHTML='<div class="muted">No rows available.</div>';
+    return;
+  }
+
+  const wrap=document.createElement("div");
+  wrap.className="scroll";
+  const table=document.createElement("table");
+  const thead=document.createElement("thead");
+  const tbody=document.createElement("tbody");
+  const hr=document.createElement("tr");
+
+  let sortKey=null;
+  let sortDir="desc";
+
+  columns.forEach(c=>{
+    const th=document.createElement("th");
+    th.textContent=c.label;
+    th.addEventListener("click",()=>{
+      if(sortKey===c.key)sortDir=sortDir==="asc"?"desc":"asc";
+      else{
+        sortKey=c.key;
+        sortDir="desc";
+      }
+      draw();
+    });
+    hr.appendChild(th);
+  });
+
+  thead.appendChild(hr);
+
+  function draw(){
+    const rows=data.slice();
+
+    if(sortKey){
+      rows.sort((a,b)=>{
+        const av=a[sortKey],bv=b[sortKey];
+        if(av==null)return 1;
+        if(bv==null)return -1;
+
+        const an=Number(av),bn=Number(bv);
+        if(!Number.isNaN(an)&&!Number.isNaN(bn)){
+          return sortDir==="asc"?an-bn:bn-an;
+        }
+
+        return sortDir==="asc"
+          ?String(av).localeCompare(String(bv))
+          :String(bv).localeCompare(String(av));
+      });
+    }
+
+    tbody.innerHTML="";
+
+    rows.forEach(r=>{
+      const tr=document.createElement("tr");
+
+      columns.forEach(c=>{
+        const td=document.createElement("td");
+        const v=r[c.key];
+
+        if(c.fmt==="int"){
+          td.classList.add("num");
+          td.textContent=fmtInt(v);
+        }else if(c.fmt==="pct"){
+          td.classList.add("num");
+          td.textContent=fmtPct(v);
+
+          if(String(c.key).toLowerCase()==="win_pct"){
+            const cls=winPctClass(v);
+            if(cls)td.classList.add(cls);
+          }
+        }else if(c.fmt==="num"){
+          td.classList.add("num");
+          td.textContent=fmtNum(v,c.decimals==null?3:c.decimals);
+
+          if(c.signed){
+            const cls=signedClass(v);
+            if(cls)td.classList.add(cls);
+          }
+        }else{
+          td.textContent=v==null?"":String(v);
+        }
+
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  draw();
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  container.innerHTML="";
+  container.appendChild(wrap);
+}
+
+const RESULT_COLUMNS=[
+  {key:"variable",label:"Bucket"},
+  {key:"side_group",label:"Side"},
+  {key:"Win",label:"W",fmt:"int"},
+  {key:"Loss",label:"L",fmt:"int"},
+  {key:"Push",label:"P",fmt:"int"},
+  {key:"Total",label:"Total",fmt:"int"},
+  {key:"Win_Pct",label:"Win %",fmt:"pct"},
+  {key:"units",label:"Units",fmt:"num",decimals:3,signed:true},
+  {key:"roi",label:"ROI",fmt:"pct"},
+  {key:"avg_odds",label:"Avg Odds",fmt:"num",decimals:1},
+  {key:"avg_ev",label:"Avg EV",fmt:"pct"},
+  {key:"avg_kelly",label:"Avg Kelly",fmt:"pct"},
+  {key:"avg_win_prob",label:"Avg Win Prob",fmt:"pct"}
+];
+
+const TALLY_COLUMNS=[
+  {key:"market_type",label:"Market"},
+  {key:"Win",label:"W",fmt:"int"},
+  {key:"Loss",label:"L",fmt:"int"},
+  {key:"Push",label:"P",fmt:"int"},
+  {key:"Total",label:"Total",fmt:"int"},
+  {key:"Win_Pct",label:"Win %",fmt:"pct"},
+  {key:"units",label:"Units",fmt:"num",decimals:3,signed:true},
+  {key:"roi",label:"ROI",fmt:"pct"},
+  {key:"avg_odds",label:"Avg Odds",fmt:"num",decimals:1},
+  {key:"avg_ev",label:"Avg EV",fmt:"pct"},
+  {key:"avg_kelly",label:"Avg Kelly",fmt:"pct"},
+  {key:"avg_win_prob",label:"Avg Win Prob",fmt:"pct"}
+];
+
+const CAL_METRICS=[
+  {key:"market_type",label:"Market"},
+  {key:"bets",label:"Bets",fmt:"int"},
+  {key:"expected_win_rate",label:"Expected",fmt:"pct"},
+  {key:"realized_win_rate",label:"Realized",fmt:"pct"},
+  {key:"calibration_gap",label:"Gap",fmt:"num",decimals:4,signed:true},
+  {key:"brier_score",label:"Brier",fmt:"num",decimals:4},
+  {key:"log_loss",label:"Log Loss",fmt:"num",decimals:4},
+  {key:"expected_wins",label:"Expected Wins",fmt:"num",decimals:2},
+  {key:"realized_wins",label:"Realized Wins",fmt:"num",decimals:0}
+];
+
+const CAL_PROB=[
+  {key:"market_type",label:"Market"},
+  {key:"probability_bucket",label:"Bucket"},
+  {key:"bets",label:"Bets",fmt:"int"},
+  {key:"avg_model_prob",label:"Avg Model",fmt:"pct"},
+  {key:"realized_win_rate",label:"Realized",fmt:"pct"},
+  {key:"calibration_gap",label:"Gap",fmt:"num",decimals:4,signed:true},
+  {key:"brier_score",label:"Brier",fmt:"num",decimals:4},
+  {key:"log_loss",label:"Log Loss",fmt:"num",decimals:4}
+];
+
+const CAL_EXPECTED=[
+  {key:"market_type",label:"Market"},
+  {key:"bets",label:"Bets",fmt:"int"},
+  {key:"expected_probability",label:"Expected",fmt:"pct"},
+  {key:"realized_probability",label:"Realized",fmt:"pct"},
+  {key:"difference",label:"Difference",fmt:"num",decimals:4,signed:true},
+  {key:"expected_wins",label:"Expected Wins",fmt:"num",decimals:2},
+  {key:"realized_wins",label:"Realized Wins",fmt:"num",decimals:0}
+];
+
+const WALK=[
+  {key:"market_type",label:"Market"},
+  {key:"through_game_date",label:"Through Date"},
+  {key:"Win",label:"W",fmt:"int"},
+  {key:"Loss",label:"L",fmt:"int"},
+  {key:"Push",label:"P",fmt:"int"},
+  {key:"bets_including_pushes",label:"Bets",fmt:"int"},
+  {key:"win_pct",label:"Win %",fmt:"pct"},
+  {key:"units",label:"Units",fmt:"num",decimals:3,signed:true},
+  {key:"roi",label:"ROI",fmt:"pct"},
+  {key:"calibration_gap",label:"Cal Gap",fmt:"num",decimals:4,signed:true},
+  {key:"brier_score",label:"Brier",fmt:"num",decimals:4},
+  {key:"log_loss",label:"Log Loss",fmt:"num",decimals:4}
+];
+
+const CLV_COLUMNS=[
+  {key:"game_date",label:"Date"},
+  {key:"away_team",label:"Away"},
+  {key:"home_team",label:"Home"},
+  {key:"market_type",label:"Market"},
+  {key:"bet_side",label:"Side"},
+  {key:"selected_provider_name",label:"Selected Book"},
+  {key:"dk_odds_american",label:"Selected Odds"},
+  {key:"closing_provider_name",label:"Closing Book"},
+  {key:"closing_odds_american",label:"Closing Odds"},
+  {key:"clv_implied_probability",label:"Implied CLV",fmt:"num",decimals:4,signed:true},
+  {key:"clv_decimal_ratio",label:"Decimal CLV",fmt:"num",decimals:4,signed:true},
+  {key:"line_clv",label:"Line CLV",fmt:"num",decimals:3,signed:true},
+  {key:"clv_status",label:"Status"}
+];
+
+function kpi(label,value,fmt){
+  let text="N/A";
+  let cls="";
+
+  if(value!=null&&!Number.isNaN(Number(value))){
+    if(fmt==="pct"){
+      text=fmtPct(value);
+    }else if(fmt==="int"){
+      text=fmtInt(value);
+    }else if(fmt==="num"){
+      text=fmtNum(value,3);
+      cls=signedClass(value);
+    }else if(fmt==="odds"){
+      text=fmtNum(value,1);
+    }
+  }
+
+  return '<div class="kpi"><div class="label">'+label+
+    '</div><div class="value '+cls+'">'+text+'</div></div>';
+}
+
+function buildMarketPanel(market,panel){
+  const dims=Object.keys(market.by||{}).filter(d=>
+    ((market.by[d]||[]).length||(market.by_side[d]||[]).length)
+  );
+
+  if(!dims.length){
+    panel.innerHTML='<div class="muted">No report rows available.</div>';
+    return;
+  }
+
+  panel.innerHTML=
+    '<div class="controls">'+
+      '<label>Dimension: <select class="dim">'+
+        dims.map(d=>
+          '<option value="'+d+'">'+d.replaceAll("_"," ")+'</option>'
+        ).join("")+
+      '</select></label>'+
+      '<label>View: <select class="view">'+
+        '<option value="overall">Overall</option>'+
+        '<option value="side">Split home/away</option>'+
+      '</select></label>'+
+    '</div>'+
+    '<div class="tablehost"></div>';
+
+  const dim=panel.querySelector(".dim");
+  const view=panel.querySelector(".view");
+  const host=panel.querySelector(".tablehost");
+
+  function refresh(){
+    const d=dim.value;
+    const rows=view.value==="side"
+      ?((market.by_side||{})[d]||[])
+      :((market.by||{})[d]||[]);
+
+    renderTable(rows,RESULT_COLUMNS,host);
+  }
+
+  dim.addEventListener("change",refresh);
+  view.addEventListener("change",refresh);
+  refresh();
+}
+
+function buildDashboard(data){
+  const h=data.headline||{};
+
+  document.getElementById("headline").innerHTML=[
+    kpi("Bets",h.bets,"int"),
+    kpi("Wins",h.wins,"int"),
+    kpi("Losses",h.losses,"int"),
+    kpi("Pushes",h.pushes,"int"),
+    kpi("Win %",h.win_pct,"pct"),
+    kpi("Units",h.units,"num"),
+    kpi("ROI",h.roi,"pct"),
+    kpi("Avg Odds",h.avg_odds,"odds"),
+    kpi("Avg EV",h.avg_ev,"pct"),
+    kpi("Avg Kelly",h.avg_kelly,"pct"),
+    kpi("Avg Win Prob",h.avg_win_prob,"pct")
+  ].join("");
+
+  renderTable(
+    data.tally||[],
+    TALLY_COLUMNS,
+    document.getElementById("by-market")
+  );
+
+  const cal=document.getElementById("calibration");
+  const calCols={
+    metrics:CAL_METRICS,
+    probability:CAL_PROB,
+    expected:CAL_EXPECTED,
+    walk_forward:WALK
+  };
+
+  Object.entries(data.calibration||{}).forEach(([key,rows])=>{
+    const panel=cal.querySelector('.tab-panel[data-key="'+key+'"]');
+    if(panel)renderTable(rows||[],calCols[key]||[],panel);
+  });
+
+  const ch=(data.clv||{}).headline||{};
+
+  document.getElementById("clv-headline").innerHTML=[
+    kpi("Selections",ch.selections,"int"),
+    kpi("Comparable",ch.comparable,"int"),
+    kpi("Positive CLV",ch.positive,"int"),
+    kpi("Positive CLV %",ch.positive_pct,"pct"),
+    kpi("Avg Implied CLV",ch.avg_implied_clv,"pct"),
+    kpi("Avg Decimal CLV",ch.avg_decimal_ratio,"pct")
+  ].join("");
+
+  renderTable(
+    (data.clv||{}).rows||[],
+    CLV_COLUMNS,
+    document.getElementById("clv-table")
+  );
+
+  const markets=document.getElementById("markets");
+
+  Object.entries(data.markets||{}).forEach(([key,market])=>{
+    const panel=markets.querySelector(".market-panel-"+key);
+    if(panel)buildMarketPanel(market,panel);
+  });
+}
+
+function selectSeason(season){
+  if(!ALL_DATA[season])return;
+
+  ACTIVE_SEASON=season;
+
+  document.querySelectorAll(".season-btn").forEach(btn=>{
+    btn.classList.toggle("active",btn.dataset.season===season);
+  });
+
+  buildDashboard(ALL_DATA[season].data);
+
+  try{
+    localStorage.setItem("nhl_dash_season",season);
+  }catch(e){}
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  const cal=document.getElementById("calibration");
+  cal.querySelectorAll(":scope > .tabs .tab").forEach(tab=>{
+    tab.addEventListener("click",()=>showTab(cal,tab.dataset.key));
+  });
+
+  const markets=document.getElementById("markets");
+  markets.querySelectorAll(":scope > .tabs .tab").forEach(tab=>{
+    tab.addEventListener("click",()=>showTab(markets,tab.dataset.key));
+  });
+
+  let initial=DEFAULT_SEASON;
+
+  try{
+    const stored=localStorage.getItem("nhl_dash_season");
+    if(stored&&ALL_DATA[stored])initial=stored;
+  }catch(e){}
+
+  selectSeason(initial);
+});
+
+
+const ALL_DATA={"current": {"label": "Current", "data": {"headline": {"bets": 33, "wins": 22, "losses": 11, "pushes": 0, "win_pct": 0.6666666666666666, "units": 5.0600653667216555, "roi": 0.15333531414308046, "avg_odds": -99.78787878787878, "avg_ev": 0.04710623339953961, "avg_kelly": 0.07443080890186503, "avg_win_prob": 0.6023184631092174}, "tally": [{"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "ALL", "Win": 3, "Loss": 1, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 0.75, "units": 0.4309573328291423, "roi": 0.1077393332072855, "avg_odds": -197.75, "avg_ev": 0.0408916310885928, "avg_kelly": 0.0866872949347609, "avg_win_prob": 0.6887748850639962, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "ALL", "Win": 5, "Loss": 0, "Push": 0, "Total": 5, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "Win_Pct": 1.0, "units": 2.245174973488865, "roi": 0.449034994697773, "avg_odds": -224.0, "avg_ev": 0.0898802517521288, "avg_kelly": 0.2042036656842475, "avg_win_prob": 0.7551931158172858, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "ALL", "Win": 14, "Loss": 10, "Push": 0, "Total": 24, "bets_excluding_pushes": 24, "bets_including_pushes": 24, "Win_Pct": 0.5833333333333334, "units": 2.3839330604036486, "roi": 0.0993305441834853, "avg_odds": -57.583333333333336, "avg_ev": 0.039230746627908, "avg_kelly": 0.0453520494000527, "avg_win_prob": 0.5560601734692402, "avg_my_model_prob": null}], "markets": {"moneyline": {"display": "Moneyline", "by": {"ev": [{"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.02_to_0.03", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.3875968992248062, "roi": 0.3875968992248062, "avg_odds": -258.0, "avg_ev": 0.021220520766455, "avg_kelly": 0.0558434757011973, "avg_win_prob": 0.7400148701206196, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.0_to_0.01", "Win": 1, "Loss": 1, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.5, "units": -0.4444444444444444, "roi": -0.2222222222222222, "avg_odds": -164.0, "avg_ev": 0.0048180799937261, "avg_kelly": 0.0072134316017729, "avg_win_prob": 0.6248700906080662, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.1_to_999", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.1327098436004643, "avg_kelly": 0.2764788408343007, "avg_win_prob": 0.7653444889192327, "avg_my_model_prob": null}], "kelly": [{"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.01_to_0.02", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -148.0, "avg_ev": 0.009499400842386, "avg_kelly": 0.0141782102125165, "avg_win_prob": 0.6044906591870576, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.05_to_0.1", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.3875968992248062, "roi": 0.3875968992248062, "avg_odds": -258.0, "avg_ev": 0.021220520766455, "avg_kelly": 0.0558434757011973, "avg_win_prob": 0.7400148701206196, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.0_to_0.01", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.5555555555555556, "roi": 0.5555555555555556, "avg_odds": -180.0, "avg_ev": 0.0001367591450662, "avg_kelly": 0.0002486529910293, "avg_win_prob": 0.6452495220290749, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.2_to_0.5", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.1327098436004643, "avg_kelly": 0.2764788408343007, "avg_win_prob": 0.7653444889192327, "avg_my_model_prob": null}], "odds": [{"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "-149_to_-125", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -148.0, "avg_ev": 0.009499400842386, "avg_kelly": 0.0141782102125165, "avg_win_prob": 0.6044906591870576, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "-199_to_-150", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.5555555555555556, "roi": 0.5555555555555556, "avg_odds": -180.0, "avg_ev": 0.0001367591450662, "avg_kelly": 0.0002486529910293, "avg_win_prob": 0.6452495220290749, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "-999_to_-200", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.8754017772735867, "roi": 0.4377008886367933, "avg_odds": -231.5, "avg_ev": 0.0769651821834596, "avg_kelly": 0.166161158267749, "avg_win_prob": 0.7526796795199262, "avg_my_model_prob": null}], "win_prob": [{"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.6_to_0.65", "Win": 1, "Loss": 1, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.5, "units": -0.4444444444444444, "roi": -0.2222222222222222, "avg_odds": -164.0, "avg_ev": 0.0048180799937261, "avg_kelly": 0.0072134316017729, "avg_win_prob": 0.6248700906080662, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "ALL", "variable": "0.7_to_1.0", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.8754017772735867, "roi": 0.4377008886367933, "avg_odds": -231.5, "avg_ev": 0.0769651821834596, "avg_kelly": 0.166161158267749, "avg_win_prob": 0.7526796795199262, "avg_my_model_prob": null}]}, "by_side": {"ev": [{"league": "nhl", "market_type": "moneyline", "side_group": "AWAY", "variable": "0.1_to_999", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.1327098436004643, "avg_kelly": 0.2764788408343007, "avg_win_prob": 0.7653444889192327, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "0.02_to_0.03", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.3875968992248062, "roi": 0.3875968992248062, "avg_odds": -258.0, "avg_ev": 0.021220520766455, "avg_kelly": 0.0558434757011973, "avg_win_prob": 0.7400148701206196, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "0.0_to_0.01", "Win": 1, "Loss": 1, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.5, "units": -0.4444444444444444, "roi": -0.2222222222222222, "avg_odds": -164.0, "avg_ev": 0.0048180799937261, "avg_kelly": 0.0072134316017729, "avg_win_prob": 0.6248700906080662, "avg_my_model_prob": null}], "kelly": [{"league": "nhl", "market_type": "moneyline", "side_group": "AWAY", "variable": "0.2_to_0.5", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.1327098436004643, "avg_kelly": 0.2764788408343007, "avg_win_prob": 0.7653444889192327, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "0.01_to_0.02", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -148.0, "avg_ev": 0.009499400842386, "avg_kelly": 0.0141782102125165, "avg_win_prob": 0.6044906591870576, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "0.05_to_0.1", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.3875968992248062, "roi": 0.3875968992248062, "avg_odds": -258.0, "avg_ev": 0.021220520766455, "avg_kelly": 0.0558434757011973, "avg_win_prob": 0.7400148701206196, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "0.0_to_0.01", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.5555555555555556, "roi": 0.5555555555555556, "avg_odds": -180.0, "avg_ev": 0.0001367591450662, "avg_kelly": 0.0002486529910293, "avg_win_prob": 0.6452495220290749, "avg_my_model_prob": null}], "odds": [{"league": "nhl", "market_type": "moneyline", "side_group": "AWAY", "variable": "-999_to_-200", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.1327098436004643, "avg_kelly": 0.2764788408343007, "avg_win_prob": 0.7653444889192327, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "-149_to_-125", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -148.0, "avg_ev": 0.009499400842386, "avg_kelly": 0.0141782102125165, "avg_win_prob": 0.6044906591870576, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "-199_to_-150", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.5555555555555556, "roi": 0.5555555555555556, "avg_odds": -180.0, "avg_ev": 0.0001367591450662, "avg_kelly": 0.0002486529910293, "avg_win_prob": 0.6452495220290749, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "-999_to_-200", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.3875968992248062, "roi": 0.3875968992248062, "avg_odds": -258.0, "avg_ev": 0.021220520766455, "avg_kelly": 0.0558434757011973, "avg_win_prob": 0.7400148701206196, "avg_my_model_prob": null}], "win_prob": [{"league": "nhl", "market_type": "moneyline", "side_group": "AWAY", "variable": "0.7_to_1.0", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.1327098436004643, "avg_kelly": 0.2764788408343007, "avg_win_prob": 0.7653444889192327, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "0.6_to_0.65", "Win": 1, "Loss": 1, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.5, "units": -0.4444444444444444, "roi": -0.2222222222222222, "avg_odds": -164.0, "avg_ev": 0.0048180799937261, "avg_kelly": 0.0072134316017729, "avg_win_prob": 0.6248700906080662, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "moneyline", "side_group": "HOME", "variable": "0.7_to_1.0", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.3875968992248062, "roi": 0.3875968992248062, "avg_odds": -258.0, "avg_ev": 0.021220520766455, "avg_kelly": 0.0558434757011973, "avg_win_prob": 0.7400148701206196, "avg_my_model_prob": null}]}}, "puck_line": {"display": "Puck Line", "by": {"ev": [{"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "0.05_to_0.075", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.0694884420511212, "avg_kelly": 0.1447675876065025, "avg_win_prob": 0.722627325710217, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "0.075_to_0.1", "Win": 4, "Loss": 0, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 1.0, "units": 1.7573700954400848, "roi": 0.4393425238600212, "avg_odds": -228.75, "avg_ev": 0.0949782041773807, "avg_kelly": 0.2190626852036838, "avg_win_prob": 0.7633345633440529, "avg_my_model_prob": null}], "kelly": [{"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "0.1_to_0.2", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.0694884420511212, "avg_kelly": 0.1447675876065025, "avg_win_prob": 0.722627325710217, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "0.2_to_0.5", "Win": 4, "Loss": 0, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 1.0, "units": 1.7573700954400848, "roi": 0.4393425238600212, "avg_odds": -228.75, "avg_ev": 0.0949782041773807, "avg_kelly": 0.2190626852036838, "avg_win_prob": 0.7633345633440529, "avg_my_model_prob": null}], "odds": [{"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "-999_to_-200", "Win": 5, "Loss": 0, "Push": 0, "Total": 5, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "Win_Pct": 1.0, "units": 2.245174973488865, "roi": 0.449034994697773, "avg_odds": -224.0, "avg_ev": 0.0898802517521288, "avg_kelly": 0.2042036656842475, "avg_win_prob": 0.7551931158172858, "avg_my_model_prob": null}], "side": [{"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "AWAY", "Win": 3, "Loss": 0, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 1.0, "units": 1.3225874867444327, "roi": 0.4408624955814775, "avg_odds": -228.33333333333331, "avg_ev": 0.0856693631145293, "avg_kelly": 0.1990486727969006, "avg_win_prob": 0.7562485253844828, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "HOME", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.9225874867444326, "roi": 0.4612937433722163, "avg_odds": -217.5, "avg_ev": 0.0961965847085281, "avg_kelly": 0.2119361550152679, "avg_win_prob": 0.7536100014664902, "avg_my_model_prob": null}], "win_prob": [{"league": "nhl", "market_type": "puck_line", "side_group": "ALL", "variable": "0.7_to_1.0", "Win": 5, "Loss": 0, "Push": 0, "Total": 5, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "Win_Pct": 1.0, "units": 2.245174973488865, "roi": 0.449034994697773, "avg_odds": -224.0, "avg_ev": 0.0898802517521288, "avg_kelly": 0.2042036656842475, "avg_win_prob": 0.7551931158172858, "avg_my_model_prob": null}]}, "by_side": {"ev": [{"league": "nhl", "market_type": "puck_line", "side_group": "AWAY", "variable": "0.05_to_0.075", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.0694884420511212, "avg_kelly": 0.1447675876065025, "avg_win_prob": 0.722627325710217, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "AWAY", "variable": "0.075_to_0.1", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.8347826086956522, "roi": 0.4173913043478261, "avg_odds": -240.0, "avg_ev": 0.0937598236462333, "avg_kelly": 0.2261892153920997, "avg_win_prob": 0.7730591252216157, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "HOME", "variable": "0.075_to_0.1", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.9225874867444326, "roi": 0.4612937433722163, "avg_odds": -217.5, "avg_ev": 0.0961965847085281, "avg_kelly": 0.2119361550152679, "avg_win_prob": 0.7536100014664902, "avg_my_model_prob": null}], "kelly": [{"league": "nhl", "market_type": "puck_line", "side_group": "AWAY", "variable": "0.1_to_0.2", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.4878048780487805, "roi": 0.4878048780487805, "avg_odds": -205.0, "avg_ev": 0.0694884420511212, "avg_kelly": 0.1447675876065025, "avg_win_prob": 0.722627325710217, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "AWAY", "variable": "0.2_to_0.5", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.8347826086956522, "roi": 0.4173913043478261, "avg_odds": -240.0, "avg_ev": 0.0937598236462333, "avg_kelly": 0.2261892153920997, "avg_win_prob": 0.7730591252216157, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "HOME", "variable": "0.2_to_0.5", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.9225874867444326, "roi": 0.4612937433722163, "avg_odds": -217.5, "avg_ev": 0.0961965847085281, "avg_kelly": 0.2119361550152679, "avg_win_prob": 0.7536100014664902, "avg_my_model_prob": null}], "odds": [{"league": "nhl", "market_type": "puck_line", "side_group": "AWAY", "variable": "-999_to_-200", "Win": 3, "Loss": 0, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 1.0, "units": 1.3225874867444327, "roi": 0.4408624955814775, "avg_odds": -228.33333333333331, "avg_ev": 0.0856693631145293, "avg_kelly": 0.1990486727969006, "avg_win_prob": 0.7562485253844828, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "HOME", "variable": "-999_to_-200", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.9225874867444326, "roi": 0.4612937433722163, "avg_odds": -217.5, "avg_ev": 0.0961965847085281, "avg_kelly": 0.2119361550152679, "avg_win_prob": 0.7536100014664902, "avg_my_model_prob": null}], "side": [{"league": "nhl", "market_type": "puck_line", "side_group": "AWAY", "variable": "AWAY", "Win": 3, "Loss": 0, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 1.0, "units": 1.3225874867444327, "roi": 0.4408624955814775, "avg_odds": -228.33333333333331, "avg_ev": 0.0856693631145293, "avg_kelly": 0.1990486727969006, "avg_win_prob": 0.7562485253844828, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "HOME", "variable": "HOME", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.9225874867444326, "roi": 0.4612937433722163, "avg_odds": -217.5, "avg_ev": 0.0961965847085281, "avg_kelly": 0.2119361550152679, "avg_win_prob": 0.7536100014664902, "avg_my_model_prob": null}], "win_prob": [{"league": "nhl", "market_type": "puck_line", "side_group": "AWAY", "variable": "0.7_to_1.0", "Win": 3, "Loss": 0, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 1.0, "units": 1.3225874867444327, "roi": 0.4408624955814775, "avg_odds": -228.33333333333331, "avg_ev": 0.0856693631145293, "avg_kelly": 0.1990486727969006, "avg_win_prob": 0.7562485253844828, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "puck_line", "side_group": "HOME", "variable": "0.7_to_1.0", "Win": 2, "Loss": 0, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 1.0, "units": 0.9225874867444326, "roi": 0.4612937433722163, "avg_odds": -217.5, "avg_ev": 0.0961965847085281, "avg_kelly": 0.2119361550152679, "avg_win_prob": 0.7536100014664902, "avg_my_model_prob": null}]}}, "total": {"display": "Total", "by": {"ev": [{"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.01_to_0.02", "Win": 1, "Loss": 2, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 0.3333333333333333, "units": -0.98, "roi": -0.3266666666666666, "avg_odds": -51.0, "avg_ev": 0.012215440080624, "avg_kelly": 0.0145004036574219, "avg_win_prob": 0.5462019324559697, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.02_to_0.03", "Win": 2, "Loss": 2, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 0.5, "units": -0.06, "roi": -0.015, "avg_odds": -6.5, "avg_ev": 0.0238652030248623, "avg_kelly": 0.0255357692192571, "avg_win_prob": 0.5258970167166879, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.04_to_0.05", "Win": 2, "Loss": 1, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 0.6666666666666666, "units": 0.7211328976034858, "roi": 0.2403776325344952, "avg_odds": -42.333333333333336, "avg_ev": 0.0447936157197692, "avg_kelly": 0.0486712572944179, "avg_win_prob": 0.5418118342740714, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.05_to_0.075", "Win": 4, "Loss": 2, "Push": 0, "Total": 6, "bets_excluding_pushes": 6, "bets_including_pushes": 6, "Win_Pct": 0.6666666666666666, "units": 1.3314814814814817, "roi": 0.2219135802469135, "avg_odds": -53.0, "avg_ev": 0.0601456844145661, "avg_kelly": 0.0710387789164721, "avg_win_prob": 0.5750579016247704, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.075_to_0.1", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 1.14, "roi": 1.14, "avg_odds": 114.0, "avg_ev": 0.0783681577167969, "avg_kelly": 0.0687439979971903, "avg_win_prob": 0.5039103540732696, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.0_to_0.01", "Win": 4, "Loss": 1, "Push": 0, "Total": 5, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "Win_Pct": 0.8, "units": 2.2313186813186814, "roi": 0.4462637362637363, "avg_odds": -123.4, "avg_ev": 0.0043465941829802, "avg_kelly": 0.0054860181101887, "avg_win_prob": 0.5559171894530079, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.1_to_999", "Win": 0, "Loss": 2, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.0, "units": -2.0, "roi": -1.0, "avg_odds": -127.5, "avg_ev": 0.1070373522250341, "avg_kelly": 0.1371921819108756, "avg_win_prob": 0.6219855425589793, "avg_my_model_prob": null}], "kelly": [{"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.01_to_0.02", "Win": 2, "Loss": 2, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 0.5, "units": -0.2107692307692308, "roi": -0.0526923076923077, "avg_odds": -70.75, "avg_ev": 0.0115220814520088, "avg_kelly": 0.0139812256266727, "avg_win_prob": 0.5530380978598981, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.02_to_0.05", "Win": 3, "Loss": 3, "Push": 0, "Total": 6, "bets_excluding_pushes": 6, "bets_including_pushes": 6, "Win_Pct": 0.5, "units": -0.079607843137255, "roi": -0.0132679738562091, "avg_odds": -3.0, "avg_ev": 0.0311584658758548, "avg_kelly": 0.0316993702880588, "avg_win_prob": 0.5216101673616066, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.05_to_0.1", "Win": 6, "Loss": 2, "Push": 0, "Total": 8, "bets_excluding_pushes": 8, "bets_including_pushes": 8, "Win_Pct": 0.75, "units": 3.212222222222222, "roi": 0.4015277777777777, "avg_odds": -42.375, "avg_ev": 0.0602666410259777, "avg_kelly": 0.069117162315994, "avg_win_prob": 0.5692025411676523, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.0_to_0.01", "Win": 3, "Loss": 1, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 0.75, "units": 1.4620879120879122, "roi": 0.365521978021978, "avg_odds": -121.75, "avg_ev": 0.0030727413371845, "avg_kelly": 0.0037515997541296, "avg_win_prob": 0.551509838298339, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.1_to_0.2", "Win": 0, "Loss": 2, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.0, "units": -2.0, "roi": -1.0, "avg_odds": -127.5, "avg_ev": 0.1070373522250341, "avg_kelly": 0.1371921819108756, "avg_win_prob": 0.6219855425589793, "avg_my_model_prob": null}], "odds": [{"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "-109_to_100", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.9803921568627452, "roi": 0.9803921568627452, "avg_odds": -102.0, "avg_ev": 0.0438425554763479, "avg_kelly": 0.0447373015064775, "avg_win_prob": 0.5271932098365394, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "-124_to_-110", "Win": 1, "Loss": 1, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.5, "units": -0.1071428571428571, "roi": -0.0535714285714285, "avg_odds": -116.0, "avg_ev": 0.002498667109267, "avg_kelly": 0.0029135730166124, "avg_win_prob": 0.5391190110436404, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "-149_to_-125", "Win": 8, "Loss": 6, "Push": 0, "Total": 14, "bets_excluding_pushes": 14, "bets_including_pushes": 14, "Win_Pct": 0.5714285714285714, "units": 0.1606837606837607, "roi": 0.0114774114774114, "avg_odds": -128.92857142857142, "avg_ev": 0.040588994929074, "avg_kelly": 0.0526781416713477, "avg_win_prob": 0.5870890371025402, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "101_to_125", "Win": 4, "Loss": 3, "Push": 0, "Total": 7, "bets_excluding_pushes": 7, "bets_including_pushes": 7, "Win_Pct": 0.5714285714285714, "units": 1.35, "roi": 0.1928571428571428, "avg_odds": 108.14285714285714, "avg_ev": 0.0463503000525534, "avg_kelly": 0.0429129649518137, "avg_win_prob": 0.5029666302717689, "avg_my_model_prob": null}], "side": [{"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "OVER", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -130.0, "avg_ev": 0.0105104588274214, "avg_kelly": 0.0138295510887123, "avg_win_prob": 0.5741536697883076, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "UNDER", "Win": 14, "Loss": 9, "Push": 0, "Total": 23, "bets_excluding_pushes": 23, "bets_including_pushes": 23, "Win_Pct": 0.6086956521739131, "units": 3.3839330604036486, "roi": 0.147127524365376, "avg_odds": -54.43478260869565, "avg_ev": 0.0404794547931465, "avg_kelly": 0.0467225928048936, "avg_win_prob": 0.5552734997162373, "avg_my_model_prob": null}], "total_range": [{"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.0_to_5.5", "Win": 4, "Loss": 3, "Push": 0, "Total": 7, "bets_excluding_pushes": 7, "bets_including_pushes": 7, "Win_Pct": 0.5714285714285714, "units": 1.35, "roi": 0.1928571428571428, "avg_odds": 75.0, "avg_ev": 0.0381189241059725, "avg_kelly": 0.0353465856320656, "avg_win_prob": 0.5094489727412804, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "6.0_to_6.5", "Win": 10, "Loss": 7, "Push": 0, "Total": 17, "bets_excluding_pushes": 17, "bets_including_pushes": 17, "Win_Pct": 0.5882352941176471, "units": 1.0339330604036487, "roi": 0.0608195917884499, "avg_odds": -112.17647058823528, "avg_ev": 0.0396885559016461, "avg_kelly": 0.0494719462456945, "avg_win_prob": 0.5752530208278118, "avg_my_model_prob": null}], "win_prob": [{"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.45_to_0.5", "Win": 1, "Loss": 2, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 0.3333333333333333, "units": -0.8600000000000001, "roi": -0.2866666666666667, "avg_odds": 111.33333333333331, "avg_ev": 0.031906081475774, "avg_kelly": 0.0287404753441839, "avg_win_prob": 0.4883429693422446, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.55_to_0.6", "Win": 6, "Loss": 3, "Push": 0, "Total": 9, "bets_excluding_pushes": 9, "bets_including_pushes": 9, "Win_Pct": 0.6666666666666666, "units": 1.6792022792022794, "roi": 0.1865780310224755, "avg_odds": -127.77777777777776, "avg_ev": 0.0209044126681356, "avg_kelly": 0.0267662850828461, "avg_win_prob": 0.5736270520592291, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.5_to_0.55", "Win": 5, "Loss": 2, "Push": 0, "Total": 7, "bets_excluding_pushes": 7, "bets_including_pushes": 7, "Win_Pct": 0.7142857142857143, "units": 3.083249299719888, "roi": 0.4404641856742697, "avg_odds": 12.714285714285714, "avg_ev": 0.0396533922336334, "avg_kelly": 0.0378191108814066, "avg_win_prob": 0.5230241051142097, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "ALL", "variable": "0.6_to_0.65", "Win": 2, "Loss": 3, "Push": 0, "Total": 5, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "Win_Pct": 0.4, "units": -1.5185185185185186, "roi": -0.3037037037037037, "avg_odds": -131.0, "avg_ev": 0.076021242998763, "avg_kelly": 0.0993194835306504, "avg_win_prob": 0.6113206101805002, "avg_my_model_prob": null}]}, "by_side": {"ev": [{"league": "nhl", "market_type": "total", "side_group": "OVER", "variable": "0.01_to_0.02", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -130.0, "avg_ev": 0.0105104588274214, "avg_kelly": 0.0138295510887123, "avg_win_prob": 0.5741536697883076, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.01_to_0.02", "Win": 1, "Loss": 1, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.5, "units": 0.02, "roi": 0.01, "avg_odds": -11.5, "avg_ev": 0.0130679307072254, "avg_kelly": 0.0148358299417767, "avg_win_prob": 0.5322260637898006, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.02_to_0.03", "Win": 2, "Loss": 2, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 0.5, "units": -0.06, "roi": -0.015, "avg_odds": -6.5, "avg_ev": 0.0238652030248623, "avg_kelly": 0.0255357692192571, "avg_win_prob": 0.5258970167166879, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.04_to_0.05", "Win": 2, "Loss": 1, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 0.6666666666666666, "units": 0.7211328976034858, "roi": 0.2403776325344952, "avg_odds": -42.333333333333336, "avg_ev": 0.0447936157197692, "avg_kelly": 0.0486712572944179, "avg_win_prob": 0.5418118342740714, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.05_to_0.075", "Win": 4, "Loss": 2, "Push": 0, "Total": 6, "bets_excluding_pushes": 6, "bets_including_pushes": 6, "Win_Pct": 0.6666666666666666, "units": 1.3314814814814817, "roi": 0.2219135802469135, "avg_odds": -53.0, "avg_ev": 0.0601456844145661, "avg_kelly": 0.0710387789164721, "avg_win_prob": 0.5750579016247704, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.075_to_0.1", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 1.14, "roi": 1.14, "avg_odds": 114.0, "avg_ev": 0.0783681577167969, "avg_kelly": 0.0687439979971903, "avg_win_prob": 0.5039103540732696, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.0_to_0.01", "Win": 4, "Loss": 1, "Push": 0, "Total": 5, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "Win_Pct": 0.8, "units": 2.2313186813186814, "roi": 0.4462637362637363, "avg_odds": -123.4, "avg_ev": 0.0043465941829802, "avg_kelly": 0.0054860181101887, "avg_win_prob": 0.5559171894530079, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.1_to_999", "Win": 0, "Loss": 2, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.0, "units": -2.0, "roi": -1.0, "avg_odds": -127.5, "avg_ev": 0.1070373522250341, "avg_kelly": 0.1371921819108756, "avg_win_prob": 0.6219855425589793, "avg_my_model_prob": null}], "kelly": [{"league": "nhl", "market_type": "total", "side_group": "OVER", "variable": "0.01_to_0.02", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -130.0, "avg_ev": 0.0105104588274214, "avg_kelly": 0.0138295510887123, "avg_win_prob": 0.5741536697883076, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.01_to_0.02", "Win": 2, "Loss": 1, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 0.6666666666666666, "units": 0.7892307692307693, "roi": 0.2630769230769231, "avg_odds": -51.0, "avg_ev": 0.011859288993538, "avg_kelly": 0.0140317838059929, "avg_win_prob": 0.5459995738837616, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.02_to_0.05", "Win": 3, "Loss": 3, "Push": 0, "Total": 6, "bets_excluding_pushes": 6, "bets_including_pushes": 6, "Win_Pct": 0.5, "units": -0.079607843137255, "roi": -0.0132679738562091, "avg_odds": -3.0, "avg_ev": 0.0311584658758548, "avg_kelly": 0.0316993702880588, "avg_win_prob": 0.5216101673616066, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.05_to_0.1", "Win": 6, "Loss": 2, "Push": 0, "Total": 8, "bets_excluding_pushes": 8, "bets_including_pushes": 8, "Win_Pct": 0.75, "units": 3.212222222222222, "roi": 0.4015277777777777, "avg_odds": -42.375, "avg_ev": 0.0602666410259777, "avg_kelly": 0.069117162315994, "avg_win_prob": 0.5692025411676523, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.0_to_0.01", "Win": 3, "Loss": 1, "Push": 0, "Total": 4, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "Win_Pct": 0.75, "units": 1.4620879120879122, "roi": 0.365521978021978, "avg_odds": -121.75, "avg_ev": 0.0030727413371845, "avg_kelly": 0.0037515997541296, "avg_win_prob": 0.551509838298339, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.1_to_0.2", "Win": 0, "Loss": 2, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.0, "units": -2.0, "roi": -1.0, "avg_odds": -127.5, "avg_ev": 0.1070373522250341, "avg_kelly": 0.1371921819108756, "avg_win_prob": 0.6219855425589793, "avg_my_model_prob": null}], "odds": [{"league": "nhl", "market_type": "total", "side_group": "OVER", "variable": "-149_to_-125", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -130.0, "avg_ev": 0.0105104588274214, "avg_kelly": 0.0138295510887123, "avg_win_prob": 0.5741536697883076, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "-109_to_100", "Win": 1, "Loss": 0, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 1.0, "units": 0.9803921568627452, "roi": 0.9803921568627452, "avg_odds": -102.0, "avg_ev": 0.0438425554763479, "avg_kelly": 0.0447373015064775, "avg_win_prob": 0.5271932098365394, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "-124_to_-110", "Win": 1, "Loss": 1, "Push": 0, "Total": 2, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "Win_Pct": 0.5, "units": -0.1071428571428571, "roi": -0.0535714285714285, "avg_odds": -116.0, "avg_ev": 0.002498667109267, "avg_kelly": 0.0029135730166124, "avg_win_prob": 0.5391190110436404, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "-149_to_-125", "Win": 8, "Loss": 5, "Push": 0, "Total": 13, "bets_excluding_pushes": 13, "bets_including_pushes": 13, "Win_Pct": 0.6153846153846154, "units": 1.160683760683761, "roi": 0.0892833662064431, "avg_odds": -128.84615384615384, "avg_ev": 0.0429027284753549, "avg_kelly": 0.0556664947930888, "avg_win_prob": 0.5880840653574813, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "101_to_125", "Win": 4, "Loss": 3, "Push": 0, "Total": 7, "bets_excluding_pushes": 7, "bets_including_pushes": 7, "Win_Pct": 0.5714285714285714, "units": 1.35, "roi": 0.1928571428571428, "avg_odds": 108.14285714285714, "avg_ev": 0.0463503000525534, "avg_kelly": 0.0429129649518137, "avg_win_prob": 0.5029666302717689, "avg_my_model_prob": null}], "side": [{"league": "nhl", "market_type": "total", "side_group": "OVER", "variable": "OVER", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -130.0, "avg_ev": 0.0105104588274214, "avg_kelly": 0.0138295510887123, "avg_win_prob": 0.5741536697883076, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "UNDER", "Win": 14, "Loss": 9, "Push": 0, "Total": 23, "bets_excluding_pushes": 23, "bets_including_pushes": 23, "Win_Pct": 0.6086956521739131, "units": 3.3839330604036486, "roi": 0.147127524365376, "avg_odds": -54.43478260869565, "avg_ev": 0.0404794547931465, "avg_kelly": 0.0467225928048936, "avg_win_prob": 0.5552734997162373, "avg_my_model_prob": null}], "total_range": [{"league": "nhl", "market_type": "total", "side_group": "OVER", "variable": "0.0_to_5.5", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -130.0, "avg_ev": 0.0105104588274214, "avg_kelly": 0.0138295510887123, "avg_win_prob": 0.5741536697883076, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.0_to_5.5", "Win": 4, "Loss": 2, "Push": 0, "Total": 6, "bets_excluding_pushes": 6, "bets_including_pushes": 6, "Win_Pct": 0.6666666666666666, "units": 2.35, "roi": 0.3916666666666666, "avg_odds": 109.16666666666669, "avg_ev": 0.0427203349857311, "avg_kelly": 0.0389327580559578, "avg_win_prob": 0.4986648565667759, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "6.0_to_6.5", "Win": 10, "Loss": 7, "Push": 0, "Total": 17, "bets_excluding_pushes": 17, "bets_including_pushes": 17, "Win_Pct": 0.5882352941176471, "units": 1.0339330604036487, "roi": 0.0608195917884499, "avg_odds": -112.17647058823528, "avg_ev": 0.0396885559016461, "avg_kelly": 0.0494719462456945, "avg_win_prob": 0.5752530208278118, "avg_my_model_prob": null}], "win_prob": [{"league": "nhl", "market_type": "total", "side_group": "OVER", "variable": "0.55_to_0.6", "Win": 0, "Loss": 1, "Push": 0, "Total": 1, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "Win_Pct": 0.0, "units": -1.0, "roi": -1.0, "avg_odds": -130.0, "avg_ev": 0.0105104588274214, "avg_kelly": 0.0138295510887123, "avg_win_prob": 0.5741536697883076, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.45_to_0.5", "Win": 1, "Loss": 2, "Push": 0, "Total": 3, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "Win_Pct": 0.3333333333333333, "units": -0.8600000000000001, "roi": -0.2866666666666667, "avg_odds": 111.33333333333331, "avg_ev": 0.031906081475774, "avg_kelly": 0.0287404753441839, "avg_win_prob": 0.4883429693422446, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.55_to_0.6", "Win": 6, "Loss": 2, "Push": 0, "Total": 8, "bets_excluding_pushes": 8, "bets_including_pushes": 8, "Win_Pct": 0.75, "units": 2.679202279202279, "roi": 0.3349002849002849, "avg_odds": -127.5, "avg_ev": 0.0222036568982249, "avg_kelly": 0.0283833768321129, "avg_win_prob": 0.5735612248430944, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.5_to_0.55", "Win": 5, "Loss": 2, "Push": 0, "Total": 7, "bets_excluding_pushes": 7, "bets_including_pushes": 7, "Win_Pct": 0.7142857142857143, "units": 3.083249299719888, "roi": 0.4404641856742697, "avg_odds": 12.714285714285714, "avg_ev": 0.0396533922336334, "avg_kelly": 0.0378191108814066, "avg_win_prob": 0.5230241051142097, "avg_my_model_prob": null}, {"league": "nhl", "market_type": "total", "side_group": "UNDER", "variable": "0.6_to_0.65", "Win": 2, "Loss": 3, "Push": 0, "Total": 5, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "Win_Pct": 0.4, "units": -1.5185185185185186, "roi": -0.3037037037037037, "avg_odds": -131.0, "avg_ev": 0.076021242998763, "avg_kelly": 0.0993194835306504, "avg_win_prob": 0.6113206101805002, "avg_my_model_prob": null}]}}}, "calibration": {"metrics": [{"league": "nhl", "market_type": "ALL", "bets": 33, "expected_win_rate": 0.6023184631092176, "realized_win_rate": 0.6666666666666666, "calibration_gap": 0.064348203557449, "brier_score": 0.2098159901652792, "log_loss": 0.6060159449420521, "expected_wins": 19.87650928260418, "realized_wins": 22.0, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "moneyline", "bets": 4, "expected_win_rate": 0.6887748850639962, "realized_win_rate": 0.75, "calibration_gap": 0.0612251149360038, "brier_score": 0.1534780838259944, "log_loss": 0.4835533219723791, "expected_wins": 2.755099540255985, "realized_wins": 3.0, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "puck_line", "bets": 5, "expected_win_rate": 0.7551931158172858, "realized_win_rate": 1.0, "calibration_gap": 0.2448068841827142, "brier_score": 0.0603562180222596, "log_loss": 0.2811581027174058, "expected_wins": 3.775965579086429, "realized_wins": 5.0, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "total", "bets": 24, "expected_win_rate": 0.5560601734692402, "realized_win_rate": 0.5833333333333334, "calibration_gap": 0.0272731598640931, "brier_score": 0.2503430937516225, "log_loss": 0.694105099233799, "expected_wins": 13.345444163261764, "realized_wins": 14.0, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}], "probability": [{"league": "nhl", "market_type": "ALL", "probability_bucket": "0.45_to_0.5", "bets": 3, "avg_model_prob": 0.4883429693422446, "realized_win_rate": 0.3333333333333333, "calibration_gap": -0.1550096360089112, "brier_score": 0.2525868129856028, "log_loss": 0.6983275569271251, "expected_wins": 1.4650289080267338, "realized_wins": 1.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "ALL", "probability_bucket": "0.5_to_0.55", "bets": 7, "avg_model_prob": 0.5230241051142097, "realized_win_rate": 0.7142857142857143, "calibration_gap": 0.1912616091715046, "brier_score": 0.2496342722337945, "log_loss": 0.6924484907625172, "expected_wins": 3.661168735799468, "realized_wins": 5.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "ALL", "probability_bucket": "0.55_to_0.6", "bets": 9, "avg_model_prob": 0.5736270520592291, "realized_win_rate": 0.6666666666666666, "calibration_gap": 0.0930396146074374, "brier_score": 0.2282347851026812, "log_loss": 0.6491998491413573, "expected_wins": 5.162643468533062, "realized_wins": 6.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "ALL", "probability_bucket": "0.6_to_0.65", "bets": 7, "avg_model_prob": 0.615191890302662, "realized_win_rate": 0.4285714285714285, "calibration_gap": -0.1866204617312334, "brier_score": 0.2771682425980631, "log_loss": 0.748471526954031, "expected_wins": 4.306343232118634, "realized_wins": 3.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "ALL", "probability_bucket": "0.7_to_1.0", "bets": 7, "avg_model_prob": 0.7544749911608973, "realized_win_rate": 1.0, "calibration_gap": 0.2455250088391026, "brier_score": 0.0606337952500389, "log_loss": 0.2820435351454705, "expected_wins": 5.281324938126281, "realized_wins": 7.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "moneyline", "probability_bucket": "0.6_to_0.65", "bets": 2, "avg_model_prob": 0.6248700906080662, "realized_win_rate": 0.5, "calibration_gap": -0.1248700906080662, "brier_score": 0.2456284293325016, "log_loss": 0.682849527729126, "expected_wins": 1.2497401812161324, "realized_wins": 1.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "moneyline", "probability_bucket": "0.7_to_1.0", "bets": 2, "avg_model_prob": 0.7526796795199262, "realized_win_rate": 1.0, "calibration_gap": 0.2473203204800738, "brier_score": 0.0613277383194872, "log_loss": 0.2842571162156323, "expected_wins": 1.5053593590398524, "realized_wins": 2.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "puck_line", "probability_bucket": "0.7_to_1.0", "bets": 5, "avg_model_prob": 0.7551931158172858, "realized_win_rate": 1.0, "calibration_gap": 0.2448068841827142, "brier_score": 0.0603562180222596, "log_loss": 0.2811581027174058, "expected_wins": 3.775965579086429, "realized_wins": 5.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "total", "probability_bucket": "0.45_to_0.5", "bets": 3, "avg_model_prob": 0.4883429693422446, "realized_win_rate": 0.3333333333333333, "calibration_gap": -0.1550096360089112, "brier_score": 0.2525868129856028, "log_loss": 0.6983275569271251, "expected_wins": 1.4650289080267338, "realized_wins": 1.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "total", "probability_bucket": "0.5_to_0.55", "bets": 7, "avg_model_prob": 0.5230241051142097, "realized_win_rate": 0.7142857142857143, "calibration_gap": 0.1912616091715046, "brier_score": 0.2496342722337945, "log_loss": 0.6924484907625172, "expected_wins": 3.661168735799468, "realized_wins": 5.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "total", "probability_bucket": "0.55_to_0.6", "bets": 9, "avg_model_prob": 0.5736270520592291, "realized_win_rate": 0.6666666666666666, "calibration_gap": 0.0930396146074374, "brier_score": 0.2282347851026812, "log_loss": 0.6491998491413573, "expected_wins": 5.162643468533062, "realized_wins": 6.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "total", "probability_bucket": "0.6_to_0.65", "bets": 5, "avg_model_prob": 0.6113206101805002, "realized_win_rate": 0.4, "calibration_gap": -0.2113206101805002, "brier_score": 0.2897841679042877, "log_loss": 0.7747203266439929, "expected_wins": 3.0566030509025013, "realized_wins": 2.0, "avg_my_model_prob": null, "my_model_bets": 0, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}], "expected": [{"league": "nhl", "market_type": "ALL", "bets": 33, "expected_probability": 0.6023184631092176, "realized_probability": 0.6666666666666666, "difference": 0.064348203557449, "expected_wins": 19.87650928260418, "realized_wins": 22.0, "my_model_bets": 0, "my_model_expected_probability": null, "my_model_realized_probability": null, "my_model_difference": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "moneyline", "bets": 4, "expected_probability": 0.6887748850639962, "realized_probability": 0.75, "difference": 0.0612251149360038, "expected_wins": 2.755099540255985, "realized_wins": 3.0, "my_model_bets": 0, "my_model_expected_probability": null, "my_model_realized_probability": null, "my_model_difference": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "puck_line", "bets": 5, "expected_probability": 0.7551931158172858, "realized_probability": 1.0, "difference": 0.2448068841827142, "expected_wins": 3.775965579086429, "realized_wins": 5.0, "my_model_bets": 0, "my_model_expected_probability": null, "my_model_realized_probability": null, "my_model_difference": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}, {"league": "nhl", "market_type": "total", "bets": 24, "expected_probability": 0.5560601734692402, "realized_probability": 0.5833333333333334, "difference": 0.0272731598640931, "expected_wins": 13.345444163261764, "realized_wins": 14.0, "my_model_bets": 0, "my_model_expected_probability": null, "my_model_realized_probability": null, "my_model_difference": null, "my_model_expected_wins": 0.0, "my_model_realized_wins": 0.0}], "walk_forward": [{"league": "nhl", "market_type": "ALL", "through_game_date": "2026_09_29", "Win": 3, "Loss": 0, "Push": 0, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "win_pct": 1.0, "units": 1.6223795079204584, "roi": 0.5407931693068194, "avg_odds": -204.33333333333331, "avg_ev": 0.0405712575734769, "avg_kelly": 0.0942403155222117, "avg_model_prob": 0.6880778784799485, "avg_my_model_prob": null, "expected_win_rate": 0.6880778784799485, "realized_win_rate": 1.0, "calibration_gap": 0.3119221215200515, "brier_score": 0.1057205343713585, "log_loss": 0.3834149020925306, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "moneyline", "through_game_date": "2026_09_29", "Win": 1, "Loss": 0, "Push": 0, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "win_pct": 1.0, "units": 0.3875968992248062, "roi": 0.3875968992248062, "avg_odds": -258.0, "avg_ev": 0.021220520766455, "avg_kelly": 0.0558434757011973, "avg_model_prob": 0.7400148701206196, "avg_my_model_prob": null, "expected_win_rate": 0.7400148701206196, "realized_win_rate": 1.0, "calibration_gap": 0.2599851298793804, "brier_score": 0.0675922677583982, "log_loss": 0.3010849982282244, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "puck_line", "through_game_date": "2026_09_29", "Win": 1, "Loss": 0, "Push": 0, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "win_pct": 1.0, "units": 0.4347826086956521, "roi": 0.4347826086956521, "avg_odds": -230.0, "avg_ev": 0.0941452746959485, "avg_kelly": 0.2189424992929035, "avg_model_prob": 0.7651365557314326, "avg_my_model_prob": null, "expected_win_rate": 0.7651365557314326, "realized_win_rate": 1.0, "calibration_gap": 0.2348634442685674, "brier_score": 0.0551608374536944, "log_loss": 0.2677009568614896, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "total", "through_game_date": "2026_09_29", "Win": 1, "Loss": 0, "Push": 0, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "win_pct": 1.0, "units": 0.8, "roi": 0.8, "avg_odds": -125.0, "avg_ev": 0.0063479772580274, "avg_kelly": 0.0079349715725345, "avg_model_prob": 0.5590822095877931, "avg_my_model_prob": null, "expected_win_rate": 0.5590822095877931, "realized_win_rate": 1.0, "calibration_gap": 0.4409177904122069, "brier_score": 0.1944084979019828, "log_loss": 0.5814587511878776, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "ALL", "through_game_date": "2026_09_30", "Win": 4, "Loss": 2, "Push": 0, "bets_excluding_pushes": 6, "bets_including_pushes": 6, "win_pct": 0.6666666666666666, "units": 0.1779350634760139, "roi": 0.0296558439126689, "avg_odds": -175.5, "avg_ev": 0.0392639893720405, "avg_kelly": 0.0721031359716164, "avg_model_prob": 0.6517446743856103, "avg_my_model_prob": null, "expected_win_rate": 0.6517446743856103, "realized_win_rate": 0.6666666666666666, "calibration_gap": 0.0149219922810562, "brier_score": 0.1942632197416386, "log_loss": 0.5712940130439779, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "moneyline", "through_game_date": "2026_09_30", "Win": 2, "Loss": 0, "Push": 0, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "win_pct": 1.0, "units": 0.9431524547803618, "roi": 0.4715762273901809, "avg_odds": -219.0, "avg_ev": 0.0106786399557606, "avg_kelly": 0.0280460643461133, "avg_model_prob": 0.6926321960748473, "avg_my_model_prob": null, "expected_win_rate": 0.6926321960748473, "realized_win_rate": 1.0, "calibration_gap": 0.3073678039251527, "brier_score": 0.096720084689499, "log_loss": 0.3696015896824964, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "puck_line", "through_game_date": "2026_09_30", "Win": 1, "Loss": 0, "Push": 0, "bets_excluding_pushes": 1, "bets_including_pushes": 1, "win_pct": 1.0, "units": 0.4347826086956521, "roi": 0.4347826086956521, "avg_odds": -230.0, "avg_ev": 0.0941452746959485, "avg_kelly": 0.2189424992929035, "avg_model_prob": 0.7651365557314326, "avg_my_model_prob": null, "expected_win_rate": 0.7651365557314326, "realized_win_rate": 1.0, "calibration_gap": 0.2348634442685674, "brier_score": 0.0551608374536944, "log_loss": 0.2677009568614896, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "total", "through_game_date": "2026_09_30", "Win": 1, "Loss": 2, "Push": 0, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "win_pct": 0.3333333333333333, "units": -1.2, "roi": -0.3999999999999999, "avg_odds": -128.33333333333334, "avg_ev": 0.0400271272082578, "avg_kelly": 0.0525280626148562, "avg_model_prob": 0.5866890328108451, "avg_my_model_prob": null, "expected_win_rate": 0.5866890328108451, "realized_win_rate": 0.3333333333333333, "calibration_gap": -0.2533556994775117, "brier_score": 0.3056594372057131, "log_loss": 0.8069533140124614, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "ALL", "through_game_date": "2026_10_01", "Win": 7, "Loss": 3, "Push": 0, "bets_excluding_pushes": 10, "bets_including_pushes": 10, "win_pct": 0.7, "units": 1.2035448195735752, "roi": 0.1203544819573575, "avg_odds": -147.8, "avg_ev": 0.0539250534221393, "avg_kelly": 0.098253497386455, "avg_model_prob": 0.648755448589627, "avg_my_model_prob": null, "expected_win_rate": 0.648755448589627, "realized_win_rate": 0.7, "calibration_gap": 0.0512445514103729, "brier_score": 0.1815709693840669, "log_loss": 0.5437384115274858, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "moneyline", "through_game_date": "2026_10_01", "Win": 3, "Loss": 0, "Push": 0, "bets_excluding_pushes": 3, "bets_including_pushes": 3, "win_pct": 1.0, "units": 1.4309573328291425, "roi": 0.4769857776097141, "avg_odds": -214.33333333333331, "avg_ev": 0.0513557078373285, "avg_kelly": 0.1108569898421757, "avg_model_prob": 0.7168696270229757, "avg_my_model_prob": null, "expected_win_rate": 0.7168696270229757, "realized_win_rate": 1.0, "calibration_gap": 0.2831303729770242, "brier_score": 0.082834459419858, "log_loss": 0.335544137856011, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "puck_line", "through_game_date": "2026_10_01", "Win": 2, "Loss": 0, "Push": 0, "bets_excluding_pushes": 2, "bets_including_pushes": 2, "win_pct": 1.0, "units": 0.9225874867444326, "roi": 0.4612937433722163, "avg_odds": -217.5, "avg_ev": 0.0956874026468199, "avg_kelly": 0.2107520106857139, "avg_model_prob": 0.7532539300946661, "avg_my_model_prob": null, "expected_win_rate": 0.7532539300946661, "realized_win_rate": 1.0, "calibration_gap": 0.2467460699053338, "brier_score": 0.0610248198057514, "log_loss": 0.2834773252054169, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "total", "through_game_date": "2026_10_01", "Win": 2, "Loss": 3, "Push": 0, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "win_pct": 0.4, "units": -1.15, "roi": -0.2299999999999999, "avg_odds": -80.0, "avg_ev": 0.0387617210831536, "avg_kelly": 0.0456919965933189, "avg_model_prob": 0.5660875489276022, "avg_my_model_prob": null, "expected_win_rate": 0.5660875489276022, "realized_win_rate": 0.4, "calibration_gap": -0.1660875489276021, "brier_score": 0.2890313351939184, "log_loss": 0.7727594102591981, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "ALL", "through_game_date": "2026_10_02", "Win": 11, "Loss": 7, "Push": 0, "bets_excluding_pushes": 18, "bets_including_pushes": 18, "win_pct": 0.6111111111111112, "units": 0.3713496976223553, "roi": 0.0206305387567975, "avg_odds": -98.11111111111111, "avg_ev": 0.0511776223616039, "avg_kelly": 0.08734054027976, "avg_model_prob": 0.6199104672417433, "avg_my_model_prob": null, "expected_win_rate": 0.6199104672417433, "realized_win_rate": 0.6111111111111112, "calibration_gap": -0.008799356130632, "brier_score": 0.2032551881569822, "log_loss": 0.5893757150198499, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "moneyline", "through_game_date": "2026_10_02", "Win": 3, "Loss": 1, "Push": 0, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "win_pct": 0.75, "units": 0.4309573328291423, "roi": 0.1077393332072855, "avg_odds": -197.75, "avg_ev": 0.0408916310885928, "avg_kelly": 0.0866872949347609, "avg_model_prob": 0.6887748850639962, "avg_my_model_prob": null, "expected_win_rate": 0.6887748850639962, "realized_win_rate": 0.75, "calibration_gap": 0.0612251149360038, "brier_score": 0.1534780838259944, "log_loss": 0.4835533219723791, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "puck_line", "through_game_date": "2026_10_02", "Win": 4, "Loss": 0, "Push": 0, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "win_pct": 1.0, "units": 1.8103923647932127, "roi": 0.4525980911983033, "avg_odds": -222.5, "avg_ev": 0.0885594049853198, "avg_kelly": 0.1999268851173065, "avg_model_prob": 0.7525292201528371, "avg_my_model_prob": null, "expected_win_rate": 0.7525292201528371, "realized_win_rate": 1.0, "calibration_gap": 0.2474707798471629, "brier_score": 0.0617385645263711, "log_loss": 0.2847549658156315, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "total", "through_game_date": "2026_10_02", "Win": 4, "Loss": 6, "Push": 0, "bets_excluding_pushes": 10, "bets_including_pushes": 10, "win_pct": 0.4, "units": -1.87, "roi": -0.187, "avg_odds": -8.5, "avg_ev": 0.040339305821322, "avg_kelly": 0.042567300482741, "avg_model_prob": 0.5393171989484047, "avg_my_model_prob": null, "expected_win_rate": 0.5393171989484047, "realized_win_rate": 0.4, "calibration_gap": -0.1393171989484046, "brier_score": 0.2797726793416218, "log_loss": 0.7535529719205255, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "ALL", "through_game_date": "2026_10_03", "Win": 19, "Loss": 11, "Push": 0, "bets_excluding_pushes": 30, "bets_including_pushes": 30, "win_pct": 0.6333333333333333, "units": 2.2904424406281416, "roi": 0.0763480813542713, "avg_odds": -105.43333333333334, "avg_ev": 0.0499532339767003, "avg_kelly": 0.0799777561936576, "avg_model_prob": 0.6093347420460137, "avg_my_model_prob": null, "expected_win_rate": 0.6093347420460137, "realized_win_rate": 0.6333333333333333, "calibration_gap": 0.0239985912873196, "brier_score": 0.2088310866891225, "log_loss": 0.6033976996594126, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "moneyline", "through_game_date": "2026_10_03", "Win": 3, "Loss": 1, "Push": 0, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "win_pct": 0.75, "units": 0.4309573328291423, "roi": 0.1077393332072855, "avg_odds": -197.75, "avg_ev": 0.0408916310885928, "avg_kelly": 0.0866872949347609, "avg_model_prob": 0.6887748850639962, "avg_my_model_prob": null, "expected_win_rate": 0.6887748850639962, "realized_win_rate": 0.75, "calibration_gap": 0.0612251149360038, "brier_score": 0.1534780838259944, "log_loss": 0.4835533219723791, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "puck_line", "through_game_date": "2026_10_03", "Win": 5, "Loss": 0, "Push": 0, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "win_pct": 1.0, "units": 2.245174973488865, "roi": 0.4490349946977731, "avg_odds": -224.0, "avg_ev": 0.0898802517521288, "avg_kelly": 0.2042036656842475, "avg_model_prob": 0.7551931158172858, "avg_my_model_prob": null, "expected_win_rate": 0.7551931158172858, "realized_win_rate": 1.0, "calibration_gap": 0.2448068841827142, "brier_score": 0.0603562180222596, "log_loss": 0.2811581027174058, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "total", "through_game_date": "2026_10_03", "Win": 11, "Loss": 10, "Push": 0, "bets_excluding_pushes": 21, "bets_including_pushes": 21, "win_pct": 0.5238095238095238, "units": -0.3856898656898659, "roi": -0.0183661840804698, "avg_odds": -59.61904761904762, "avg_ev": 0.0421728207707616, "avg_kelly": 0.0491221513166403, "avg_model_prob": 0.5594751020018093, "avg_my_model_prob": null, "expected_win_rate": 0.5594751020018093, "realized_win_rate": 0.5238095238095238, "calibration_gap": -0.0356655781922854, "brier_score": 0.2547256750123047, "log_loss": 0.7029489137288492, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "ALL", "through_game_date": "2026_10_04", "Win": 22, "Loss": 11, "Push": 0, "bets_excluding_pushes": 33, "bets_including_pushes": 33, "win_pct": 0.6666666666666666, "units": 5.060065366721656, "roi": 0.1533353141430805, "avg_odds": -99.78787878787878, "avg_ev": 0.0471062333995396, "avg_kelly": 0.074430808901865, "avg_model_prob": 0.6023184631092176, "avg_my_model_prob": null, "expected_win_rate": 0.6023184631092176, "realized_win_rate": 0.6666666666666666, "calibration_gap": 0.064348203557449, "brier_score": 0.2098159901652792, "log_loss": 0.6060159449420521, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "moneyline", "through_game_date": "2026_10_04", "Win": 3, "Loss": 1, "Push": 0, "bets_excluding_pushes": 4, "bets_including_pushes": 4, "win_pct": 0.75, "units": 0.4309573328291423, "roi": 0.1077393332072855, "avg_odds": -197.75, "avg_ev": 0.0408916310885928, "avg_kelly": 0.0866872949347609, "avg_model_prob": 0.6887748850639962, "avg_my_model_prob": null, "expected_win_rate": 0.6887748850639962, "realized_win_rate": 0.75, "calibration_gap": 0.0612251149360038, "brier_score": 0.1534780838259944, "log_loss": 0.4835533219723791, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "puck_line", "through_game_date": "2026_10_04", "Win": 5, "Loss": 0, "Push": 0, "bets_excluding_pushes": 5, "bets_including_pushes": 5, "win_pct": 1.0, "units": 2.245174973488865, "roi": 0.4490349946977731, "avg_odds": -224.0, "avg_ev": 0.0898802517521288, "avg_kelly": 0.2042036656842475, "avg_model_prob": 0.7551931158172858, "avg_my_model_prob": null, "expected_win_rate": 0.7551931158172858, "realized_win_rate": 1.0, "calibration_gap": 0.2448068841827142, "brier_score": 0.0603562180222596, "log_loss": 0.2811581027174058, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}, {"league": "nhl", "market_type": "total", "through_game_date": "2026_10_04", "Win": 14, "Loss": 10, "Push": 0, "bets_excluding_pushes": 24, "bets_including_pushes": 24, "win_pct": 0.5833333333333334, "units": 2.383933060403649, "roi": 0.0993305441834853, "avg_odds": -57.583333333333336, "avg_ev": 0.039230746627908, "avg_kelly": 0.0453520494000527, "avg_model_prob": 0.5560601734692402, "avg_my_model_prob": null, "expected_win_rate": 0.5560601734692402, "realized_win_rate": 0.5833333333333334, "calibration_gap": 0.0272731598640931, "brier_score": 0.2503430937516225, "log_loss": 0.694105099233799, "my_model_bets": 0, "my_model_expected_win_rate": null, "my_model_realized_win_rate": null, "my_model_calibration_gap": null, "my_model_brier_score": null, "my_model_log_loss": null}]}, "clv": {"headline": {}, "rows": []}}}};
+const DEFAULT_SEASON="current";
+</script>
+</body>
+</html>

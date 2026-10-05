@@ -31,6 +31,7 @@ VALID_PICK_PREFERENCES = {
 COMMON_REQUIRED_SIDE_KEYS = {
     "enabled",
     "prob_bands",
+    "my_model_prob_bands",
     "odds_bands",
     "ev_bands",
     "kelly_bands",
@@ -345,6 +346,7 @@ def validate_side(
 
     band_types = {
         "prob_bands": "prob",
+        "my_model_prob_bands": "prob",
         "odds_bands": "odds",
         "line_bands": "line",
         "edge_bands": "edge",
@@ -469,7 +471,6 @@ def validate_market(
             )
 
 
-
 def validate_secondary_model(
     config,
     errors: list[str],
@@ -480,83 +481,174 @@ def validate_secondary_model(
         add_error(errors, f"{label} MUST BE A MAPPING")
         return
 
-    unknown = sorted(set(config) - SECONDARY_MODEL_REQUIRED_KEYS)
-    if unknown:
-        add_error(errors, f"{label} HAS UNKNOWN KEY(S) | {unknown}")
+    unknown = sorted(
+        set(config)
+        - SECONDARY_MODEL_REQUIRED_KEYS
+    )
 
-    missing = sorted(SECONDARY_MODEL_REQUIRED_KEYS - set(config))
+    if unknown:
+        add_error(
+            errors,
+            f"{label} HAS UNKNOWN KEY(S) | {unknown}",
+        )
+
+    missing = sorted(
+        SECONDARY_MODEL_REQUIRED_KEYS
+        - set(config)
+    )
+
     if missing:
-        add_error(errors, f"{label} MISSING REQUIRED KEY(S) | {missing}")
+        add_error(
+            errors,
+            f"{label} MISSING REQUIRED KEY(S) | {missing}",
+        )
         return
 
-    validate_boolean(config.get("enabled"), f"{label}.enabled", errors)
+    validate_boolean(
+        config.get("enabled"),
+        f"{label}.enabled",
+        errors,
+    )
 
-    mode = config.get("selection_mode")
-    if mode not in VALID_SECONDARY_SELECTION_MODES:
-        add_error(
-            errors,
-            f"{label}.selection_mode INVALID | value={mode!r} | "
-            f"allowed={sorted(VALID_SECONDARY_SELECTION_MODES)}",
-        )
+    mode = config.get(
+        "selection_mode"
+    )
 
-    unavailable = config.get("unavailable_behavior")
-    if unavailable not in VALID_SECONDARY_UNAVAILABLE_BEHAVIORS:
-        add_error(
-            errors,
-            f"{label}.unavailable_behavior INVALID | value={unavailable!r} | "
-            f"allowed={sorted(VALID_SECONDARY_UNAVAILABLE_BEHAVIORS)}",
-        )
-
-    min_rows = config.get("min_train_rows")
     if (
-        not isinstance(min_rows, int)
-        or isinstance(min_rows, bool)
+        mode
+        not in VALID_SECONDARY_SELECTION_MODES
+    ):
+        add_error(
+            errors,
+            f"{label}.selection_mode INVALID | "
+            f"value={mode!r} | "
+            f"allowed="
+            f"{sorted(VALID_SECONDARY_SELECTION_MODES)}",
+        )
+
+    unavailable = config.get(
+        "unavailable_behavior"
+    )
+
+    if (
+        unavailable
+        not in VALID_SECONDARY_UNAVAILABLE_BEHAVIORS
+    ):
+        add_error(
+            errors,
+            f"{label}.unavailable_behavior INVALID | "
+            f"value={unavailable!r} | "
+            f"allowed="
+            f"{sorted(VALID_SECONDARY_UNAVAILABLE_BEHAVIORS)}",
+        )
+
+    min_rows = config.get(
+        "min_train_rows"
+    )
+
+    if (
+        not isinstance(
+            min_rows,
+            int,
+        )
+        or isinstance(
+            min_rows,
+            bool,
+        )
         or min_rows < 100
     ):
         add_error(
             errors,
-            f"{label}.min_train_rows MUST BE AN INTEGER >= 100",
+            f"{label}.min_train_rows "
+            "MUST BE AN INTEGER >= 100",
         )
 
-    quantile = config.get("disagreement_quantile")
+    quantile = config.get(
+        "disagreement_quantile"
+    )
+
     if (
-        not is_finite_number(quantile)
-        or abs(float(quantile) - 0.75) > 1e-12
+        not is_finite_number(
+            quantile
+        )
+        or abs(
+            float(quantile)
+            - 0.75
+        ) > 1e-12
     ):
         add_error(
             errors,
-            f"{label}.disagreement_quantile MUST EQUAL 0.75 FOR THE P6 CONTRACT",
+            f"{label}.disagreement_quantile "
+            "MUST EQUAL 0.75 FOR THE P6 CONTRACT",
         )
 
-    derived = config.get("derived_signal_by_market")
-    if not isinstance(derived, dict):
-        add_error(errors, f"{label}.derived_signal_by_market MUST BE A MAPPING")
+    derived = config.get(
+        "derived_signal_by_market"
+    )
+
+    if not isinstance(
+        derived,
+        dict,
+    ):
+        add_error(
+            errors,
+            f"{label}.derived_signal_by_market "
+            "MUST BE A MAPPING",
+        )
         return
 
-    expected = set(VALID_DERIVED_SIGNAL_BY_MARKET)
-    unknown_markets = sorted(set(derived) - expected)
-    missing_markets = sorted(expected - set(derived))
+    expected = set(
+        VALID_DERIVED_SIGNAL_BY_MARKET
+    )
+
+    unknown_markets = sorted(
+        set(derived)
+        - expected
+    )
+
+    missing_markets = sorted(
+        expected
+        - set(derived)
+    )
+
     if unknown_markets:
         add_error(
             errors,
-            f"{label}.derived_signal_by_market HAS UNKNOWN MARKET(S) | {unknown_markets}",
+            f"{label}.derived_signal_by_market "
+            "HAS UNKNOWN MARKET(S) | "
+            f"{unknown_markets}",
         )
+
     if missing_markets:
         add_error(
             errors,
-            f"{label}.derived_signal_by_market MISSING MARKET(S) | {missing_markets}",
+            f"{label}.derived_signal_by_market "
+            "MISSING MARKET(S) | "
+            f"{missing_markets}",
         )
 
-    for market, allowed in VALID_DERIVED_SIGNAL_BY_MARKET.items():
+    for (
+        market,
+        allowed,
+    ) in (
+        VALID_DERIVED_SIGNAL_BY_MARKET.items()
+    ):
         if market not in derived:
             continue
-        value = derived[market]
+
+        value = derived[
+            market
+        ]
+
         if value not in allowed:
             add_error(
                 errors,
-                f"{label}.derived_signal_by_market.{market} INVALID | "
-                f"value={value!r} | allowed={sorted(allowed)}",
+                f"{label}.derived_signal_by_market."
+                f"{market} INVALID | "
+                f"value={value!r} | "
+                f"allowed={sorted(allowed)}",
             )
+
 
 def validate_config(
     nhl_config,
@@ -570,7 +662,10 @@ def validate_config(
         EXPECTED_MARKETS
     )
 
-    allowed_keys = expected_markets | {"secondary_model"}
+    allowed_keys = (
+        expected_markets
+        | {"secondary_model"}
+    )
 
     unknown_markets = sorted(
         actual_keys
@@ -596,14 +691,20 @@ def validate_config(
             f"{missing_markets}",
         )
 
-    if "secondary_model" not in nhl_config:
+    if (
+        "secondary_model"
+        not in nhl_config
+    ):
         add_error(
             errors,
-            "MISSING REQUIRED markets.nhl.secondary_model",
+            "MISSING REQUIRED "
+            "markets.nhl.secondary_model",
         )
     else:
         validate_secondary_model(
-            nhl_config["secondary_model"],
+            nhl_config[
+                "secondary_model"
+            ],
             errors,
         )
 

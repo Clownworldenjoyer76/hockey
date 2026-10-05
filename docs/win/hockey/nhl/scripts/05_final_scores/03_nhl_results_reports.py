@@ -71,7 +71,6 @@ REPORT_COLUMNS = [
     "avg_ev",
     "avg_kelly",
     "avg_win_prob",
-    "avg_my_model_prob",
 ]
 
 CALIBRATION_METRICS_COLUMNS = [
@@ -85,14 +84,6 @@ CALIBRATION_METRICS_COLUMNS = [
     "log_loss",
     "expected_wins",
     "realized_wins",
-    "my_model_bets",
-    "my_model_expected_win_rate",
-    "my_model_realized_win_rate",
-    "my_model_calibration_gap",
-    "my_model_brier_score",
-    "my_model_log_loss",
-    "my_model_expected_wins",
-    "my_model_realized_wins",
 ]
 
 PROBABILITY_CALIBRATION_COLUMNS = [
@@ -107,14 +98,6 @@ PROBABILITY_CALIBRATION_COLUMNS = [
     "log_loss",
     "expected_wins",
     "realized_wins",
-    "avg_my_model_prob",
-    "my_model_bets",
-    "my_model_realized_win_rate",
-    "my_model_calibration_gap",
-    "my_model_brier_score",
-    "my_model_log_loss",
-    "my_model_expected_wins",
-    "my_model_realized_wins",
 ]
 
 EXPECTED_VS_REALIZED_COLUMNS = [
@@ -126,12 +109,6 @@ EXPECTED_VS_REALIZED_COLUMNS = [
     "difference",
     "expected_wins",
     "realized_wins",
-    "my_model_bets",
-    "my_model_expected_probability",
-    "my_model_realized_probability",
-    "my_model_difference",
-    "my_model_expected_wins",
-    "my_model_realized_wins",
 ]
 
 WALK_FORWARD_COLUMNS = [
@@ -150,18 +127,11 @@ WALK_FORWARD_COLUMNS = [
     "avg_ev",
     "avg_kelly",
     "avg_model_prob",
-    "avg_my_model_prob",
     "expected_win_rate",
     "realized_win_rate",
     "calibration_gap",
     "brier_score",
     "log_loss",
-    "my_model_bets",
-    "my_model_expected_win_rate",
-    "my_model_realized_win_rate",
-    "my_model_calibration_gap",
-    "my_model_brier_score",
-    "my_model_log_loss",
 ]
 
 
@@ -408,7 +378,6 @@ def prepare_df(df: pd.DataFrame) -> pd.DataFrame:
         "dk_odds_american",
         "dk_odds_decimal",
         "model_prob",
-        "my_model_prob",
         "edge",
         "ev",
         "kelly",
@@ -479,17 +448,6 @@ def prepare_df(df: pd.DataFrame) -> pd.DataFrame:
         axis=1,
     )
 
-    df["my_model_prob_bucket"] = df.apply(
-        lambda row: bucket_value(
-            row.get("my_model_prob"),
-            WIN_PROB_BANDS.get(
-                normalize_market(row.get("market_type", "")),
-                [],
-            ),
-        ),
-        axis=1,
-    )
-
     df["side_bucket"] = df["side_group"]
 
     df["total_range_bucket"] = (
@@ -548,10 +506,6 @@ def summarize(
             avg_kelly=("kelly", "mean"),
             avg_win_prob=(
                 "model_prob",
-                "mean",
-            ),
-            avg_my_model_prob=(
-                "my_model_prob",
                 "mean",
             ),
         )
@@ -710,7 +664,6 @@ def write_market_tally(
                 "avg_ev": np.nan,
                 "avg_kelly": np.nan,
                 "avg_win_prob": np.nan,
-                "avg_my_model_prob": np.nan,
             }
 
             rows.append(row)
@@ -767,24 +720,34 @@ def prepare_calibration_df(
     ].copy()
 
     if calibration.empty:
-        for column, dtype in [
-            ("actual_win", float),
-            ("brier_component", float),
-            ("log_loss_component", float),
-            ("calibration_bucket", str),
-            ("my_model_actual_win", float),
-            ("my_model_brier_component", float),
-            ("my_model_log_loss_component", float),
-            ("my_model_calibration_bucket", str),
-        ]:
-            calibration[column] = pd.Series(dtype=dtype)
+        calibration["actual_win"] = (
+            pd.Series(dtype=float)
+        )
+
+        calibration["brier_component"] = (
+            pd.Series(dtype=float)
+        )
+
+        calibration["log_loss_component"] = (
+            pd.Series(dtype=float)
+        )
+
+        calibration["calibration_bucket"] = (
+            pd.Series(dtype=str)
+        )
 
         return calibration
 
     invalid_prob = (
         calibration["model_prob"].isna()
-        | (calibration["model_prob"] < 0.0)
-        | (calibration["model_prob"] > 1.0)
+        | (
+            calibration["model_prob"]
+            < 0.0
+        )
+        | (
+            calibration["model_prob"]
+            > 1.0
+        )
     )
 
     if invalid_prob.any():
@@ -804,35 +767,6 @@ def prepare_calibration_df(
             "CALIBRATION BLOCKED: "
             "win/loss rows contain missing "
             "or out-of-range model_prob "
-            "values | "
-            f"count={len(bad)} | "
-            f"rows={bad.to_dict('records')}"
-        )
-
-    invalid_my_model_prob = (
-        calibration["my_model_prob"].notna()
-        & (
-            (calibration["my_model_prob"] < 0.0)
-            | (calibration["my_model_prob"] > 1.0)
-        )
-    )
-
-    if invalid_my_model_prob.any():
-        bad = calibration.loc[
-            invalid_my_model_prob,
-            [
-                "game_date",
-                "game_id",
-                "market_type",
-                "bet_side",
-                "my_model_prob",
-                "bet_result",
-            ],
-        ]
-
-        raise RuntimeError(
-            "CALIBRATION BLOCKED: "
-            "win/loss rows contain out-of-range my_model_prob "
             "values | "
             f"count={len(bad)} | "
             f"rows={bad.to_dict('records')}"
@@ -865,50 +799,17 @@ def prepare_calibration_df(
     calibration["log_loss_component"] = -(
         calibration["actual_win"]
         * np.log(clipped_prob)
-        + (1.0 - calibration["actual_win"])
-        * np.log(1.0 - clipped_prob)
+        + (
+            1.0
+            - calibration["actual_win"]
+        )
+        * np.log(
+            1.0 - clipped_prob
+        )
     )
 
     calibration["calibration_bucket"] = (
         calibration["model_prob"]
-        .apply(
-            lambda value: bucket_value(
-                value,
-                CALIBRATION_BANDS,
-            )
-        )
-    )
-
-    my_model_valid = calibration["my_model_prob"].notna()
-    calibration["my_model_actual_win"] = (
-        calibration["actual_win"].where(my_model_valid)
-    )
-    calibration["my_model_brier_component"] = (
-        (
-            calibration["my_model_prob"]
-            - calibration["actual_win"]
-        ) ** 2
-    ).where(my_model_valid)
-
-    clipped_my_model_prob = (
-        calibration["my_model_prob"]
-        .clip(
-            LOG_LOSS_EPSILON,
-            1.0 - LOG_LOSS_EPSILON,
-        )
-    )
-
-    calibration["my_model_log_loss_component"] = (
-        -(
-            calibration["actual_win"]
-            * np.log(clipped_my_model_prob)
-            + (1.0 - calibration["actual_win"])
-            * np.log(1.0 - clipped_my_model_prob)
-        )
-    ).where(my_model_valid)
-
-    calibration["my_model_calibration_bucket"] = (
-        calibration["my_model_prob"]
         .apply(
             lambda value: bucket_value(
                 value,
@@ -958,10 +859,6 @@ def calibration_metric_row(
     market_type: str,
 ) -> dict:
     bets = len(scope)
-    my_model_scope = scope[
-        scope["my_model_prob"].notna()
-    ].copy()
-    my_model_bets = len(my_model_scope)
 
     if bets == 0:
         return {
@@ -975,71 +872,45 @@ def calibration_metric_row(
             "log_loss": np.nan,
             "expected_wins": 0.0,
             "realized_wins": 0.0,
-            "my_model_bets": 0,
-            "my_model_expected_win_rate": np.nan,
-            "my_model_realized_win_rate": np.nan,
-            "my_model_calibration_gap": np.nan,
-            "my_model_brier_score": np.nan,
-            "my_model_log_loss": np.nan,
-            "my_model_expected_wins": 0.0,
-            "my_model_realized_wins": 0.0,
         }
 
-    expected_win_rate = scope["model_prob"].mean()
-    realized_win_rate = scope["actual_win"].mean()
-
-    my_model_expected = (
-        my_model_scope["my_model_prob"].mean()
-        if my_model_bets
-        else np.nan
+    expected_win_rate = (
+        scope["model_prob"].mean()
     )
-    my_model_realized = (
-        my_model_scope["actual_win"].mean()
-        if my_model_bets
-        else np.nan
+
+    realized_win_rate = (
+        scope["actual_win"].mean()
     )
 
     return {
         "league": "nhl",
         "market_type": market_type,
         "bets": bets,
-        "expected_win_rate": expected_win_rate,
-        "realized_win_rate": realized_win_rate,
+        "expected_win_rate": (
+            expected_win_rate
+        ),
+        "realized_win_rate": (
+            realized_win_rate
+        ),
         "calibration_gap": (
             realized_win_rate
             - expected_win_rate
         ),
-        "brier_score": scope["brier_component"].mean(),
-        "log_loss": scope["log_loss_component"].mean(),
-        "expected_wins": scope["model_prob"].sum(),
-        "realized_wins": scope["actual_win"].sum(),
-        "my_model_bets": my_model_bets,
-        "my_model_expected_win_rate": my_model_expected,
-        "my_model_realized_win_rate": my_model_realized,
-        "my_model_calibration_gap": (
-            my_model_realized - my_model_expected
-            if my_model_bets
-            else np.nan
+        "brier_score": (
+            scope[
+                "brier_component"
+            ].mean()
         ),
-        "my_model_brier_score": (
-            my_model_scope["my_model_brier_component"].mean()
-            if my_model_bets
-            else np.nan
+        "log_loss": (
+            scope[
+                "log_loss_component"
+            ].mean()
         ),
-        "my_model_log_loss": (
-            my_model_scope["my_model_log_loss_component"].mean()
-            if my_model_bets
-            else np.nan
+        "expected_wins": (
+            scope["model_prob"].sum()
         ),
-        "my_model_expected_wins": (
-            my_model_scope["my_model_prob"].sum()
-            if my_model_bets
-            else 0.0
-        ),
-        "my_model_realized_wins": (
-            my_model_scope["actual_win"].sum()
-            if my_model_bets
-            else 0.0
+        "realized_wins": (
+            scope["actual_win"].sum()
         ),
     }
 
@@ -1120,34 +991,6 @@ def write_probability_calibration(
                     "actual_win",
                     "sum",
                 ),
-                avg_my_model_prob=(
-                    "my_model_prob",
-                    "mean",
-                ),
-                my_model_bets=(
-                    "my_model_prob",
-                    "count",
-                ),
-                my_model_realized_win_rate=(
-                    "my_model_actual_win",
-                    "mean",
-                ),
-                my_model_brier_score=(
-                    "my_model_brier_component",
-                    "mean",
-                ),
-                my_model_log_loss=(
-                    "my_model_log_loss_component",
-                    "mean",
-                ),
-                my_model_expected_wins=(
-                    "my_model_prob",
-                    "sum",
-                ),
-                my_model_realized_wins=(
-                    "my_model_actual_win",
-                    "sum",
-                ),
             )
             .reset_index()
         )
@@ -1166,17 +1009,6 @@ def write_probability_calibration(
             ]
             - grouped[
                 "avg_model_prob"
-            ]
-        )
-
-        grouped[
-            "my_model_calibration_gap"
-        ] = (
-            grouped[
-                "my_model_realized_win_rate"
-            ]
-            - grouped[
-                "avg_my_model_prob"
             ]
         )
 
@@ -1291,81 +1123,66 @@ def write_expected_vs_realized(
         calibration
     ):
         bets = len(scope)
-        my_model_scope = scope[
-            scope["my_model_prob"].notna()
-        ].copy()
-        my_model_bets = len(my_model_scope)
 
         if bets == 0:
             rows.append(
                 {
                     "league": "nhl",
-                    "market_type": market_type,
+                    "market_type": (
+                        market_type
+                    ),
                     "bets": 0,
-                    "expected_probability": np.nan,
-                    "realized_probability": np.nan,
+                    "expected_probability": (
+                        np.nan
+                    ),
+                    "realized_probability": (
+                        np.nan
+                    ),
                     "difference": np.nan,
                     "expected_wins": 0.0,
                     "realized_wins": 0.0,
-                    "my_model_bets": 0,
-                    "my_model_expected_probability": np.nan,
-                    "my_model_realized_probability": np.nan,
-                    "my_model_difference": np.nan,
-                    "my_model_expected_wins": 0.0,
-                    "my_model_realized_wins": 0.0,
                 }
             )
             continue
 
-        expected_probability = scope["model_prob"].mean()
-        realized_probability = scope["actual_win"].mean()
-
-        my_model_expected_probability = (
-            my_model_scope["my_model_prob"].mean()
-            if my_model_bets
-            else np.nan
+        expected_probability = (
+            scope[
+                "model_prob"
+            ].mean()
         )
-        my_model_realized_probability = (
-            my_model_scope["actual_win"].mean()
-            if my_model_bets
-            else np.nan
+
+        realized_probability = (
+            scope[
+                "actual_win"
+            ].mean()
         )
 
         rows.append(
             {
                 "league": "nhl",
-                "market_type": market_type,
+                "market_type": (
+                    market_type
+                ),
                 "bets": bets,
-                "expected_probability": expected_probability,
-                "realized_probability": realized_probability,
+                "expected_probability": (
+                    expected_probability
+                ),
+                "realized_probability": (
+                    realized_probability
+                ),
                 "difference": (
                     realized_probability
                     - expected_probability
                 ),
-                "expected_wins": scope["model_prob"].sum(),
-                "realized_wins": scope["actual_win"].sum(),
-                "my_model_bets": my_model_bets,
-                "my_model_expected_probability": (
-                    my_model_expected_probability
+                "expected_wins": (
+                    scope[
+                        "model_prob"
+                    ].sum()
                 ),
-                "my_model_realized_probability": (
-                    my_model_realized_probability
-                ),
-                "my_model_difference": (
-                    my_model_realized_probability
-                    - my_model_expected_probability
-                    if my_model_bets
-                    else np.nan
-                ),
-                "my_model_expected_wins": (
-                    my_model_scope["my_model_prob"].sum()
-                    if my_model_bets
-                    else 0.0
-                ),
-                "my_model_realized_wins": (
-                    my_model_scope["actual_win"].sum()
-                    if my_model_bets
-                    else 0.0
+                "realized_wins": (
+                    scope[
+                        "actual_win"
+                    ].sum()
                 ),
             }
         )
@@ -1393,28 +1210,57 @@ def walk_forward_scope_row(
     market_type: str,
     through_game_date: str,
 ) -> dict:
-    wins = int(full_scope["is_win"].sum())
-    losses = int(full_scope["is_loss"].sum())
-    pushes = int(full_scope["is_push"].sum())
+    wins = int(
+        full_scope[
+            "is_win"
+        ].sum()
+    )
 
-    bets_excluding_pushes = wins + losses
-    bets_including_pushes = wins + losses + pushes
+    losses = int(
+        full_scope[
+            "is_loss"
+        ].sum()
+    )
 
-    units = full_scope["units"].sum(
-        min_count=1
+    pushes = int(
+        full_scope[
+            "is_push"
+        ].sum()
+    )
+
+    bets_excluding_pushes = (
+        wins + losses
+    )
+
+    bets_including_pushes = (
+        wins
+        + losses
+        + pushes
+    )
+
+    units = (
+        full_scope[
+            "units"
+        ].sum(
+            min_count=1
+        )
     )
 
     win_pct = (
-        wins / bets_excluding_pushes
+        wins
+        / bets_excluding_pushes
         if bets_excluding_pushes > 0
         else np.nan
     )
 
     roi = (
-        units / bets_including_pushes
+        units
+        / bets_including_pushes
         if (
             bets_including_pushes > 0
-            and not pd.isna(units)
+            and not pd.isna(
+                units
+            )
         )
         else np.nan
     )
@@ -1425,69 +1271,89 @@ def walk_forward_scope_row(
         calibration_gap = np.nan
         brier_score = np.nan
         log_loss = np.nan
+
     else:
-        expected_win_rate = calibration_scope["model_prob"].mean()
-        realized_win_rate = calibration_scope["actual_win"].mean()
-        calibration_gap = realized_win_rate - expected_win_rate
-        brier_score = calibration_scope["brier_component"].mean()
-        log_loss = calibration_scope["log_loss_component"].mean()
+        expected_win_rate = (
+            calibration_scope[
+                "model_prob"
+            ].mean()
+        )
 
-    my_model_scope = calibration_scope[
-        calibration_scope["my_model_prob"].notna()
-    ].copy()
-    my_model_bets = len(my_model_scope)
+        realized_win_rate = (
+            calibration_scope[
+                "actual_win"
+            ].mean()
+        )
 
-    my_model_expected_win_rate = (
-        my_model_scope["my_model_prob"].mean()
-        if my_model_bets
-        else np.nan
-    )
-    my_model_realized_win_rate = (
-        my_model_scope["actual_win"].mean()
-        if my_model_bets
-        else np.nan
-    )
+        calibration_gap = (
+            realized_win_rate
+            - expected_win_rate
+        )
+
+        brier_score = (
+            calibration_scope[
+                "brier_component"
+            ].mean()
+        )
+
+        log_loss = (
+            calibration_scope[
+                "log_loss_component"
+            ].mean()
+        )
 
     return {
         "league": "nhl",
         "market_type": market_type,
-        "through_game_date": through_game_date,
+        "through_game_date": (
+            through_game_date
+        ),
         "Win": wins,
         "Loss": losses,
         "Push": pushes,
-        "bets_excluding_pushes": bets_excluding_pushes,
-        "bets_including_pushes": bets_including_pushes,
+        "bets_excluding_pushes": (
+            bets_excluding_pushes
+        ),
+        "bets_including_pushes": (
+            bets_including_pushes
+        ),
         "win_pct": win_pct,
         "units": units,
         "roi": roi,
-        "avg_odds": full_scope["dk_odds_american"].mean(),
-        "avg_ev": full_scope["ev"].mean(),
-        "avg_kelly": full_scope["kelly"].mean(),
-        "avg_model_prob": full_scope["model_prob"].mean(),
-        "avg_my_model_prob": full_scope["my_model_prob"].mean(),
-        "expected_win_rate": expected_win_rate,
-        "realized_win_rate": realized_win_rate,
-        "calibration_gap": calibration_gap,
-        "brier_score": brier_score,
-        "log_loss": log_loss,
-        "my_model_bets": my_model_bets,
-        "my_model_expected_win_rate": my_model_expected_win_rate,
-        "my_model_realized_win_rate": my_model_realized_win_rate,
-        "my_model_calibration_gap": (
-            my_model_realized_win_rate
-            - my_model_expected_win_rate
-            if my_model_bets
-            else np.nan
+        "avg_odds": (
+            full_scope[
+                "dk_odds_american"
+            ].mean()
         ),
-        "my_model_brier_score": (
-            my_model_scope["my_model_brier_component"].mean()
-            if my_model_bets
-            else np.nan
+        "avg_ev": (
+            full_scope[
+                "ev"
+            ].mean()
         ),
-        "my_model_log_loss": (
-            my_model_scope["my_model_log_loss_component"].mean()
-            if my_model_bets
-            else np.nan
+        "avg_kelly": (
+            full_scope[
+                "kelly"
+            ].mean()
+        ),
+        "avg_model_prob": (
+            full_scope[
+                "model_prob"
+            ].mean()
+        ),
+        "expected_win_rate": (
+            expected_win_rate
+        ),
+        "realized_win_rate": (
+            realized_win_rate
+        ),
+        "calibration_gap": (
+            calibration_gap
+        ),
+        "brier_score": (
+            brier_score
+        ),
+        "log_loss": (
+            log_loss
         ),
     }
 
@@ -1706,7 +1572,6 @@ def main() -> None:
         "line",
         "dk_odds_american",
         "model_prob",
-        "my_model_prob",
         "ev",
         "kelly",
         "bet_result",
@@ -1787,15 +1652,6 @@ def main() -> None:
         "win_prob_bucket",
     )
 
-    write_pair(
-        moneyline_df,
-        "moneyline",
-        MONEYLINE_DIR,
-        "nhl_moneyline",
-        "my_model_prob",
-        "my_model_prob_bucket",
-    )
-
     ###########################################################
     # PUCK LINE
     ###########################################################
@@ -1843,15 +1699,6 @@ def main() -> None:
         "nhl_puck_line",
         "win_prob",
         "win_prob_bucket",
-    )
-
-    write_pair(
-        puckline_df,
-        "puck_line",
-        PUCKLINE_DIR,
-        "nhl_puck_line",
-        "my_model_prob",
-        "my_model_prob_bucket",
     )
 
     ###########################################################
@@ -1910,15 +1757,6 @@ def main() -> None:
         "nhl_total",
         "win_prob",
         "win_prob_bucket",
-    )
-
-    write_pair(
-        total_df,
-        "total",
-        TOTAL_DIR,
-        "nhl_total",
-        "my_model_prob",
-        "my_model_prob_bucket",
     )
 
     write_market_tally(

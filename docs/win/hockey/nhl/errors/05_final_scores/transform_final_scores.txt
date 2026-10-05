@@ -1,38 +1,47 @@
-2026-10-02T09:49:30.156963+00:00 | === transform_final_scores START ===
-2026-10-02T09:49:30.157028+00:00 | TARGET_DATE_SOURCE=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/04_select
-2026-10-02T09:49:30.157063+00:00 | DRAT_CHECK_DIR=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw
-2026-10-02T09:49:30.157090+00:00 | OUT_DIR=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/final_scores
-2026-10-02T09:49:30.157117+00:00 | STATUS_FILE=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv
-2026-10-02T09:49:30.157454+00:00 | Stage 04 target dates discovered: 4
-2026-10-02T09:49:30.157509+00:00 | CURRENT_GAME_DATE_ET=2026_10_02
-2026-10-02T09:49:30.173806+00:00 | Loaded existing official NHL status history: rows=292
-2026-10-02T09:49:30.197461+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_09_29_nhl_raw.json
-2026-10-02T09:49:30.199487+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_09_30_nhl_raw.json
-2026-10-02T09:49:30.200533+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_01_nhl_raw.json
-2026-10-02T09:49:30.201775+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_02_nhl_raw.json
-2026-10-02T09:49:30.212105+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_29 | preserved_final_rows=5
-2026-10-02T09:49:30.220369+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_30 | preserved_final_rows=3
-2026-10-02T09:49:30.220934+00:00 | Processing official NHL final scores for 2026_10_01
-2026-10-02T09:49:30.221011+00:00 | Fetching official NHL scores: https://api-web.nhle.com/v1/score/2026-10-01
-2026-10-02T09:49:30.285189+00:00 | DRAT CHECK MISSING: 2026_10_01 | Flyers at Devils | official_game_id=2026020009
-2026-10-02T09:49:30.285367+00:00 | DRAT CHECK MISSING: 2026_10_01 | Lightning at Rangers | official_game_id=2026020010
-2026-10-02T09:49:30.285488+00:00 | DRAT CHECK MISSING: 2026_10_01 | Sabres at Blue Jackets | official_game_id=2026020011
-2026-10-02T09:49:30.285611+00:00 | DRAT CHECK MISSING: 2026_10_01 | Wild at Predators | official_game_id=2026020012
-2026-10-02T09:49:30.285748+00:00 | DRAT CHECK MISSING: 2026_10_01 | Kraken at Flames | official_game_id=2026020014
-2026-10-02T09:49:30.285858+00:00 | DRAT CHECK MISSING: 2026_10_01 | Blackhawks at Mammoth | official_game_id=2026020013
-2026-10-02T09:49:30.285963+00:00 | DRAT CHECK MISSING: 2026_10_01 | Oilers at Canucks | official_game_id=2026020015
-2026-10-02T09:49:30.286070+00:00 | DRAT CHECK MISSING: 2026_10_01 | Panthers at Sharks | official_game_id=2026020016
-2026-10-02T09:49:30.292681+00:00 | WROTE OFFICIAL FINAL SCORES: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/final_scores/2026_10_01_NHL_final_scores.csv | rows=8
-2026-10-02T09:49:30.292736+00:00 | Processing official NHL final scores for 2026_10_02
-2026-10-02T09:49:30.292801+00:00 | Fetching official NHL scores: https://api-web.nhle.com/v1/score/2026-10-02
-2026-10-02T09:49:30.336666+00:00 | No officially final NHL games for 2026_10_02
-2026-10-02T09:49:30.350978+00:00 | WROTE OFFICIAL NHL GAME STATUS: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv | rows=297
-2026-10-02T09:49:30.351079+00:00 | Stage 04 target dates considered: 4
-2026-10-02T09:49:30.351123+00:00 | Official NHL dates queried: 2
-2026-10-02T09:49:30.351150+00:00 | Completed historical dates skipped: 2
-2026-10-02T09:49:30.351174+00:00 | Existing final-score rows preserved without refetch/replacement: 8
-2026-10-02T09:49:30.351196+00:00 | Official NHL status rows written: 297
-2026-10-02T09:49:30.351218+00:00 | D-Ratings check files processed: 4
-2026-10-02T09:49:30.351240+00:00 | Official final-score rows written on queried dates: 8
-2026-10-02T09:49:30.351267+00:00 | Official final-score files written on queried dates: 1
-2026-10-02T09:49:30.351290+00:00 | === transform_final_scores END ===
+2026-10-04T09:49:26.707106+00:00 | === transform_final_scores START ===
+2026-10-04T09:49:26.707208+00:00 | TARGET_DATE_SOURCE=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/04_select
+2026-10-04T09:49:26.707251+00:00 | DRAT_CHECK_DIR=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw
+2026-10-04T09:49:26.707278+00:00 | OUT_DIR=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/final_scores
+2026-10-04T09:49:26.707305+00:00 | STATUS_FILE=/home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv
+2026-10-04T09:49:26.707638+00:00 | Stage 04 target dates discovered: 6
+2026-10-04T09:49:26.707690+00:00 | CURRENT_GAME_DATE_ET=2026_10_04
+2026-10-04T09:49:26.727386+00:00 | Loaded existing official NHL status history: rows=310
+2026-10-04T09:49:26.751655+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_09_29_nhl_raw.json
+2026-10-04T09:49:26.753649+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_09_30_nhl_raw.json
+2026-10-04T09:49:26.754657+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_01_nhl_raw.json
+2026-10-04T09:49:26.755754+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_02_nhl_raw.json
+2026-10-04T09:49:26.756752+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_03_nhl_raw.json
+2026-10-04T09:49:26.757915+00:00 | Reading D-Ratings check source: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_04_nhl_raw.json
+2026-10-04T09:49:26.768853+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_29 | preserved_final_rows=5
+2026-10-04T09:49:26.776823+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_30 | preserved_final_rows=3
+2026-10-04T09:49:26.785859+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_01 | preserved_final_rows=8
+2026-10-04T09:49:26.794357+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_02 | preserved_final_rows=5
+2026-10-04T09:49:26.794843+00:00 | Processing official NHL final scores for 2026_10_03
+2026-10-04T09:49:26.794917+00:00 | Fetching official NHL scores: https://api-web.nhle.com/v1/score/2026-10-03
+2026-10-04T09:49:26.840397+00:00 | DRAT CHECK MISSING: 2026_10_03 | Blackhawks at Sabres | official_game_id=2026020022
+2026-10-04T09:49:26.840551+00:00 | DRAT CHECK MISSING: 2026_10_03 | Senators at Maple Leafs | official_game_id=2026020023
+2026-10-04T09:49:26.840663+00:00 | DRAT CHECK MISSING: 2026_10_03 | Capitals at Lightning | official_game_id=2026020024
+2026-10-04T09:49:26.840770+00:00 | DRAT CHECK MISSING: 2026_10_03 | Hurricanes at Flyers | official_game_id=2026020025
+2026-10-04T09:49:26.840876+00:00 | DRAT CHECK MISSING: 2026_10_03 | Canadiens at Penguins | official_game_id=2026020026
+2026-10-04T09:49:26.840981+00:00 | DRAT CHECK MISSING: 2026_10_03 | Mammoth at Blue Jackets | official_game_id=2026020027
+2026-10-04T09:49:26.841096+00:00 | DRAT CHECK MISSING: 2026_10_03 | Kraken at Oilers | official_game_id=2026020028
+2026-10-04T09:49:26.841228+00:00 | DRAT CHECK MISSING: 2026_10_03 | Devils at Islanders | official_game_id=2026020029
+2026-10-04T09:49:26.841333+00:00 | DRAT CHECK MISSING: 2026_10_03 | Stars at Predators | official_game_id=2026020030
+2026-10-04T09:49:26.841434+00:00 | DRAT CHECK MISSING: 2026_10_03 | Bruins at Wild | official_game_id=2026020031
+2026-10-04T09:49:26.841536+00:00 | DRAT CHECK MISSING: 2026_10_03 | Blues at Avalanche | official_game_id=2026020032
+2026-10-04T09:49:26.841636+00:00 | DRAT CHECK MISSING: 2026_10_03 | Flames at Canucks | official_game_id=2026020033
+2026-10-04T09:49:26.841734+00:00 | DRAT CHECK MISSING: 2026_10_03 | Kings at Sharks | official_game_id=2026020034
+2026-10-04T09:49:26.847711+00:00 | WROTE OFFICIAL FINAL SCORES: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/final_scores/2026_10_03_NHL_final_scores.csv | rows=13
+2026-10-04T09:49:26.847795+00:00 | Processing official NHL final scores for 2026_10_04
+2026-10-04T09:49:26.847865+00:00 | Fetching official NHL scores: https://api-web.nhle.com/v1/score/2026-10-04
+2026-10-04T09:49:26.886665+00:00 | No officially final NHL games for 2026_10_04
+2026-10-04T09:49:26.900729+00:00 | WROTE OFFICIAL NHL GAME STATUS: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv | rows=315
+2026-10-04T09:49:26.900828+00:00 | Stage 04 target dates considered: 6
+2026-10-04T09:49:26.900889+00:00 | Official NHL dates queried: 2
+2026-10-04T09:49:26.900914+00:00 | Completed historical dates skipped: 4
+2026-10-04T09:49:26.900937+00:00 | Existing final-score rows preserved without refetch/replacement: 21
+2026-10-04T09:49:26.900958+00:00 | Official NHL status rows written: 315
+2026-10-04T09:49:26.900979+00:00 | D-Ratings check files processed: 6
+2026-10-04T09:49:26.900999+00:00 | Official final-score rows written on queried dates: 13
+2026-10-04T09:49:26.901020+00:00 | Official final-score files written on queried dates: 1
+2026-10-04T09:49:26.901040+00:00 | === transform_final_scores END ===

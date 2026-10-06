@@ -1,70 +1,70 @@
-=== apply_puck_line_juice RUN 2026-10-06T14:47:36.161931+00:00 ===
-2026-10-06T14:47:36.164285+00:00 | Wiped puck_line output/quarantine CSVs: 16
-2026-10-06T14:47:36.164313+00:00 | INPUT_DIR: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced
-2026-10-06T14:47:36.164331+00:00 | OUTPUT_DIR: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice
-2026-10-06T14:47:36.164347+00:00 | JUICE_FILE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/config/juice/nhl_puck_line_juice.csv
-2026-10-06T14:47:36.164362+00:00 | QUARANTINE_DIR: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice
-2026-10-06T14:47:36.171856+00:00 | Input files found: 8
-2026-10-06T14:47:36.171897+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_09_29_NHL_puck_line.csv
-2026-10-06T14:47:36.186808+00:00 | ROW QUARANTINE: 2026_09_29_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=0.9239519178246814 home_juiced_decimal=4.923664892174759
-2026-10-06T14:47:36.188419+00:00 | ROW QUARANTINE: 2026_09_29_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=0.9152531069139979 home_juiced_decimal=5.057654942781123
-2026-10-06T14:47:36.196747+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_09_29_NHL_puck_line.csv rows=3 applied=3
-2026-10-06T14:47:36.196774+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_09_29_NHL_puck_line_quarantine.csv rows=2
-2026-10-06T14:47:36.196793+00:00 | FILE SUMMARY: 2026_09_29_NHL_puck_line.csv input=5 accepted=3 quarantined=2 bad=2 no_band=0
-2026-10-06T14:47:36.196983+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_09_30_NHL_puck_line.csv
-2026-10-06T14:47:36.207378+00:00 | ROW QUARANTINE: 2026_09_30_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=0.9899337912615116 home_juiced_decimal=4.152222071049074
-2026-10-06T14:47:36.212464+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_09_30_NHL_puck_line.csv rows=2 applied=2
-2026-10-06T14:47:36.212489+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_09_30_NHL_puck_line_quarantine.csv rows=1
-2026-10-06T14:47:36.212507+00:00 | FILE SUMMARY: 2026_09_30_NHL_puck_line.csv input=3 accepted=2 quarantined=1 bad=1 no_band=0
-2026-10-06T14:47:36.212703+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_10_01_NHL_puck_line.csv
-2026-10-06T14:47:36.223625+00:00 | ROW QUARANTINE: 2026_10_01_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=0.9449425316841774 home_juiced_decimal=4.6365726309800825
-2026-10-06T14:47:36.226641+00:00 | ROW QUARANTINE: 2026_10_01_NHL_puck_line.csv row_number=5 reason=bad_juiced_decimal away_juiced_decimal=0.9654910150865995 home_juiced_decimal=4.396419688486
-2026-10-06T14:47:36.233858+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_10_01_NHL_puck_line.csv rows=6 applied=6
-2026-10-06T14:47:36.233886+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_10_01_NHL_puck_line_quarantine.csv rows=2
-2026-10-06T14:47:36.233904+00:00 | FILE SUMMARY: 2026_10_01_NHL_puck_line.csv input=8 accepted=6 quarantined=2 bad=2 no_band=0
-2026-10-06T14:47:36.234145+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_10_02_NHL_puck_line.csv
-2026-10-06T14:47:36.242152+00:00 | ROW QUARANTINE: 2026_10_02_NHL_puck_line.csv row_number=0 reason=bad_juiced_decimal away_juiced_decimal=0.9846961441104711 home_juiced_decimal=4.201251023641097
-2026-10-06T14:47:36.249905+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_10_02_NHL_puck_line.csv rows=4 applied=4
-2026-10-06T14:47:36.249928+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_10_02_NHL_puck_line_quarantine.csv rows=1
-2026-10-06T14:47:36.249945+00:00 | FILE SUMMARY: 2026_10_02_NHL_puck_line.csv input=5 accepted=4 quarantined=1 bad=1 no_band=0
-2026-10-06T14:47:36.250066+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_10_03_NHL_puck_line.csv
-2026-10-06T14:47:36.258768+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=0.9574274348013183 home_juiced_decimal=4.486418822035691
-2026-10-06T14:47:36.261532+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=4 reason=bad_juiced_decimal away_juiced_decimal=4.552162414950356 home_juiced_decimal=0.9154569572467411
-2026-10-06T14:47:36.262602+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=5 reason=bad_juiced_decimal away_juiced_decimal=5.090921999956207 home_juiced_decimal=0.8775305614939699
-2026-10-06T14:47:36.264477+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=7 reason=bad_juiced_decimal away_juiced_decimal=4.376090240427859 home_juiced_decimal=0.9307508720291839
-2026-10-06T14:47:36.265526+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=8 reason=bad_juiced_decimal away_juiced_decimal=3.9429501999498466 home_juiced_decimal=0.9771125772866011
-2026-10-06T14:47:36.268215+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=11 reason=bad_juiced_decimal away_juiced_decimal=0.9622983394511979 home_juiced_decimal=4.431438894463708
-2026-10-06T14:47:36.269254+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=12 reason=bad_juiced_decimal away_juiced_decimal=0.8591360237850978 home_juiced_decimal=6.234797486967215
-2026-10-06T14:47:36.274224+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_10_03_NHL_puck_line.csv rows=6 applied=6
-2026-10-06T14:47:36.274245+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_10_03_NHL_puck_line_quarantine.csv rows=7
-2026-10-06T14:47:36.274262+00:00 | FILE SUMMARY: 2026_10_03_NHL_puck_line.csv input=13 accepted=6 quarantined=7 bad=7 no_band=0
-2026-10-06T14:47:36.274457+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_10_04_NHL_puck_line.csv
-2026-10-06T14:47:36.282340+00:00 | ROW QUARANTINE: 2026_10_04_NHL_puck_line.csv row_number=0 reason=bad_juiced_decimal away_juiced_decimal=5.579086697116003 home_juiced_decimal=0.8514516399915
-2026-10-06T14:47:36.283438+00:00 | ROW QUARANTINE: 2026_10_04_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=0.9865087079717709 home_juiced_decimal=4.184094242703915
-2026-10-06T14:47:36.284501+00:00 | ROW QUARANTINE: 2026_10_04_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=4.054525441645213 home_juiced_decimal=0.9637655941806812
-2026-10-06T14:47:36.290707+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_10_04_NHL_puck_line.csv rows=2 applied=2
-2026-10-06T14:47:36.290730+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_10_04_NHL_puck_line_quarantine.csv rows=3
-2026-10-06T14:47:36.290747+00:00 | FILE SUMMARY: 2026_10_04_NHL_puck_line.csv input=5 accepted=2 quarantined=3 bad=3 no_band=0
-2026-10-06T14:47:36.290905+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_10_05_NHL_puck_line.csv
-2026-10-06T14:47:36.299781+00:00 | ROW QUARANTINE: 2026_10_05_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=4.45797453928451 home_juiced_decimal=0.9234247806215895
-2026-10-06T14:47:36.306069+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_10_05_NHL_puck_line.csv rows=3 applied=3
-2026-10-06T14:47:36.306092+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_10_05_NHL_puck_line_quarantine.csv rows=1
-2026-10-06T14:47:36.306108+00:00 | FILE SUMMARY: 2026_10_05_NHL_puck_line.csv input=4 accepted=3 quarantined=1 bad=1 no_band=0
-2026-10-06T14:47:36.306254+00:00 | Processing input: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/01_merge/01_merguiced/2026_10_06_NHL_puck_line.csv
-2026-10-06T14:47:36.315193+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=4.096954347039644 home_juiced_decimal=0.9589715900135938
-2026-10-06T14:47:36.316302+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=4.929831507290051 home_juiced_decimal=0.8876842238390544
-2026-10-06T14:47:36.317399+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=3 reason=bad_juiced_decimal away_juiced_decimal=0.920953866712141 home_juiced_decimal=4.968752081310582
-2026-10-06T14:47:36.319316+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=5 reason=bad_juiced_decimal away_juiced_decimal=4.971746197158582 home_juiced_decimal=0.8849560877663429
-2026-10-06T14:47:36.320439+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=6 reason=bad_juiced_decimal away_juiced_decimal=4.181348097479858 home_juiced_decimal=0.9498586577968919
-2026-10-06T14:47:36.322377+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=8 reason=bad_juiced_decimal away_juiced_decimal=4.6615804841164685 home_juiced_decimal=0.9067647267747496
-2026-10-06T14:47:36.327752+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice/2026_10_06_NHL_puck_line.csv rows=3 applied=3
-2026-10-06T14:47:36.327774+00:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/02_juice/2026_10_06_NHL_puck_line_quarantine.csv rows=6
-2026-10-06T14:47:36.327791+00:00 | FILE SUMMARY: 2026_10_06_NHL_puck_line.csv input=9 accepted=3 quarantined=6 bad=6 no_band=0
-2026-10-06T14:47:36.327984+00:00 | --- SUMMARY ---
-2026-10-06T14:47:36.328001+00:00 | Files processed: 8
-2026-10-06T14:47:36.328014+00:00 | Files written: 8
-2026-10-06T14:47:36.328028+00:00 | Rows applied: 29
-2026-10-06T14:47:36.328041+00:00 | Rows quarantined bad: 23
-2026-10-06T14:47:36.328054+00:00 | Rows quarantined no band: 0
-2026-10-06T14:47:36.328067+00:00 | Rows quarantined total: 23
-2026-10-06T14:47:36.328080+00:00 | STATUS: SUCCESS
+=== apply_puck_line_juice RUN 2026-10-06T16:03:09.507893+00:00 ===
+2026-10-06T16:03:09.507893+00:00 | Wiped puck_line output/quarantine CSVs: 16
+2026-10-06T16:03:09.507893+00:00 | INPUT_DIR: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced
+2026-10-06T16:03:09.507893+00:00 | OUTPUT_DIR: G:\hockey\docs\win\hockey\nhl\02_juice
+2026-10-06T16:03:09.507893+00:00 | JUICE_FILE: G:\hockey\docs\win\hockey\nhl\config\juice\nhl_puck_line_juice.csv
+2026-10-06T16:03:09.507893+00:00 | QUARANTINE_DIR: G:\hockey\docs\win\hockey\nhl\errors\02_juice
+2026-10-06T16:03:09.523710+00:00 | Input files found: 8
+2026-10-06T16:03:09.523710+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_09_29_NHL_puck_line.csv
+2026-10-06T16:03:09.555805+00:00 | ROW QUARANTINE: 2026_09_29_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=0.9239519178246814 home_juiced_decimal=4.923664892174756
+2026-10-06T16:03:09.557310+00:00 | ROW QUARANTINE: 2026_09_29_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=0.9152531069139979 home_juiced_decimal=5.0576549427811175
+2026-10-06T16:03:09.571519+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_09_29_NHL_puck_line.csv rows=3 applied=3
+2026-10-06T16:03:09.571519+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_09_29_NHL_puck_line_quarantine.csv rows=2
+2026-10-06T16:03:09.571519+00:00 | FILE SUMMARY: 2026_09_29_NHL_puck_line.csv input=5 accepted=3 quarantined=2 bad=2 no_band=0
+2026-10-06T16:03:09.571519+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_09_30_NHL_puck_line.csv
+2026-10-06T16:03:09.586925+00:00 | ROW QUARANTINE: 2026_09_30_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=0.9899337912615116 home_juiced_decimal=4.152222071049077
+2026-10-06T16:03:09.602937+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_09_30_NHL_puck_line.csv rows=2 applied=2
+2026-10-06T16:03:09.602937+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_09_30_NHL_puck_line_quarantine.csv rows=1
+2026-10-06T16:03:09.602937+00:00 | FILE SUMMARY: 2026_09_30_NHL_puck_line.csv input=3 accepted=2 quarantined=1 bad=1 no_band=0
+2026-10-06T16:03:09.602937+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_10_01_NHL_puck_line.csv
+2026-10-06T16:03:09.635456+00:00 | ROW QUARANTINE: 2026_10_01_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=0.9449425316841774 home_juiced_decimal=4.636572630980081
+2026-10-06T16:03:09.635456+00:00 | ROW QUARANTINE: 2026_10_01_NHL_puck_line.csv row_number=5 reason=bad_juiced_decimal away_juiced_decimal=0.9654910150865995 home_juiced_decimal=4.396419688486006
+2026-10-06T16:03:09.653811+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_10_01_NHL_puck_line.csv rows=6 applied=6
+2026-10-06T16:03:09.653811+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_10_01_NHL_puck_line_quarantine.csv rows=2
+2026-10-06T16:03:09.653811+00:00 | FILE SUMMARY: 2026_10_01_NHL_puck_line.csv input=8 accepted=6 quarantined=2 bad=2 no_band=0
+2026-10-06T16:03:09.653811+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_10_02_NHL_puck_line.csv
+2026-10-06T16:03:09.676292+00:00 | ROW QUARANTINE: 2026_10_02_NHL_puck_line.csv row_number=0 reason=bad_juiced_decimal away_juiced_decimal=0.9846961441104711 home_juiced_decimal=4.201251023641099
+2026-10-06T16:03:09.691849+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_10_02_NHL_puck_line.csv rows=4 applied=4
+2026-10-06T16:03:09.691849+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_10_02_NHL_puck_line_quarantine.csv rows=1
+2026-10-06T16:03:09.692853+00:00 | FILE SUMMARY: 2026_10_02_NHL_puck_line.csv input=5 accepted=4 quarantined=1 bad=1 no_band=0
+2026-10-06T16:03:09.692853+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_10_03_NHL_puck_line.csv
+2026-10-06T16:03:09.714090+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=0.9574274348013183 home_juiced_decimal=4.486418822035691
+2026-10-06T16:03:09.722739+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=4 reason=bad_juiced_decimal away_juiced_decimal=4.552162414950361 home_juiced_decimal=0.9154569572467411
+2026-10-06T16:03:09.722739+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=5 reason=bad_juiced_decimal away_juiced_decimal=5.09092199995621 home_juiced_decimal=0.8775305614939699
+2026-10-06T16:03:09.722739+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=7 reason=bad_juiced_decimal away_juiced_decimal=4.376090240427859 home_juiced_decimal=0.9307508720291839
+2026-10-06T16:03:09.731791+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=8 reason=bad_juiced_decimal away_juiced_decimal=3.942950199949849 home_juiced_decimal=0.9771125772866011
+2026-10-06T16:03:09.732296+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=11 reason=bad_juiced_decimal away_juiced_decimal=0.9622983394511979 home_juiced_decimal=4.431438894463707
+2026-10-06T16:03:09.732296+00:00 | ROW QUARANTINE: 2026_10_03_NHL_puck_line.csv row_number=12 reason=bad_juiced_decimal away_juiced_decimal=0.8591360237850978 home_juiced_decimal=6.234797486967222
+2026-10-06T16:03:09.748683+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_10_03_NHL_puck_line.csv rows=6 applied=6
+2026-10-06T16:03:09.748683+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_10_03_NHL_puck_line_quarantine.csv rows=7
+2026-10-06T16:03:09.748683+00:00 | FILE SUMMARY: 2026_10_03_NHL_puck_line.csv input=13 accepted=6 quarantined=7 bad=7 no_band=0
+2026-10-06T16:03:09.748683+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_10_04_NHL_puck_line.csv
+2026-10-06T16:03:09.773257+00:00 | ROW QUARANTINE: 2026_10_04_NHL_puck_line.csv row_number=0 reason=bad_juiced_decimal away_juiced_decimal=5.579086697116008 home_juiced_decimal=0.8514516399915
+2026-10-06T16:03:09.775263+00:00 | ROW QUARANTINE: 2026_10_04_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=0.9865087079717709 home_juiced_decimal=4.184094242703911
+2026-10-06T16:03:09.777270+00:00 | ROW QUARANTINE: 2026_10_04_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=4.054525441645211 home_juiced_decimal=0.9637655941806812
+2026-10-06T16:03:09.781835+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_10_04_NHL_puck_line.csv rows=2 applied=2
+2026-10-06T16:03:09.781835+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_10_04_NHL_puck_line_quarantine.csv rows=3
+2026-10-06T16:03:09.781835+00:00 | FILE SUMMARY: 2026_10_04_NHL_puck_line.csv input=5 accepted=2 quarantined=3 bad=3 no_band=0
+2026-10-06T16:03:09.781835+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_10_05_NHL_puck_line.csv
+2026-10-06T16:03:09.812910+00:00 | ROW QUARANTINE: 2026_10_05_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=4.457974539284509 home_juiced_decimal=0.9234247806215895
+2026-10-06T16:03:09.812910+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_10_05_NHL_puck_line.csv rows=3 applied=3
+2026-10-06T16:03:09.812910+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_10_05_NHL_puck_line_quarantine.csv rows=1
+2026-10-06T16:03:09.812910+00:00 | FILE SUMMARY: 2026_10_05_NHL_puck_line.csv input=4 accepted=3 quarantined=1 bad=1 no_band=0
+2026-10-06T16:03:09.812910+00:00 | Processing input: G:\hockey\docs\win\hockey\nhl\01_merge\01_merguiced\2026_10_06_NHL_puck_line.csv
+2026-10-06T16:03:09.844777+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=1 reason=bad_juiced_decimal away_juiced_decimal=3.812978038333968 home_juiced_decimal=0.9941666901219042
+2026-10-06T16:03:09.844777+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=2 reason=bad_juiced_decimal away_juiced_decimal=5.008915597887485 home_juiced_decimal=0.8825886774127734
+2026-10-06T16:03:09.844777+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=3 reason=bad_juiced_decimal away_juiced_decimal=0.9351442378770383 home_juiced_decimal=4.7647068942471105
+2026-10-06T16:03:09.857958+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=5 reason=bad_juiced_decimal away_juiced_decimal=4.90151637295201 home_juiced_decimal=0.8895633331400371
+2026-10-06T16:03:09.860474+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=6 reason=bad_juiced_decimal away_juiced_decimal=4.371213059443327 home_juiced_decimal=0.9311996354513957
+2026-10-06T16:03:09.860474+00:00 | ROW QUARANTINE: 2026_10_06_NHL_puck_line.csv row_number=8 reason=bad_juiced_decimal away_juiced_decimal=4.413590975613849 home_juiced_decimal=0.927347589504702
+2026-10-06T16:03:09.860474+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\02_juice\2026_10_06_NHL_puck_line.csv rows=3 applied=3
+2026-10-06T16:03:09.860474+00:00 | WROTE G:\hockey\docs\win\hockey\nhl\errors\02_juice\2026_10_06_NHL_puck_line_quarantine.csv rows=6
+2026-10-06T16:03:09.860474+00:00 | FILE SUMMARY: 2026_10_06_NHL_puck_line.csv input=9 accepted=3 quarantined=6 bad=6 no_band=0
+2026-10-06T16:03:09.860474+00:00 | --- SUMMARY ---
+2026-10-06T16:03:09.860474+00:00 | Files processed: 8
+2026-10-06T16:03:09.860474+00:00 | Files written: 8
+2026-10-06T16:03:09.860474+00:00 | Rows applied: 29
+2026-10-06T16:03:09.876535+00:00 | Rows quarantined bad: 23
+2026-10-06T16:03:09.876535+00:00 | Rows quarantined no band: 0
+2026-10-06T16:03:09.876535+00:00 | Rows quarantined total: 23
+2026-10-06T16:03:09.876535+00:00 | STATUS: SUCCESS

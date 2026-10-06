@@ -3140,80 +3140,135 @@ def fatigue_features_for_game(
 
 
 def load_sdv_prediction_index() -> dict[str, dict[str, str]]:
-    if not SDV_PREDICTIONS_PATH.exists():
+    archive_dir = SDV_PREDICTIONS_PATH.parent
+
+    prediction_files = sorted(
+        archive_dir.glob("*_ET_predictions.csv")
+    )
+
+    if SDV_PREDICTIONS_PATH.exists():
+        prediction_files.append(
+            SDV_PREDICTIONS_PATH
+        )
+
+    if not prediction_files:
         log(
-            "No current SportsDataverse prediction file found; "
+            "No SportsDataverse prediction files found; "
             "SDV challenger fields will remain blank: "
-            f"{SDV_PREDICTIONS_PATH}"
+            f"{archive_dir}"
         )
         return {}
 
-    fieldnames, rows = load_csv(
-        SDV_PREDICTIONS_PATH
-    )
-
-    validate_required_columns(
-        SDV_PREDICTIONS_PATH,
-        fieldnames,
-        REQUIRED_SDV_PREDICTION_COLUMNS,
-    )
-
     index: dict[str, dict[str, str]] = {}
+    source_by_game_id: dict[str, Path] = {}
 
-    for row_number, row in enumerate(rows, start=2):
-        game_id = str(row.get("game_id", "")).strip()
+    mappings = {
+        "sdv_home_win_prob": "home_win_prob",
+        "sdv_exp_margin": "exp_margin",
+        "sdv_exp_total": "exp_total",
+    }
 
-        if not GAME_ID_RE.fullmatch(game_id):
-            fail(
-                "SportsDataverse prediction file has non-canonical game_id: "
-                f"{SDV_PREDICTIONS_PATH} row={row_number} game_id={game_id!r}"
+    for prediction_path in prediction_files:
+        fieldnames, rows = load_csv(
+            prediction_path
+        )
+
+        validate_required_columns(
+            prediction_path,
+            fieldnames,
+            REQUIRED_SDV_PREDICTION_COLUMNS,
+        )
+
+        for row_number, row in enumerate(
+            rows,
+            start=2,
+        ):
+            game_id = str(
+                row.get("game_id", "")
+            ).strip()
+
+            if not GAME_ID_RE.fullmatch(game_id):
+                fail(
+                    "SportsDataverse prediction file has "
+                    "non-canonical game_id: "
+                    f"{prediction_path} "
+                    f"row={row_number} "
+                    f"game_id={game_id!r}"
+                )
+
+            normalized: dict[str, str] = {
+                "game_id": game_id
+            }
+
+            for output_col, source_col in mappings.items():
+                raw = str(
+                    row.get(source_col, "")
+                ).strip()
+
+                if raw == "":
+                    fail(
+                        "SportsDataverse prediction row has "
+                        "blank required value: "
+                        f"{prediction_path} "
+                        f"row={row_number} "
+                        f"game_id={game_id} "
+                        f"column={source_col}"
+                    )
+
+                try:
+                    value = float(raw)
+                except ValueError:
+                    fail(
+                        "SportsDataverse prediction row has "
+                        "non-numeric required value: "
+                        f"{prediction_path} "
+                        f"row={row_number} "
+                        f"game_id={game_id} "
+                        f"column={source_col} "
+                        f"value={raw!r}"
+                    )
+
+                if (
+                    output_col == "sdv_home_win_prob"
+                    and not (0.0 <= value <= 1.0)
+                ):
+                    fail(
+                        "SportsDataverse home win probability "
+                        "is outside [0,1]: "
+                        f"{prediction_path} "
+                        f"row={row_number} "
+                        f"game_id={game_id} "
+                        f"value={value}"
+                    )
+
+                normalized[output_col] = (
+                    format_numeric(value)
+                )
+
+            previous_source = source_by_game_id.get(
+                game_id
             )
 
-        if game_id in index:
-            fail(
-                "SportsDataverse prediction file has duplicate game_id: "
-                f"{SDV_PREDICTIONS_PATH} game_id={game_id}"
+            if previous_source is not None:
+                log(
+                    "SportsDataverse prediction override | "
+                    f"game_id={game_id} | "
+                    f"previous={previous_source.name} | "
+                    f"new={prediction_path.name}"
+                )
+
+            index[game_id] = normalized
+            source_by_game_id[game_id] = (
+                prediction_path
             )
-
-        normalized: dict[str, str] = {"game_id": game_id}
-        mappings = {
-            "sdv_home_win_prob": "home_win_prob",
-            "sdv_exp_margin": "exp_margin",
-            "sdv_exp_total": "exp_total",
-        }
-
-        for output_col, source_col in mappings.items():
-            raw = str(row.get(source_col, "")).strip()
-            if raw == "":
-                fail(
-                    "SportsDataverse prediction row has blank required value: "
-                    f"{SDV_PREDICTIONS_PATH} row={row_number} "
-                    f"game_id={game_id} column={source_col}"
-                )
-            try:
-                value = float(raw)
-            except ValueError:
-                return fail(
-                    "SportsDataverse prediction row has non-numeric required value: "
-                    f"{SDV_PREDICTIONS_PATH} row={row_number} "
-                    f"game_id={game_id} column={source_col} value={raw!r}"
-                )
-
-            if output_col == "sdv_home_win_prob" and not (0.0 <= value <= 1.0):
-                fail(
-                    "SportsDataverse home win probability is outside [0,1]: "
-                    f"{SDV_PREDICTIONS_PATH} row={row_number} "
-                    f"game_id={game_id} value={value}"
-                )
-
-            normalized[output_col] = format_numeric(value)
-
-        index[game_id] = normalized
 
     log(
-        "SportsDataverse current predictions loaded: "
-        f"{len(index)} rows from {SDV_PREDICTIONS_PATH}"
+        "SportsDataverse prediction archive loaded: "
+        f"files={len(prediction_files)} "
+        f"games={len(index)} "
+        f"dir={archive_dir}"
     )
+
     return index
 
 def process_date(

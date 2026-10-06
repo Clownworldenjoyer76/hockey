@@ -31,13 +31,13 @@ markets:
       # best_ev = one moneyline side max per game, highest EV
       # best_prob = one moneyline side max per game, highest model probability
       # all = can select both sides if both pass
-      pick_preference: best_prob
+      pick_preference: all
 
       home:
         enabled: true
         # based on home_model_prob_moneyline from the moneyline EV file
         prob_bands:
-          - [0.60, 1.0]
+          - [0.00, 1.0]
         # Direct probability produced by the configured NHL secondary model.
         my_model_prob_bands:
           - [0.0, 1.0]
@@ -53,7 +53,7 @@ markets:
 
         # based on away_model_prob_moneyline from the moneyline EV file
         prob_bands:
-          - [0.60, 1.0]
+          - [0.00, 1.0]
         # Direct probability produced by the configured NHL secondary model.
         my_model_prob_bands:
           - [0.0, 1.0]
@@ -82,11 +82,11 @@ markets:
         my_model_prob_bands:
           - [0.0, 1.0]
         line_bands:
-          - [-100.0, 100.0]
+          - [-5.0, 5.0]
         odds_bands:
           - [-300, 10000]
         ev_bands:
-          - [0.0, 0.10]
+          - [0.0, 999.9999]
         kelly_bands:
           - [0.0, 999.9999]
 
@@ -99,11 +99,11 @@ markets:
         my_model_prob_bands:
           - [0.0, 1.0]
         line_bands:
-          - [-100.0, 100.0]
+          - [-5.0, 5.0]
         odds_bands:
           - [-300, 10000]
         ev_bands:
-          - [0.0, 0.10]
+          - [0.0, 999.9999]
         kelly_bands:
           - [0.0, 999.9999]
     ###################################################

@@ -3169,6 +3169,8 @@ def load_sdv_prediction_index() -> dict[str, dict[str, str]]:
     }
 
     for prediction_path in prediction_files:
+        seen_in_file: set[str] = set()
+
         fieldnames, rows = load_csv(
             prediction_path
         )
@@ -3195,6 +3197,14 @@ def load_sdv_prediction_index() -> dict[str, dict[str, str]]:
                     f"row={row_number} "
                     f"game_id={game_id!r}"
                 )
+
+            if game_id in seen_in_file:
+                fail(
+                    "SportsDataverse prediction file has duplicate game_id: "
+                    f"{prediction_path} game_id={game_id}"
+                )
+
+            seen_in_file.add(game_id)
 
             normalized: dict[str, str] = {
                 "game_id": game_id

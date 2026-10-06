@@ -119,7 +119,7 @@ docs/win/hockey/nhl/scripts/tests/test_nhl_pipeline.py::test_clv_reports_no_refe
 docs/win/hockey/nhl/scripts/tests/test_nhl_pipeline.py::test_clv_reports_no_later_closing_snapshot_when_only_earlier_price_exists PASSED [ 91%]
 docs/win/hockey/nhl/scripts/tests/test_nhl_pipeline.py::test_clv_line_change_blocks_price_comparison_but_keeps_line_clv PASSED [ 92%]
 docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_merge_intake_loads_current_sdv_predictions_by_game_id PASSED [ 93%]
-docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_merge_intake_rejects_duplicate_sdv_game_id PASSED [ 94%]
+docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_merge_intake_rejects_duplicate_sdv_game_id FAILED [ 94%]
 docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_build_juice_files_preserves_sdv_prediction_columns PASSED [ 95%]
 docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_secondary_models_use_only_dates_before_target PASSED [ 95%]
 docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_secondary_signal_falls_back_when_sdv_missing PASSED [ 96%]
@@ -128,4 +128,28 @@ docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_stage04_
 docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_stage04_uses_primary_when_secondary_unavailable PASSED [ 99%]
 docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_markets_yaml_secondary_model_contract PASSED [100%]
 
-============================= 123 passed in 3.52s ==============================
+=================================== FAILURES ===================================
+_______________ test_merge_intake_rejects_duplicate_sdv_game_id ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_merge_intake_rejects_dupl0')
+
+    def test_merge_intake_rejects_duplicate_sdv_game_id(tmp_path: Path) -> None:
+        module = load_module("docs/win/hockey/nhl/scripts/01_merge/merge_intake.py")
+        module.SDV_PREDICTIONS_PATH = tmp_path / "latest_predictions.csv"
+        module.LOG_FILE = tmp_path / "merge.log"
+    
+        pd.DataFrame(
+            [
+                {"game_id": "2026020001", "home_win_prob": 0.61, "exp_margin": 0.72, "exp_total": 6.15},
+                {"game_id": "2026020001", "home_win_prob": 0.62, "exp_margin": 0.80, "exp_total": 6.20},
+            ]
+        ).to_csv(module.SDV_PREDICTIONS_PATH, index=False)
+    
+>       with pytest.raises(SystemExit):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py:78: Failed
+=========================== short test summary info ============================
+FAILED docs/win/hockey/nhl/scripts/tests/test_secondary_model_signals.py::test_merge_intake_rejects_duplicate_sdv_game_id - Failed: DID NOT RAISE SystemExit
+======================== 1 failed, 122 passed in 4.52s =========================

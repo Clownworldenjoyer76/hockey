@@ -421,8 +421,7 @@ jobs:
         run: |
           git add -A docs/win/hockey/nhl/05_final_scores
           git add -A docs/win/hockey/nhl/errors/05_final_scores
-          git add frontend/nhl_dashboard.html
-          git add frontend/hockey_dashboard.html
+          git add frontend/data/dashboards/nhl.json
 
           if git diff --cached --quiet; then
             echo "No NHL Stage 05 changes to commit."

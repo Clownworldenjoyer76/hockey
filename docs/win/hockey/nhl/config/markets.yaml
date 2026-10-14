@@ -82,13 +82,13 @@ markets:
           - [0.0, 1.0]
         # Direct probability produced by the configured NHL secondary model.
         my_model_prob_bands:
-          - [0.50, 1.0]
+          - [0.60, 1.0]
         line_bands:
           - [-5.0, 5.0]
         odds_bands:
           - [-300, 10000]
         ev_bands:
-          - [0.0, 999.9999]
+          - [0.0, 0.10]
         kelly_bands:
           - [0.0, 999.9999]
 
@@ -122,7 +122,7 @@ markets:
         enabled: true
         # based on over_model_prob_total from the total EV file
         prob_bands:
-          - [0.0, 1.0]
+          - [0.60, 1.0]
         # Direct probability produced by the configured NHL secondary model.
         my_model_prob_bands:
           - [0.0, 1.0]
@@ -139,7 +139,7 @@ markets:
         enabled: true
         # based on under_model_prob_total from the total EV file
         prob_bands:
-          - [0.50, 0.60]
+          - [0.55, 0.60]
         # Direct probability produced by the configured NHL secondary model.
         my_model_prob_bands:
           - [0.0, 1.0]

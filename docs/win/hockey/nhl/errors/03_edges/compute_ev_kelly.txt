@@ -1,108 +1,198 @@
-=== compute_ev_kelly RUN 2026-10-06T18:39:00.119919+00:00 ===
-2026-10-06T18:39:00.120021+00:00 | INFO  | INPUT_DIR : /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges
-2026-10-06T18:39:00.120059+00:00 | INFO  | OUTPUT_DIR: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly
-2026-10-06T18:39:00.122874+00:00 | INFO  | --- FILE: 2026_09_29_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.139231+00:00 | WARN  | 2026_09_29_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1069)
-2026-10-06T18:39:00.141963+00:00 | WARN  | 2026_09_29_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1980)
-2026-10-06T18:39:00.147351+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_29_NHL_moneyline.csv (5 rows, 6 Kelly values clipped)
-2026-10-06T18:39:00.147406+00:00 | INFO  | --- FILE: 2026_09_30_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.159980+00:00 | WARN  | 2026_09_30_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.0754)
-2026-10-06T18:39:00.162611+00:00 | WARN  | 2026_09_30_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.1336)
-2026-10-06T18:39:00.166460+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_30_NHL_moneyline.csv (3 rows, 4 Kelly values clipped)
-2026-10-06T18:39:00.166501+00:00 | INFO  | --- FILE: 2026_10_01_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.175597+00:00 | WARN  | 2026_10_01_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.0446)
-2026-10-06T18:39:00.177701+00:00 | WARN  | 2026_10_01_NHL_moneyline.csv | 8 negative Kelly values clipped to 0 (min=-0.2787)
-2026-10-06T18:39:00.181437+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_01_NHL_moneyline.csv (8 rows, 12 Kelly values clipped)
-2026-10-06T18:39:00.181480+00:00 | INFO  | --- FILE: 2026_10_02_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.189804+00:00 | WARN  | 2026_10_02_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.1050)
-2026-10-06T18:39:00.191892+00:00 | WARN  | 2026_10_02_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1578)
-2026-10-06T18:39:00.195487+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_02_NHL_moneyline.csv (5 rows, 7 Kelly values clipped)
-2026-10-06T18:39:00.195527+00:00 | INFO  | --- FILE: 2026_10_03_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.207472+00:00 | WARN  | 2026_10_03_NHL_moneyline.csv | 10 negative Kelly values clipped to 0 (min=-0.1897)
-2026-10-06T18:39:00.210150+00:00 | WARN  | 2026_10_03_NHL_moneyline.csv | 9 negative Kelly values clipped to 0 (min=-0.2736)
-2026-10-06T18:39:00.215529+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_03_NHL_moneyline.csv (13 rows, 19 Kelly values clipped)
-2026-10-06T18:39:00.215576+00:00 | INFO  | --- FILE: 2026_10_04_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.226637+00:00 | WARN  | 2026_10_04_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.3645)
-2026-10-06T18:39:00.228708+00:00 | WARN  | 2026_10_04_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1355)
-2026-10-06T18:39:00.232583+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_04_NHL_moneyline.csv (5 rows, 7 Kelly values clipped)
-2026-10-06T18:39:00.232632+00:00 | INFO  | --- FILE: 2026_10_05_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.241640+00:00 | WARN  | 2026_10_05_NHL_moneyline.csv | 1 negative Kelly values clipped to 0 (min=-0.0977)
-2026-10-06T18:39:00.243778+00:00 | WARN  | 2026_10_05_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.2685)
-2026-10-06T18:39:00.247774+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_05_NHL_moneyline.csv (4 rows, 5 Kelly values clipped)
-2026-10-06T18:39:00.247819+00:00 | INFO  | --- FILE: 2026_10_06_NHL_moneyline.csv market=moneyline
-2026-10-06T18:39:00.256966+00:00 | WARN  | 2026_10_06_NHL_moneyline.csv | 8 negative Kelly values clipped to 0 (min=-0.1854)
-2026-10-06T18:39:00.259008+00:00 | WARN  | 2026_10_06_NHL_moneyline.csv | 5 negative Kelly values clipped to 0 (min=-0.1535)
-2026-10-06T18:39:00.263227+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_06_NHL_moneyline.csv (9 rows, 13 Kelly values clipped)
-2026-10-06T18:39:00.263605+00:00 | INFO  | --- FILE: 2026_09_29_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.273432+00:00 | WARN  | 2026_09_29_NHL_puck_line.csv | 3 negative Kelly values clipped to 0 (min=-0.3601)
-2026-10-06T18:39:00.276836+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_29_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
-2026-10-06T18:39:00.276873+00:00 | INFO  | --- FILE: 2026_09_30_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.286648+00:00 | WARN  | 2026_09_30_NHL_puck_line.csv | 2 negative Kelly values clipped to 0 (min=-0.2402)
-2026-10-06T18:39:00.290044+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_30_NHL_puck_line.csv (2 rows, 2 Kelly values clipped)
-2026-10-06T18:39:00.290080+00:00 | INFO  | --- FILE: 2026_10_01_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.298018+00:00 | WARN  | 2026_10_01_NHL_puck_line.csv | 4 negative Kelly values clipped to 0 (min=-0.3158)
-2026-10-06T18:39:00.299991+00:00 | WARN  | 2026_10_01_NHL_puck_line.csv | 2 negative Kelly values clipped to 0 (min=-0.2905)
-2026-10-06T18:39:00.303484+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_01_NHL_puck_line.csv (6 rows, 6 Kelly values clipped)
-2026-10-06T18:39:00.303521+00:00 | INFO  | --- FILE: 2026_10_02_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.313270+00:00 | WARN  | 2026_10_02_NHL_puck_line.csv | 4 negative Kelly values clipped to 0 (min=-0.2762)
-2026-10-06T18:39:00.316685+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_02_NHL_puck_line.csv (4 rows, 4 Kelly values clipped)
-2026-10-06T18:39:00.316722+00:00 | INFO  | --- FILE: 2026_10_03_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.324694+00:00 | WARN  | 2026_10_03_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.1689)
-2026-10-06T18:39:00.326677+00:00 | WARN  | 2026_10_03_NHL_puck_line.csv | 5 negative Kelly values clipped to 0 (min=-0.3671)
-2026-10-06T18:39:00.330145+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_03_NHL_puck_line.csv (6 rows, 6 Kelly values clipped)
-2026-10-06T18:39:00.330183+00:00 | INFO  | --- FILE: 2026_10_04_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.338102+00:00 | WARN  | 2026_10_04_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.3395)
-2026-10-06T18:39:00.340112+00:00 | WARN  | 2026_10_04_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.2264)
-2026-10-06T18:39:00.343456+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_04_NHL_puck_line.csv (2 rows, 2 Kelly values clipped)
-2026-10-06T18:39:00.343493+00:00 | INFO  | --- FILE: 2026_10_05_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.353230+00:00 | WARN  | 2026_10_05_NHL_puck_line.csv | 3 negative Kelly values clipped to 0 (min=-0.3236)
-2026-10-06T18:39:00.356613+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_05_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
-2026-10-06T18:39:00.356650+00:00 | INFO  | --- FILE: 2026_10_06_NHL_puck_line.csv market=puck_line
-2026-10-06T18:39:00.364845+00:00 | WARN  | 2026_10_06_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.1968)
-2026-10-06T18:39:00.366804+00:00 | WARN  | 2026_10_06_NHL_puck_line.csv | 2 negative Kelly values clipped to 0 (min=-0.2252)
-2026-10-06T18:39:00.370390+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_06_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
-2026-10-06T18:39:00.370706+00:00 | INFO  | --- FILE: 2026_09_29_NHL_total.csv market=total
-2026-10-06T18:39:00.378559+00:00 | WARN  | 2026_09_29_NHL_total.csv | 5 negative Kelly values clipped to 0 (min=-0.1061)
-2026-10-06T18:39:00.380533+00:00 | WARN  | 2026_09_29_NHL_total.csv | 4 negative Kelly values clipped to 0 (min=-0.0459)
-2026-10-06T18:39:00.383862+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_29_NHL_total.csv (5 rows, 9 Kelly values clipped)
-2026-10-06T18:39:00.383899+00:00 | INFO  | --- FILE: 2026_09_30_NHL_total.csv market=total
-2026-10-06T18:39:00.391857+00:00 | WARN  | 2026_09_30_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.1967)
-2026-10-06T18:39:00.393807+00:00 | WARN  | 2026_09_30_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0961)
-2026-10-06T18:39:00.397180+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_30_NHL_total.csv (3 rows, 4 Kelly values clipped)
-2026-10-06T18:39:00.397218+00:00 | INFO  | --- FILE: 2026_10_01_NHL_total.csv market=total
-2026-10-06T18:39:00.405063+00:00 | WARN  | 2026_10_01_NHL_total.csv | 8 negative Kelly values clipped to 0 (min=-0.1756)
-2026-10-06T18:39:00.407023+00:00 | WARN  | 2026_10_01_NHL_total.csv | 6 negative Kelly values clipped to 0 (min=-0.0630)
-2026-10-06T18:39:00.410595+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_01_NHL_total.csv (8 rows, 14 Kelly values clipped)
-2026-10-06T18:39:00.410633+00:00 | INFO  | --- FILE: 2026_10_02_NHL_total.csv market=total
-2026-10-06T18:39:00.418469+00:00 | WARN  | 2026_10_02_NHL_total.csv | 5 negative Kelly values clipped to 0 (min=-0.1849)
-2026-10-06T18:39:00.423730+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_02_NHL_total.csv (5 rows, 5 Kelly values clipped)
-2026-10-06T18:39:00.423767+00:00 | INFO  | --- FILE: 2026_10_03_NHL_total.csv market=total
-2026-10-06T18:39:00.431752+00:00 | WARN  | 2026_10_03_NHL_total.csv | 13 negative Kelly values clipped to 0 (min=-0.2049)
-2026-10-06T18:39:00.433735+00:00 | WARN  | 2026_10_03_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0736)
-2026-10-06T18:39:00.437612+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_03_NHL_total.csv (13 rows, 15 Kelly values clipped)
-2026-10-06T18:39:00.437648+00:00 | INFO  | --- FILE: 2026_10_04_NHL_total.csv market=total
-2026-10-06T18:39:00.445593+00:00 | WARN  | 2026_10_04_NHL_total.csv | 5 negative Kelly values clipped to 0 (min=-0.1548)
-2026-10-06T18:39:00.447592+00:00 | WARN  | 2026_10_04_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0684)
-2026-10-06T18:39:00.451049+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_04_NHL_total.csv (5 rows, 7 Kelly values clipped)
-2026-10-06T18:39:00.451086+00:00 | INFO  | --- FILE: 2026_10_05_NHL_total.csv market=total
-2026-10-06T18:39:00.459108+00:00 | WARN  | 2026_10_05_NHL_total.csv | 4 negative Kelly values clipped to 0 (min=-0.1535)
-2026-10-06T18:39:00.461078+00:00 | WARN  | 2026_10_05_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0911)
-2026-10-06T18:39:00.464549+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_05_NHL_total.csv (4 rows, 6 Kelly values clipped)
-2026-10-06T18:39:00.464586+00:00 | INFO  | --- FILE: 2026_10_06_NHL_total.csv market=total
-2026-10-06T18:39:00.473014+00:00 | WARN  | 2026_10_06_NHL_total.csv | 8 negative Kelly values clipped to 0 (min=-0.1986)
-2026-10-06T18:39:00.475000+00:00 | WARN  | 2026_10_06_NHL_total.csv | 3 negative Kelly values clipped to 0 (min=-0.1551)
-2026-10-06T18:39:00.479215+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_06_NHL_total.csv (9 rows, 11 Kelly values clipped)
+=== compute_ev_kelly RUN 2026-10-14T09:33:12.529586+00:00 ===
+2026-10-14T09:33:12.529668+00:00 | INFO  | INPUT_DIR : /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges
+2026-10-14T09:33:12.529697+00:00 | INFO  | OUTPUT_DIR: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly
+2026-10-14T09:33:12.535903+00:00 | INFO  | --- FILE: 2026_09_29_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.545778+00:00 | WARN  | 2026_09_29_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1069)
+2026-10-14T09:33:12.547127+00:00 | WARN  | 2026_09_29_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1980)
+2026-10-14T09:33:12.550562+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_29_NHL_moneyline.csv (5 rows, 6 Kelly values clipped)
+2026-10-14T09:33:12.550602+00:00 | INFO  | --- FILE: 2026_09_30_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.556931+00:00 | WARN  | 2026_09_30_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.0754)
+2026-10-14T09:33:12.558230+00:00 | WARN  | 2026_09_30_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.1336)
+2026-10-14T09:33:12.560835+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_30_NHL_moneyline.csv (3 rows, 4 Kelly values clipped)
+2026-10-14T09:33:12.560865+00:00 | INFO  | --- FILE: 2026_10_01_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.566677+00:00 | WARN  | 2026_10_01_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.0446)
+2026-10-14T09:33:12.567866+00:00 | WARN  | 2026_10_01_NHL_moneyline.csv | 8 negative Kelly values clipped to 0 (min=-0.2787)
+2026-10-14T09:33:12.570415+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_01_NHL_moneyline.csv (8 rows, 12 Kelly values clipped)
+2026-10-14T09:33:12.570445+00:00 | INFO  | --- FILE: 2026_10_02_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.575744+00:00 | WARN  | 2026_10_02_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.1050)
+2026-10-14T09:33:12.577010+00:00 | WARN  | 2026_10_02_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1578)
+2026-10-14T09:33:12.579570+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_02_NHL_moneyline.csv (5 rows, 7 Kelly values clipped)
+2026-10-14T09:33:12.579602+00:00 | INFO  | --- FILE: 2026_10_03_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.585445+00:00 | WARN  | 2026_10_03_NHL_moneyline.csv | 10 negative Kelly values clipped to 0 (min=-0.1897)
+2026-10-14T09:33:12.586894+00:00 | WARN  | 2026_10_03_NHL_moneyline.csv | 9 negative Kelly values clipped to 0 (min=-0.2736)
+2026-10-14T09:33:12.589553+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_03_NHL_moneyline.csv (13 rows, 19 Kelly values clipped)
+2026-10-14T09:33:12.589582+00:00 | INFO  | --- FILE: 2026_10_04_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.594777+00:00 | WARN  | 2026_10_04_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.3645)
+2026-10-14T09:33:12.596012+00:00 | WARN  | 2026_10_04_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1355)
+2026-10-14T09:33:12.599028+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_04_NHL_moneyline.csv (5 rows, 7 Kelly values clipped)
+2026-10-14T09:33:12.599070+00:00 | INFO  | --- FILE: 2026_10_05_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.605579+00:00 | WARN  | 2026_10_05_NHL_moneyline.csv | 1 negative Kelly values clipped to 0 (min=-0.0977)
+2026-10-14T09:33:12.606873+00:00 | WARN  | 2026_10_05_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.2685)
+2026-10-14T09:33:12.609400+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_05_NHL_moneyline.csv (4 rows, 5 Kelly values clipped)
+2026-10-14T09:33:12.609438+00:00 | INFO  | --- FILE: 2026_10_06_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.614803+00:00 | WARN  | 2026_10_06_NHL_moneyline.csv | 7 negative Kelly values clipped to 0 (min=-0.1744)
+2026-10-14T09:33:12.616184+00:00 | WARN  | 2026_10_06_NHL_moneyline.csv | 5 negative Kelly values clipped to 0 (min=-0.1785)
+2026-10-14T09:33:12.618752+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_06_NHL_moneyline.csv (9 rows, 12 Kelly values clipped)
+2026-10-14T09:33:12.618781+00:00 | INFO  | --- FILE: 2026_10_07_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.623924+00:00 | WARN  | 2026_10_07_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1201)
+2026-10-14T09:33:12.625094+00:00 | WARN  | 2026_10_07_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.0967)
+2026-10-14T09:33:12.627387+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_07_NHL_moneyline.csv (3 rows, 5 Kelly values clipped)
+2026-10-14T09:33:12.627415+00:00 | INFO  | --- FILE: 2026_10_08_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.632549+00:00 | WARN  | 2026_10_08_NHL_moneyline.csv | 8 negative Kelly values clipped to 0 (min=-0.3993)
+2026-10-14T09:33:12.633741+00:00 | WARN  | 2026_10_08_NHL_moneyline.csv | 6 negative Kelly values clipped to 0 (min=-0.1804)
+2026-10-14T09:33:12.636184+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_08_NHL_moneyline.csv (10 rows, 14 Kelly values clipped)
+2026-10-14T09:33:12.636211+00:00 | INFO  | --- FILE: 2026_10_09_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.641317+00:00 | WARN  | 2026_10_09_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.0603)
+2026-10-14T09:33:12.642461+00:00 | WARN  | 2026_10_09_NHL_moneyline.csv | 4 negative Kelly values clipped to 0 (min=-0.1385)
+2026-10-14T09:33:12.644682+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_09_NHL_moneyline.csv (4 rows, 7 Kelly values clipped)
+2026-10-14T09:33:12.644711+00:00 | INFO  | --- FILE: 2026_10_10_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.649874+00:00 | WARN  | 2026_10_10_NHL_moneyline.csv | 10 negative Kelly values clipped to 0 (min=-0.2103)
+2026-10-14T09:33:12.651044+00:00 | WARN  | 2026_10_10_NHL_moneyline.csv | 10 negative Kelly values clipped to 0 (min=-0.5324)
+2026-10-14T09:33:12.653722+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_10_NHL_moneyline.csv (14 rows, 20 Kelly values clipped)
+2026-10-14T09:33:12.653751+00:00 | INFO  | --- FILE: 2026_10_11_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.658796+00:00 | WARN  | 2026_10_11_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.1554)
+2026-10-14T09:33:12.659962+00:00 | WARN  | 2026_10_11_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.2480)
+2026-10-14T09:33:12.662175+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_11_NHL_moneyline.csv (3 rows, 4 Kelly values clipped)
+2026-10-14T09:33:12.662203+00:00 | INFO  | --- FILE: 2026_10_12_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.667241+00:00 | WARN  | 2026_10_12_NHL_moneyline.csv | 1 negative Kelly values clipped to 0 (min=-0.1003)
+2026-10-14T09:33:12.668413+00:00 | WARN  | 2026_10_12_NHL_moneyline.csv | 3 negative Kelly values clipped to 0 (min=-0.1872)
+2026-10-14T09:33:12.670612+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_12_NHL_moneyline.csv (3 rows, 4 Kelly values clipped)
+2026-10-14T09:33:12.670640+00:00 | INFO  | --- FILE: 2026_10_13_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.675747+00:00 | WARN  | 2026_10_13_NHL_moneyline.csv | 11 negative Kelly values clipped to 0 (min=-0.1619)
+2026-10-14T09:33:12.676928+00:00 | WARN  | 2026_10_13_NHL_moneyline.csv | 11 negative Kelly values clipped to 0 (min=-0.3193)
+2026-10-14T09:33:12.679580+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_13_NHL_moneyline.csv (16 rows, 22 Kelly values clipped)
+2026-10-14T09:33:12.679608+00:00 | INFO  | --- FILE: 2026_10_14_NHL_moneyline.csv market=moneyline
+2026-10-14T09:33:12.684662+00:00 | WARN  | 2026_10_14_NHL_moneyline.csv | 2 negative Kelly values clipped to 0 (min=-0.1174)
+2026-10-14T09:33:12.685821+00:00 | WARN  | 2026_10_14_NHL_moneyline.csv | 1 negative Kelly values clipped to 0 (min=-0.1025)
+2026-10-14T09:33:12.688161+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_14_NHL_moneyline.csv (2 rows, 3 Kelly values clipped)
+2026-10-14T09:33:12.688478+00:00 | INFO  | --- FILE: 2026_09_29_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.694549+00:00 | WARN  | 2026_09_29_NHL_puck_line.csv | 3 negative Kelly values clipped to 0 (min=-0.3601)
+2026-10-14T09:33:12.696973+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_29_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
+2026-10-14T09:33:12.697000+00:00 | INFO  | --- FILE: 2026_09_30_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.703114+00:00 | WARN  | 2026_09_30_NHL_puck_line.csv | 2 negative Kelly values clipped to 0 (min=-0.2402)
+2026-10-14T09:33:12.705467+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_30_NHL_puck_line.csv (2 rows, 2 Kelly values clipped)
+2026-10-14T09:33:12.705495+00:00 | INFO  | --- FILE: 2026_10_01_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.710611+00:00 | WARN  | 2026_10_01_NHL_puck_line.csv | 4 negative Kelly values clipped to 0 (min=-0.3158)
+2026-10-14T09:33:12.711782+00:00 | WARN  | 2026_10_01_NHL_puck_line.csv | 2 negative Kelly values clipped to 0 (min=-0.2905)
+2026-10-14T09:33:12.714246+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_01_NHL_puck_line.csv (6 rows, 6 Kelly values clipped)
+2026-10-14T09:33:12.714288+00:00 | INFO  | --- FILE: 2026_10_02_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.720419+00:00 | WARN  | 2026_10_02_NHL_puck_line.csv | 4 negative Kelly values clipped to 0 (min=-0.2762)
+2026-10-14T09:33:12.722853+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_02_NHL_puck_line.csv (4 rows, 4 Kelly values clipped)
+2026-10-14T09:33:12.722881+00:00 | INFO  | --- FILE: 2026_10_03_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.728101+00:00 | WARN  | 2026_10_03_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.1689)
+2026-10-14T09:33:12.729289+00:00 | WARN  | 2026_10_03_NHL_puck_line.csv | 5 negative Kelly values clipped to 0 (min=-0.3671)
+2026-10-14T09:33:12.731760+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_03_NHL_puck_line.csv (6 rows, 6 Kelly values clipped)
+2026-10-14T09:33:12.731788+00:00 | INFO  | --- FILE: 2026_10_04_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.736915+00:00 | WARN  | 2026_10_04_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.3395)
+2026-10-14T09:33:12.738127+00:00 | WARN  | 2026_10_04_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.2264)
+2026-10-14T09:33:12.740490+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_04_NHL_puck_line.csv (2 rows, 2 Kelly values clipped)
+2026-10-14T09:33:12.740518+00:00 | INFO  | --- FILE: 2026_10_05_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.746692+00:00 | WARN  | 2026_10_05_NHL_puck_line.csv | 3 negative Kelly values clipped to 0 (min=-0.3236)
+2026-10-14T09:33:12.749044+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_05_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
+2026-10-14T09:33:12.749072+00:00 | INFO  | --- FILE: 2026_10_06_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.754218+00:00 | WARN  | 2026_10_06_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.1968)
+2026-10-14T09:33:12.755431+00:00 | WARN  | 2026_10_06_NHL_puck_line.csv | 2 negative Kelly values clipped to 0 (min=-0.2252)
+2026-10-14T09:33:12.757800+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_06_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
+2026-10-14T09:33:12.757828+00:00 | INFO  | --- FILE: 2026_10_07_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.762929+00:00 | WARN  | 2026_10_07_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.2337)
+2026-10-14T09:33:12.764123+00:00 | WARN  | 2026_10_07_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.2321)
+2026-10-14T09:33:12.766454+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_07_NHL_puck_line.csv (2 rows, 2 Kelly values clipped)
+2026-10-14T09:33:12.766481+00:00 | INFO  | --- FILE: 2026_10_08_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.771598+00:00 | WARN  | 2026_10_08_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.3398)
+2026-10-14T09:33:12.772785+00:00 | WARN  | 2026_10_08_NHL_puck_line.csv | 6 negative Kelly values clipped to 0 (min=-0.3769)
+2026-10-14T09:33:12.775233+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_08_NHL_puck_line.csv (7 rows, 7 Kelly values clipped)
+2026-10-14T09:33:12.775276+00:00 | INFO  | --- FILE: 2026_10_09_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.781440+00:00 | WARN  | 2026_10_09_NHL_puck_line.csv | 3 negative Kelly values clipped to 0 (min=-0.1902)
+2026-10-14T09:33:12.783790+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_09_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
+2026-10-14T09:33:12.783818+00:00 | INFO  | --- FILE: 2026_10_10_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.788989+00:00 | WARN  | 2026_10_10_NHL_puck_line.csv | 4 negative Kelly values clipped to 0 (min=-0.3615)
+2026-10-14T09:33:12.790147+00:00 | WARN  | 2026_10_10_NHL_puck_line.csv | 6 negative Kelly values clipped to 0 (min=-0.4561)
+2026-10-14T09:33:12.792732+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_10_NHL_puck_line.csv (10 rows, 10 Kelly values clipped)
+2026-10-14T09:33:12.792760+00:00 | INFO  | --- FILE: 2026_10_11_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.797838+00:00 | WARN  | 2026_10_11_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.2508)
+2026-10-14T09:33:12.798989+00:00 | WARN  | 2026_10_11_NHL_puck_line.csv | 2 negative Kelly values clipped to 0 (min=-0.3767)
+2026-10-14T09:33:12.801332+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_11_NHL_puck_line.csv (3 rows, 3 Kelly values clipped)
+2026-10-14T09:33:12.801361+00:00 | INFO  | --- FILE: 2026_10_13_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.806492+00:00 | WARN  | 2026_10_13_NHL_puck_line.csv | 4 negative Kelly values clipped to 0 (min=-0.2857)
+2026-10-14T09:33:12.807650+00:00 | WARN  | 2026_10_13_NHL_puck_line.csv | 7 negative Kelly values clipped to 0 (min=-0.3016)
+2026-10-14T09:33:12.810323+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_13_NHL_puck_line.csv (11 rows, 11 Kelly values clipped)
+2026-10-14T09:33:12.810352+00:00 | INFO  | --- FILE: 2026_10_14_NHL_puck_line.csv market=puck_line
+2026-10-14T09:33:12.816483+00:00 | WARN  | 2026_10_14_NHL_puck_line.csv | 1 negative Kelly values clipped to 0 (min=-0.1526)
+2026-10-14T09:33:12.818788+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_14_NHL_puck_line.csv (1 rows, 1 Kelly values clipped)
+2026-10-14T09:33:12.819081+00:00 | INFO  | --- FILE: 2026_09_29_NHL_total.csv market=total
+2026-10-14T09:33:12.824142+00:00 | WARN  | 2026_09_29_NHL_total.csv | 5 negative Kelly values clipped to 0 (min=-0.1061)
+2026-10-14T09:33:12.825357+00:00 | WARN  | 2026_09_29_NHL_total.csv | 4 negative Kelly values clipped to 0 (min=-0.0459)
+2026-10-14T09:33:12.827718+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_29_NHL_total.csv (5 rows, 9 Kelly values clipped)
+2026-10-14T09:33:12.827746+00:00 | INFO  | --- FILE: 2026_09_30_NHL_total.csv market=total
+2026-10-14T09:33:12.832927+00:00 | WARN  | 2026_09_30_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.1967)
+2026-10-14T09:33:12.834100+00:00 | WARN  | 2026_09_30_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0961)
+2026-10-14T09:33:12.836507+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_09_30_NHL_total.csv (3 rows, 4 Kelly values clipped)
+2026-10-14T09:33:12.836535+00:00 | INFO  | --- FILE: 2026_10_01_NHL_total.csv market=total
+2026-10-14T09:33:12.841663+00:00 | WARN  | 2026_10_01_NHL_total.csv | 8 negative Kelly values clipped to 0 (min=-0.1756)
+2026-10-14T09:33:12.842823+00:00 | WARN  | 2026_10_01_NHL_total.csv | 6 negative Kelly values clipped to 0 (min=-0.0630)
+2026-10-14T09:33:12.845512+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_01_NHL_total.csv (8 rows, 14 Kelly values clipped)
+2026-10-14T09:33:12.845539+00:00 | INFO  | --- FILE: 2026_10_02_NHL_total.csv market=total
+2026-10-14T09:33:12.850616+00:00 | WARN  | 2026_10_02_NHL_total.csv | 5 negative Kelly values clipped to 0 (min=-0.1849)
+2026-10-14T09:33:12.854044+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_02_NHL_total.csv (5 rows, 5 Kelly values clipped)
+2026-10-14T09:33:12.854072+00:00 | INFO  | --- FILE: 2026_10_03_NHL_total.csv market=total
+2026-10-14T09:33:12.859157+00:00 | WARN  | 2026_10_03_NHL_total.csv | 13 negative Kelly values clipped to 0 (min=-0.2049)
+2026-10-14T09:33:12.860363+00:00 | WARN  | 2026_10_03_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0736)
+2026-10-14T09:33:12.863043+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_03_NHL_total.csv (13 rows, 15 Kelly values clipped)
+2026-10-14T09:33:12.863071+00:00 | INFO  | --- FILE: 2026_10_04_NHL_total.csv market=total
+2026-10-14T09:33:12.868154+00:00 | WARN  | 2026_10_04_NHL_total.csv | 5 negative Kelly values clipped to 0 (min=-0.1548)
+2026-10-14T09:33:12.869337+00:00 | WARN  | 2026_10_04_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0684)
+2026-10-14T09:33:12.871729+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_04_NHL_total.csv (5 rows, 7 Kelly values clipped)
+2026-10-14T09:33:12.871756+00:00 | INFO  | --- FILE: 2026_10_05_NHL_total.csv market=total
+2026-10-14T09:33:12.876809+00:00 | WARN  | 2026_10_05_NHL_total.csv | 4 negative Kelly values clipped to 0 (min=-0.1535)
+2026-10-14T09:33:12.877985+00:00 | WARN  | 2026_10_05_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0911)
+2026-10-14T09:33:12.880365+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_05_NHL_total.csv (4 rows, 6 Kelly values clipped)
+2026-10-14T09:33:12.880393+00:00 | INFO  | --- FILE: 2026_10_06_NHL_total.csv market=total
+2026-10-14T09:33:12.885646+00:00 | WARN  | 2026_10_06_NHL_total.csv | 8 negative Kelly values clipped to 0 (min=-0.1986)
+2026-10-14T09:33:12.886815+00:00 | WARN  | 2026_10_06_NHL_total.csv | 3 negative Kelly values clipped to 0 (min=-0.1551)
+2026-10-14T09:33:12.889393+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_06_NHL_total.csv (9 rows, 11 Kelly values clipped)
+2026-10-14T09:33:12.889421+00:00 | INFO  | --- FILE: 2026_10_07_NHL_total.csv market=total
+2026-10-14T09:33:12.894543+00:00 | WARN  | 2026_10_07_NHL_total.csv | 3 negative Kelly values clipped to 0 (min=-0.2668)
+2026-10-14T09:33:12.895716+00:00 | WARN  | 2026_10_07_NHL_total.csv | 1 negative Kelly values clipped to 0 (min=-0.0385)
+2026-10-14T09:33:12.898071+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_07_NHL_total.csv (3 rows, 4 Kelly values clipped)
+2026-10-14T09:33:12.898100+00:00 | INFO  | --- FILE: 2026_10_08_NHL_total.csv market=total
+2026-10-14T09:33:12.903332+00:00 | WARN  | 2026_10_08_NHL_total.csv | 9 negative Kelly values clipped to 0 (min=-0.1042)
+2026-10-14T09:33:12.904512+00:00 | WARN  | 2026_10_08_NHL_total.csv | 8 negative Kelly values clipped to 0 (min=-0.1087)
+2026-10-14T09:33:12.907056+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_08_NHL_total.csv (10 rows, 17 Kelly values clipped)
+2026-10-14T09:33:12.907084+00:00 | INFO  | --- FILE: 2026_10_09_NHL_total.csv market=total
+2026-10-14T09:33:12.912155+00:00 | WARN  | 2026_10_09_NHL_total.csv | 4 negative Kelly values clipped to 0 (min=-0.1751)
+2026-10-14T09:33:12.913348+00:00 | WARN  | 2026_10_09_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0109)
+2026-10-14T09:33:12.915705+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_09_NHL_total.csv (4 rows, 6 Kelly values clipped)
+2026-10-14T09:33:12.915733+00:00 | INFO  | --- FILE: 2026_10_10_NHL_total.csv market=total
+2026-10-14T09:33:12.920900+00:00 | WARN  | 2026_10_10_NHL_total.csv | 12 negative Kelly values clipped to 0 (min=-0.1505)
+2026-10-14T09:33:12.922060+00:00 | WARN  | 2026_10_10_NHL_total.csv | 10 negative Kelly values clipped to 0 (min=-0.1541)
+2026-10-14T09:33:12.924760+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_10_NHL_total.csv (14 rows, 22 Kelly values clipped)
+2026-10-14T09:33:12.924787+00:00 | INFO  | --- FILE: 2026_10_11_NHL_total.csv market=total
+2026-10-14T09:33:12.929836+00:00 | WARN  | 2026_10_11_NHL_total.csv | 3 negative Kelly values clipped to 0 (min=-0.1761)
+2026-10-14T09:33:12.930995+00:00 | WARN  | 2026_10_11_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0778)
+2026-10-14T09:33:12.933324+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_11_NHL_total.csv (3 rows, 5 Kelly values clipped)
+2026-10-14T09:33:12.933352+00:00 | INFO  | --- FILE: 2026_10_12_NHL_total.csv market=total
+2026-10-14T09:33:12.938475+00:00 | WARN  | 2026_10_12_NHL_total.csv | 2 negative Kelly values clipped to 0 (min=-0.0591)
+2026-10-14T09:33:12.939625+00:00 | WARN  | 2026_10_12_NHL_total.csv | 3 negative Kelly values clipped to 0 (min=-0.0982)
+2026-10-14T09:33:12.941927+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_12_NHL_total.csv (3 rows, 5 Kelly values clipped)
+2026-10-14T09:33:12.941956+00:00 | INFO  | --- FILE: 2026_10_13_NHL_total.csv market=total
+2026-10-14T09:33:12.947086+00:00 | WARN  | 2026_10_13_NHL_total.csv | 15 negative Kelly values clipped to 0 (min=-0.2080)
+2026-10-14T09:33:12.948238+00:00 | WARN  | 2026_10_13_NHL_total.csv | 7 negative Kelly values clipped to 0 (min=-0.1712)
+2026-10-14T09:33:12.951043+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_13_NHL_total.csv (16 rows, 22 Kelly values clipped)
+2026-10-14T09:33:12.951071+00:00 | INFO  | --- FILE: 2026_10_14_NHL_total.csv market=total
+2026-10-14T09:33:12.956241+00:00 | WARN  | 2026_10_14_NHL_total.csv | 1 negative Kelly values clipped to 0 (min=-0.2022)
+2026-10-14T09:33:12.957428+00:00 | WARN  | 2026_10_14_NHL_total.csv | 1 negative Kelly values clipped to 0 (min=-0.1011)
+2026-10-14T09:33:12.959812+00:00 | INFO  | WROTE: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/03_edges/ev_kelly/2026_10_14_NHL_total.csv (2 rows, 2 Kelly values clipped)
 
 ============================================================
-SUMMARY  2026-10-06T18:39:00.479289+00:00
+SUMMARY  2026-10-14T09:33:12.959874+00:00
 ============================================================
-  files_processed  : 24
-  rows_processed   : 133
-  moneyline_files  : 8
-  puck_line_files  : 8
-  total_files      : 8
+  files_processed  : 47
+  rows_processed   : 280
+  moneyline_files  : 16
+  puck_line_files  : 15
+  total_files      : 16
   skipped          : 0
-  neg_kelly_clipped: 173
+  neg_kelly_clipped: 371
   schema_errors    : 0
   errors           : 0
 
@@ -114,7 +204,15 @@ SUMMARY  2026-10-06T18:39:00.479289+00:00
   2026_10_03_NHL_moneyline.csv                     moneyline       13         19           ok
   2026_10_04_NHL_moneyline.csv                     moneyline        5          7           ok
   2026_10_05_NHL_moneyline.csv                     moneyline        4          5           ok
-  2026_10_06_NHL_moneyline.csv                     moneyline        9         13           ok
+  2026_10_06_NHL_moneyline.csv                     moneyline        9         12           ok
+  2026_10_07_NHL_moneyline.csv                     moneyline        3          5           ok
+  2026_10_08_NHL_moneyline.csv                     moneyline       10         14           ok
+  2026_10_09_NHL_moneyline.csv                     moneyline        4          7           ok
+  2026_10_10_NHL_moneyline.csv                     moneyline       14         20           ok
+  2026_10_11_NHL_moneyline.csv                     moneyline        3          4           ok
+  2026_10_12_NHL_moneyline.csv                     moneyline        3          4           ok
+  2026_10_13_NHL_moneyline.csv                     moneyline       16         22           ok
+  2026_10_14_NHL_moneyline.csv                     moneyline        2          3           ok
   2026_09_29_NHL_puck_line.csv                     puck_line        3          3           ok
   2026_09_30_NHL_puck_line.csv                     puck_line        2          2           ok
   2026_10_01_NHL_puck_line.csv                     puck_line        6          6           ok
@@ -123,6 +221,13 @@ SUMMARY  2026-10-06T18:39:00.479289+00:00
   2026_10_04_NHL_puck_line.csv                     puck_line        2          2           ok
   2026_10_05_NHL_puck_line.csv                     puck_line        3          3           ok
   2026_10_06_NHL_puck_line.csv                     puck_line        3          3           ok
+  2026_10_07_NHL_puck_line.csv                     puck_line        2          2           ok
+  2026_10_08_NHL_puck_line.csv                     puck_line        7          7           ok
+  2026_10_09_NHL_puck_line.csv                     puck_line        3          3           ok
+  2026_10_10_NHL_puck_line.csv                     puck_line       10         10           ok
+  2026_10_11_NHL_puck_line.csv                     puck_line        3          3           ok
+  2026_10_13_NHL_puck_line.csv                     puck_line       11         11           ok
+  2026_10_14_NHL_puck_line.csv                     puck_line        1          1           ok
   2026_09_29_NHL_total.csv                         total            5          9           ok
   2026_09_30_NHL_total.csv                         total            3          4           ok
   2026_10_01_NHL_total.csv                         total            8         14           ok
@@ -131,20 +236,28 @@ SUMMARY  2026-10-06T18:39:00.479289+00:00
   2026_10_04_NHL_total.csv                         total            5          7           ok
   2026_10_05_NHL_total.csv                         total            4          6           ok
   2026_10_06_NHL_total.csv                         total            9         11           ok
+  2026_10_07_NHL_total.csv                         total            3          4           ok
+  2026_10_08_NHL_total.csv                         total           10         17           ok
+  2026_10_09_NHL_total.csv                         total            4          6           ok
+  2026_10_10_NHL_total.csv                         total           14         22           ok
+  2026_10_11_NHL_total.csv                         total            3          5           ok
+  2026_10_12_NHL_total.csv                         total            3          5           ok
+  2026_10_13_NHL_total.csv                         total           16         22           ok
+  2026_10_14_NHL_total.csv                         total            2          2           ok
 
 STATUS: SUCCESS
 ============================================================
 
 ============================================================
-SUMMARY  2026-10-06T18:39:00.479434+00:00
+SUMMARY  2026-10-14T09:33:12.959960+00:00
 ============================================================
-  files_processed  : 24
-  rows_processed   : 133
-  moneyline_files  : 8
-  puck_line_files  : 8
-  total_files      : 8
+  files_processed  : 47
+  rows_processed   : 280
+  moneyline_files  : 16
+  puck_line_files  : 15
+  total_files      : 16
   skipped          : 0
-  neg_kelly_clipped: 173
+  neg_kelly_clipped: 371
   schema_errors    : 0
   errors           : 0
 
@@ -156,7 +269,15 @@ SUMMARY  2026-10-06T18:39:00.479434+00:00
   2026_10_03_NHL_moneyline.csv                     moneyline       13         19           ok
   2026_10_04_NHL_moneyline.csv                     moneyline        5          7           ok
   2026_10_05_NHL_moneyline.csv                     moneyline        4          5           ok
-  2026_10_06_NHL_moneyline.csv                     moneyline        9         13           ok
+  2026_10_06_NHL_moneyline.csv                     moneyline        9         12           ok
+  2026_10_07_NHL_moneyline.csv                     moneyline        3          5           ok
+  2026_10_08_NHL_moneyline.csv                     moneyline       10         14           ok
+  2026_10_09_NHL_moneyline.csv                     moneyline        4          7           ok
+  2026_10_10_NHL_moneyline.csv                     moneyline       14         20           ok
+  2026_10_11_NHL_moneyline.csv                     moneyline        3          4           ok
+  2026_10_12_NHL_moneyline.csv                     moneyline        3          4           ok
+  2026_10_13_NHL_moneyline.csv                     moneyline       16         22           ok
+  2026_10_14_NHL_moneyline.csv                     moneyline        2          3           ok
   2026_09_29_NHL_puck_line.csv                     puck_line        3          3           ok
   2026_09_30_NHL_puck_line.csv                     puck_line        2          2           ok
   2026_10_01_NHL_puck_line.csv                     puck_line        6          6           ok
@@ -165,6 +286,13 @@ SUMMARY  2026-10-06T18:39:00.479434+00:00
   2026_10_04_NHL_puck_line.csv                     puck_line        2          2           ok
   2026_10_05_NHL_puck_line.csv                     puck_line        3          3           ok
   2026_10_06_NHL_puck_line.csv                     puck_line        3          3           ok
+  2026_10_07_NHL_puck_line.csv                     puck_line        2          2           ok
+  2026_10_08_NHL_puck_line.csv                     puck_line        7          7           ok
+  2026_10_09_NHL_puck_line.csv                     puck_line        3          3           ok
+  2026_10_10_NHL_puck_line.csv                     puck_line       10         10           ok
+  2026_10_11_NHL_puck_line.csv                     puck_line        3          3           ok
+  2026_10_13_NHL_puck_line.csv                     puck_line       11         11           ok
+  2026_10_14_NHL_puck_line.csv                     puck_line        1          1           ok
   2026_09_29_NHL_total.csv                         total            5          9           ok
   2026_09_30_NHL_total.csv                         total            3          4           ok
   2026_10_01_NHL_total.csv                         total            8         14           ok
@@ -173,6 +301,14 @@ SUMMARY  2026-10-06T18:39:00.479434+00:00
   2026_10_04_NHL_total.csv                         total            5          7           ok
   2026_10_05_NHL_total.csv                         total            4          6           ok
   2026_10_06_NHL_total.csv                         total            9         11           ok
+  2026_10_07_NHL_total.csv                         total            3          4           ok
+  2026_10_08_NHL_total.csv                         total           10         17           ok
+  2026_10_09_NHL_total.csv                         total            4          6           ok
+  2026_10_10_NHL_total.csv                         total           14         22           ok
+  2026_10_11_NHL_total.csv                         total            3          5           ok
+  2026_10_12_NHL_total.csv                         total            3          5           ok
+  2026_10_13_NHL_total.csv                         total           16         22           ok
+  2026_10_14_NHL_total.csv                         total            2          2           ok
 
 STATUS: SUCCESS
 ============================================================

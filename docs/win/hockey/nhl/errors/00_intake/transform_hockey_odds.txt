@@ -1,36 +1,53 @@
-=== transform_hockey_odds RUN 2026-10-06T13:19:24.802581-04:00 ===
-2026-10-06T13:19:24.802854-04:00 | Odds input directory: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds
-2026-10-06T13:19:24.802891-04:00 | JSON files found: 8
-2026-10-06T13:19:24.804689-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_09_29.json | events=5 | provider_rows=5
-2026-10-06T13:19:24.805928-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_09_30.json | events=3 | provider_rows=3
-2026-10-06T13:19:24.809019-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_01.json | events=8 | provider_rows=8
-2026-10-06T13:19:24.810715-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_02.json | events=5 | provider_rows=5
-2026-10-06T13:19:24.815580-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_03.json | events=13 | provider_rows=13
-2026-10-06T13:19:24.817524-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_04.json | events=5 | provider_rows=5
-2026-10-06T13:19:24.818825-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_05.json | events=4 | provider_rows=4
-2026-10-06T13:19:24.821803-04:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_06.json | events=9 | provider_rows=9
-2026-10-06T13:19:24.822649-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_29.csv rows=5
-2026-10-06T13:19:24.823080-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_30.csv rows=3
-2026-10-06T13:19:24.823601-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_01.csv rows=8
-2026-10-06T13:19:24.824028-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_02.csv rows=5
-2026-10-06T13:19:24.824640-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_03.csv rows=13
-2026-10-06T13:19:24.825056-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_04.csv rows=5
-2026-10-06T13:19:24.825496-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_05.csv rows=4
-2026-10-06T13:19:24.826019-04:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_06.csv rows=9
-2026-10-06T13:19:24.826050-04:00 | Provider priority: Titanbets -> MGM -> Bet365 -> Caesars Sportsbook -> SugarHouse -> others
-2026-10-06T13:19:24.826074-04:00 | Live Odds providers excluded from production selection
-2026-10-06T13:19:24.826102-04:00 | --- SUMMARY ---
-2026-10-06T13:19:24.826140-04:00 | csv_files_written: 8
-2026-10-06T13:19:24.826163-04:00 | events_found: 52
-2026-10-06T13:19:24.826183-04:00 | json_files_processed: 8
-2026-10-06T13:19:24.826203-04:00 | moneyline_provider:Draft Kings: 7
-2026-10-06T13:19:24.826223-04:00 | moneyline_provider:DraftKings: 45
-2026-10-06T13:19:24.826242-04:00 | odds_provider_rows_found: 52
-2026-10-06T13:19:24.826261-04:00 | puck_line_provider:Draft Kings: 7
-2026-10-06T13:19:24.826280-04:00 | puck_line_provider:DraftKings: 45
-2026-10-06T13:19:24.826300-04:00 | rows_built: 52
-2026-10-06T13:19:24.826319-04:00 | rows_unchanged: 41
-2026-10-06T13:19:24.826370-04:00 | rows_updated: 11
-2026-10-06T13:19:24.826393-04:00 | total_provider:Draft Kings: 7
-2026-10-06T13:19:24.826413-04:00 | total_provider:DraftKings: 45
-2026-10-06T13:19:24.826432-04:00 | STATUS: SUCCESS
+=== transform_hockey_odds RUN 2026-10-14T04:42:13.278607-04:00 ===
+2026-10-14T04:42:13.278862-04:00 | Odds input directory: /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds
+2026-10-14T04:42:13.278888-04:00 | JSON files found: 16
+2026-10-14T04:42:13.280352-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_09_29.json | events=5 | provider_rows=5
+2026-10-14T04:42:13.281335-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_09_30.json | events=3 | provider_rows=3
+2026-10-14T04:42:13.283971-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_01.json | events=8 | provider_rows=8
+2026-10-14T04:42:13.285272-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_02.json | events=5 | provider_rows=5
+2026-10-14T04:42:13.289069-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_03.json | events=13 | provider_rows=13
+2026-10-14T04:42:13.290502-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_04.json | events=5 | provider_rows=5
+2026-10-14T04:42:13.291526-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_05.json | events=4 | provider_rows=4
+2026-10-14T04:42:13.293798-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_06.json | events=9 | provider_rows=9
+2026-10-14T04:42:13.294690-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_07.json | events=3 | provider_rows=3
+2026-10-14T04:42:13.296895-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_08.json | events=10 | provider_rows=10
+2026-10-14T04:42:13.298011-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_09.json | events=4 | provider_rows=4
+2026-10-14T04:42:13.301664-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_10.json | events=14 | provider_rows=14
+2026-10-14T04:42:13.302663-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_11.json | events=3 | provider_rows=3
+2026-10-14T04:42:13.303471-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_12.json | events=3 | provider_rows=3
+2026-10-14T04:42:13.307208-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_13.json | events=16 | provider_rows=16
+2026-10-14T04:42:13.308016-04:00 | READ /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/odds/2026_10_14.json | events=2 | provider_rows=2
+2026-10-14T04:42:13.308776-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_29.csv rows=5
+2026-10-14T04:42:13.309152-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_30.csv rows=3
+2026-10-14T04:42:13.309602-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_01.csv rows=8
+2026-10-14T04:42:13.310014-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_02.csv rows=5
+2026-10-14T04:42:13.310516-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_03.csv rows=13
+2026-10-14T04:42:13.310893-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_04.csv rows=5
+2026-10-14T04:42:13.311285-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_05.csv rows=4
+2026-10-14T04:42:13.311721-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_06.csv rows=9
+2026-10-14T04:42:13.312056-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_07.csv rows=3
+2026-10-14T04:42:13.312502-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_08.csv rows=10
+2026-10-14T04:42:13.312862-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_09.csv rows=4
+2026-10-14T04:42:13.313397-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_10.csv rows=14
+2026-10-14T04:42:13.313725-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_11.csv rows=3
+2026-10-14T04:42:13.314047-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_12.csv rows=3
+2026-10-14T04:42:13.314590-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_13.csv rows=16
+2026-10-14T04:42:13.314750-04:00 | WROTE /home/runner/work/bet_tracker/bet_tracker/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_14.csv rows=2
+2026-10-14T04:42:13.314771-04:00 | Provider priority: Titanbets -> MGM -> Bet365 -> Caesars Sportsbook -> SugarHouse -> others
+2026-10-14T04:42:13.314788-04:00 | Live Odds providers excluded from production selection
+2026-10-14T04:42:13.314803-04:00 | --- SUMMARY ---
+2026-10-14T04:42:13.314822-04:00 | csv_files_written: 16
+2026-10-14T04:42:13.314837-04:00 | events_found: 107
+2026-10-14T04:42:13.314852-04:00 | json_files_processed: 16
+2026-10-14T04:42:13.314867-04:00 | moneyline_provider:Draft Kings: 12
+2026-10-14T04:42:13.314882-04:00 | moneyline_provider:DraftKings: 95
+2026-10-14T04:42:13.314897-04:00 | odds_provider_rows_found: 107
+2026-10-14T04:42:13.314911-04:00 | puck_line_provider:Draft Kings: 12
+2026-10-14T04:42:13.314926-04:00 | puck_line_provider:DraftKings: 95
+2026-10-14T04:42:13.314941-04:00 | rows_added: 2
+2026-10-14T04:42:13.314956-04:00 | rows_built: 107
+2026-10-14T04:42:13.314971-04:00 | rows_unchanged: 99
+2026-10-14T04:42:13.314985-04:00 | rows_updated: 6
+2026-10-14T04:42:13.315000-04:00 | total_provider:Draft Kings: 12
+2026-10-14T04:42:13.315015-04:00 | total_provider:DraftKings: 95
+2026-10-14T04:42:13.315030-04:00 | STATUS: SUCCESS

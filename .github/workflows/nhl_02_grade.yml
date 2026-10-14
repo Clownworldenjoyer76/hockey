@@ -1,3 +1,4 @@
+
 name: NHL 02 Grade
 
 on:
@@ -16,13 +17,56 @@ jobs:
 
     env:
       TZ: America/New_York
+      GH_TOKEN: ${{ github.token }}
+      GIT_TERMINAL_PROMPT: "0"
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          ref: main
-          fetch-depth: 0
+      - name: Checkout NHL pipeline files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Authenticate Git without embedding tokens in remote URLs.
+          gh auth setup-git --hostname github.com
+
+          # Fetch only the latest commit, without downloading
+          # unnecessary file contents or repository history.
+          git clone \
+            --filter=blob:none \
+            --depth=1 \
+            --sparse \
+            --branch main \
+            "https://github.com/${GITHUB_REPOSITORY}.git" .
+
+          # Materialize only the directories used by this pipeline.
+          git sparse-checkout set \
+            docs/win/hockey/nhl/scripts \
+            docs/win/hockey/nhl/config \
+            docs/win/hockey/nhl/00_intake/drat_raw \
+            docs/win/hockey/nhl/00_intake/sportsbook \
+            docs/win/hockey/nhl/03_edges/secondary_signals \
+            docs/win/hockey/nhl/04_select \
+            docs/win/hockey/nhl/05_final_scores \
+            docs/win/hockey/nhl/odds/snapshots \
+            docs/win/hockey/nhl/errors/04_select \
+            docs/win/hockey/nhl/errors/05_final_scores \
+            docs/win/hockey/nhl/clv \
+            frontend/data/dashboards
+
+          # Verify essential pipeline files are present.
+          test -f docs/win/hockey/nhl/requirements.txt
+          test -f docs/win/hockey/nhl/scripts/04_select/validate_markets_config.py
+          test -f docs/win/hockey/nhl/scripts/04_select/hockey_select_bets.py
+          test -f docs/win/hockey/nhl/scripts/05_final_scores/transform_final_scores.py
+          test -f docs/win/hockey/nhl/scripts/05_final_scores/01_nhl_results_grade.py
+          test -f docs/win/hockey/nhl/scripts/05_final_scores/02_nhl_results_analyze.py
+          test -f docs/win/hockey/nhl/scripts/05_final_scores/03_nhl_results_reports.py
+          test -f docs/win/hockey/nhl/scripts/05_final_scores/04_nhl_clv.py
+          test -f docs/win/hockey/nhl/scripts/05_final_scores/05_nhl_results_dashboard.py
+
+          echo "CHECKOUT: PASS"
+          echo "SPARSE CHECKOUT: PASS"
+          echo "COMMIT: $(git rev-parse HEAD)"
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -119,6 +163,8 @@ jobs:
       - name: Commit NHL markets rebuild outputs
         shell: bash
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
@@ -128,8 +174,9 @@ jobs:
           git add -A docs/win/hockey/nhl/errors/04_select
           git add -A docs/win/hockey/nhl/errors/05_final_scores
 
-          [ -f frontend/nhl_dashboard.html ] && git add frontend/nhl_dashboard.html
-          [ -f frontend/hockey_dashboard.html ] && git add frontend/hockey_dashboard.html
+          if [ -f frontend/data/dashboards/nhl.json ]; then
+            git add frontend/data/dashboards/nhl.json
+          fi
 
           echo "--- git status before commit ---"
           git status --short
@@ -143,3 +190,6 @@ jobs:
 
           git pull --rebase --autostash origin main
           git push origin main
+
+          echo "COMMIT: $(git rev-parse HEAD)"
+          echo "PUSH: PASS"

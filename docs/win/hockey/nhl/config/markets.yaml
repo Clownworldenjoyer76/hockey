@@ -31,7 +31,7 @@ markets:
       # best_ev = one moneyline side max per game, highest EV
       # best_prob = one moneyline side max per game, highest model probability
       # all = can select both sides if both pass
-      pick_preference: all
+      pick_preference: best_prob
 
       home:
         enabled: true
@@ -42,8 +42,7 @@ markets:
         my_model_prob_bands:
           - [0.0, 1.0]
         odds_bands:
-          - [-300, -150]
-          - [100, 125]
+          - [-500, 500]
         ev_bands:
           - [0.00, 999.9999]
         kelly_bands:
@@ -51,7 +50,6 @@ markets:
 
       away:
         enabled: true
-
         # based on away_model_prob_moneyline from the moneyline EV file
         prob_bands:
           - [0.00, 1.0]
@@ -59,10 +57,9 @@ markets:
         my_model_prob_bands:
           - [0.0, 1.0]
         odds_bands:
-          - [-300, -200]
-          - [100, 150]
+          - [-500, 500]
         ev_bands:
-          - [0.0, 999.9999]
+          - [0.00, 999.9999]
         kelly_bands:
           - [0.0, 999.9999]
     ###################################################
@@ -73,7 +70,7 @@ markets:
       # best_ev = one puck-line side max per game, highest EV
       # best_prob = one puck-line side max per game, highest model probability
       # all = can select both sides if both pass
-      pick_preference: all
+      pick_preference: best_prob
 
       home:
         enabled: true
@@ -81,14 +78,14 @@ markets:
         prob_bands:
           - [0.0, 1.0]
         # Direct probability produced by the configured NHL secondary model.
-        my_model_prob_bands:
-          - [0.60, 1.0]
         line_bands:
           - [-5.0, 5.0]
+        my_model_prob_bands:
+          - [0.0, 1.0]
         odds_bands:
-          - [-300, 10000]
+          - [-500, 500]
         ev_bands:
-          - [0.0, 0.10]
+          - [0.00, 999.9999]
         kelly_bands:
           - [0.0, 999.9999]
 
@@ -98,14 +95,14 @@ markets:
         prob_bands:
           - [0.0, 1.0]
         # Direct probability produced by the configured NHL secondary model.
-        my_model_prob_bands:
-          - [0.65, 1.0]
         line_bands:
           - [-5.0, 5.0]
+        my_model_prob_bands:
+          - [0.0, 1.0]
         odds_bands:
-          - [-300, 10000]
+          - [-500, 500]
         ev_bands:
-          - [0.0, 999.9999]
+          - [0.00, 999.9999]
         kelly_bands:
           - [0.0, 999.9999]
     ###################################################
@@ -116,22 +113,22 @@ markets:
       # best_ev = one total side max per game, highest EV
       # best_prob = one total side max per game, highest model probability
       # all = can select both sides if both pass
-      pick_preference: all
+      pick_preference: best_prob
 
       over:
         enabled: true
         # based on over_model_prob_total from the total EV file
         prob_bands:
-          - [0.60, 1.0]
+          - [0.00, 0.99]
         # Direct probability produced by the configured NHL secondary model.
-        my_model_prob_bands:
-          - [0.0, 1.0]
         line_bands:
           - [0.0, 100.0]
+        my_model_prob_bands:
+          - [0.0, 1.0]
         odds_bands:
-          - [-300, 10000]
+          - [-500, 500]
         ev_bands:
-          - [0.0, 999.9999]
+          - [0.00, 999.9999]
         kelly_bands:
           - [0.0, 999.9999]
 
@@ -139,15 +136,15 @@ markets:
         enabled: true
         # based on under_model_prob_total from the total EV file
         prob_bands:
-          - [0.55, 0.60]
+          - [0.00, 0.99]
         # Direct probability produced by the configured NHL secondary model.
-        my_model_prob_bands:
-          - [0.0, 1.0]
         line_bands:
           - [0.0, 100.0]
+        my_model_prob_bands:
+          - [0.0, 1.0]
         odds_bands:
-          - [-300, 10000]
+          - [-500, 500]
         ev_bands:
-          - [0.0, 0.10]
+          - [0.00, 999.9999]
         kelly_bands:
-          - [0.0, 0.10]
+          - [0.0, 999.9999]

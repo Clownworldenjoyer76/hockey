@@ -3237,23 +3237,23 @@ def load_sdv_prediction_index() -> dict[str, dict[str, str]]:
                         f"column={source_col} "
                         f"value={raw!r}"
                     )
+                else:
+                    if (
+                        output_col == "sdv_home_win_prob"
+                        and not (0.0 <= value <= 1.0)
+                    ):
+                        fail(
+                            "SportsDataverse home win probability "
+                            "is outside [0,1]: "
+                            f"{prediction_path} "
+                            f"row={row_number} "
+                            f"game_id={game_id} "
+                            f"value={value}"
+                        )
 
-                if (
-                    output_col == "sdv_home_win_prob"
-                    and not (0.0 <= value <= 1.0)
-                ):
-                    fail(
-                        "SportsDataverse home win probability "
-                        "is outside [0,1]: "
-                        f"{prediction_path} "
-                        f"row={row_number} "
-                        f"game_id={game_id} "
-                        f"value={value}"
+                    normalized[output_col] = (
+                        format_numeric(value)
                     )
-
-                normalized[output_col] = (
-                    format_numeric(value)
-                )
 
             previous_source = source_by_game_id.get(
                 game_id

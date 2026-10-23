@@ -1,6 +1,6 @@
 version: "1.0"
 
-linter: qodana-python
+linter: qodana-python-community
 
 profile:
   name: qodana.recommended
@@ -10,9 +10,6 @@ bootstrap: |
   python -m pip install -r docs/win/hockey/nhl/requirements.txt
 
 onlyDirectory: docs/win/hockey/nhl
-
-include:
-  - name: CheckDependencyLicenses
 
 exclude:
   - name: DuplicatedCode

@@ -25,6 +25,7 @@ import tempfile
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import NoReturn
 
 ROOT = Path("docs/win/hockey/nhl")
 SDV = ROOT / "sdv"
@@ -64,7 +65,7 @@ FAMILIES = {
 }
 
 
-def error(message: str) -> None:
+def error(message: str) -> NoReturn:
     raise RuntimeError(message)
 
 
@@ -522,8 +523,6 @@ def audit_history() -> None:
 
             for family in FAMILIES:
                 _, _, _, value_fields = FAMILIES[family]
-
-                sources = []
 
                 if family == "fatigue":
                     sources = [

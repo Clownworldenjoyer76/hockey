@@ -105,6 +105,14 @@ jobs:
           path: ~/.cache/nhl_xg_models
           key: sdv-nhl-xg-models-v1
 
+      - name: Cache NHL full-season SDV datasets
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/nhl_sdv_season_v2
+          key: nhl-sdv-season-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            nhl-sdv-season-v2-
+
       - name: Install Playwright system dependencies
         run: python -m playwright install-deps chromium
 
@@ -266,9 +274,17 @@ jobs:
             git push
           fi
 
+      - name: 01 Merge - Restore historical NHL SDV features
+        if: steps.current_slate.outputs.has_games == 'true'
+        run: python docs/win/hockey/nhl/scripts/01_merge/restore_nhl_sdv_history.py prepare
+
       - name: 01 Merge - NHL merge intake
         if: steps.current_slate.outputs.has_games == 'true'
         run: python docs/win/hockey/nhl/scripts/01_merge/merge_intake.py
+
+      - name: 01 Merge - Audit NHL SDV feature coverage
+        if: steps.current_slate.outputs.has_games == 'true'
+        run: python docs/win/hockey/nhl/scripts/01_merge/restore_nhl_sdv_history.py audit
 
       - name: 01 Merge - NHL build juice files
         if: steps.current_slate.outputs.has_games == 'true'
@@ -328,6 +344,7 @@ jobs:
       - name: Commit NHL Stage 01-04 outputs
         if: steps.current_slate.outputs.has_games == 'true'
         run: |
+          git add -A docs/win/hockey/nhl/sdv
           git add -A docs/win/hockey/nhl/01_merge
           git add -A docs/win/hockey/nhl/02_juice
           git add -A docs/win/hockey/nhl/03_edges

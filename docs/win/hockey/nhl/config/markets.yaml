@@ -53,10 +53,11 @@ markets:
         enabled: true
         # based on away_model_prob_moneyline from the moneyline EV file
         prob_bands:
-          - [0.00, 1.0]
+          - [0.60, 1.0]
         # Direct probability produced by the configured NHL secondary model.
         my_model_prob_bands:
-          - [0.45, 1.00]
+          - [0.45, 0.50]
+          - [0.55, 1.00]
         odds_bands:
           - [-500, -110]
           - [101, 150]
@@ -102,7 +103,7 @@ markets:
         my_model_prob_bands:
           - [0.0, 1.0]
         odds_bands:
-          - [-500, -125]
+          - [-500, -150]
         ev_bands:
           - [0.00, 999.9999]
         kelly_bands:
@@ -143,11 +144,12 @@ markets:
         line_bands:
           - [0.0, 100.0]
         my_model_prob_bands:
-          - [0.0, 1.0]
+          - [0.50, 0.55]
+          - [0.60, 1.0]
         odds_bands:
           - [-124, -110]
           - [101, 125]
         ev_bands:
-          - [0.00, 999.999]
+          - [0.00, 0.04]
         kelly_bands:
           - [0.0, 0.10]

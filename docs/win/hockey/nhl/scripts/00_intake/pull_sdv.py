@@ -12,12 +12,26 @@ Historical:
 Optional category subset:
     python docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py --categories schedule,goalie,odds
 
+Default current run: all production families and SDV predictions; ESPN odds,
+raw duplicates, roster/profile diagnostics disabled. Use --include-raw,
+--include-diagnostics or --categories odds only when explicitly needed.
+
 Current mode never requires a date. It uses the current America/New_York date.
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.metadata
+import os
+import pickle
+import platform
+import tempfile
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import contextmanager
+from dataclasses import dataclass
+from functools import lru_cache
 import json
 import shutil
 import sys
@@ -47,6 +61,173 @@ CATEGORIES = (
 )
 NY = ZoneInfo("America/New_York")
 UTC = timezone.utc
+
+
+@dataclass
+class PullOptions:
+    include_raw: bool = False
+    include_diagnostics: bool = False
+    max_workers: int = 3
+    cache_dir: Path = Path.home() / ".cache" / "nhl_sdv_season_v2"
+    no_cache: bool = False
+    cache_current_hours: float = 8.0
+    cache_historical_days: float = 30.0
+    compare_baseline_dir: Path | None = None
+
+
+OPTIONS = PullOptions()
+TIMING_LOCK = threading.Lock()
+TIMING_EVENTS: list[dict[str, Any]] = []
+CACHE_COUNTS = {"hit": 0, "miss": 0, "write": 0, "invalid": 0}
+TIMING_PATH = BASE_DIR / "errors" / "00_intake" / "pull_sdv_timing.json"
+
+
+def record_timing(name: str, elapsed: float, status: str = "ok") -> None:
+    with TIMING_LOCK:
+        TIMING_EVENTS.append({
+            "name": name,
+            "seconds": round(elapsed, 5),
+            "status": status,
+        })
+
+
+@contextmanager
+def timed_operation(name: str):
+    start = time.perf_counter()
+    status = "ok"
+    try:
+        yield
+    except BaseException:
+        status = "error"
+        raise
+    finally:
+        duration = time.perf_counter() - start
+        record_timing(name, duration, status)
+        print(f"SDV TIMING | {name} | {duration:.2f}s | {status}", flush=True)
+
+
+def timed_call(name: str, function, *args, **kwargs):
+    with timed_operation(name):
+        return function(*args, **kwargs)
+
+
+def library_version() -> str:
+    try:
+        return importlib.metadata.version("sportsdataverse")
+    except importlib.metadata.PackageNotFoundError:
+        return "uninstalled"
+
+
+def _cache_file(label: str, season: int) -> Path:
+    return OPTIONS.cache_dir / f"{label}_season_{season}.pickle"
+
+
+def _cache_fresh(metadata: dict[str, Any], label: str, season: int,
+                 current: bool, now: datetime) -> bool:
+    if (metadata.get("schema") != 2
+            or metadata.get("label") != label
+            or metadata.get("season") != season
+            or metadata.get("python") != platform.python_version_tuple()[:2]
+            or metadata.get("sportsdataverse") != library_version()):
+        return False
+    try:
+        stamped = datetime.fromisoformat(metadata["fetched_at_utc"])
+        if stamped.tzinfo is None or stamped > now:
+            return False
+        age_seconds = (now - stamped).total_seconds()
+    except (ValueError, TypeError, KeyError):
+        return False
+    if current:
+        # Cached in-season data is never reused across ET calendar days.
+        # The season dataset can gain new game results overnight.
+        return (
+            stamped.astimezone(NY).date() == now.astimezone(NY).date()
+            and age_seconds <= OPTIONS.cache_current_hours * 3600
+        )
+    return age_seconds <= OPTIONS.cache_historical_days * 86400
+
+
+def cached_season_pull(failures: list[str], label: str, function,
+                       season: int, *, current: bool):
+    """Trust only same-version, same-season, freshness-checked cache entries.
+
+    Existing game-level as-of validations remain entirely in their builders.
+    Cached full-season source frames never bypass those validations.
+    """
+    path = _cache_file(label, season)
+    now = datetime.now(timezone.utc)
+    if not OPTIONS.no_cache and path.is_file():
+        try:
+            # Cache is created by this workflow, not loaded from user uploads.
+            with path.open("rb") as stream:
+                metadata, value = pickle.load(stream)
+            if _cache_fresh(metadata, label, season, current, now) and not frame_empty(value):
+                with TIMING_LOCK:
+                    CACHE_COUNTS["hit"] += 1
+                print(f"SDV CACHE HIT | {label} | season={season}", flush=True)
+                return value
+            with TIMING_LOCK:
+                CACHE_COUNTS["invalid"] += 1
+        except (OSError, EOFError, ValueError, TypeError, AttributeError, pickle.UnpicklingError):
+            with TIMING_LOCK:
+                CACHE_COUNTS["invalid"] += 1
+
+    with TIMING_LOCK:
+        CACHE_COUNTS["miss"] += 1
+    print(f"SDV CACHE MISS | {label} | season={season}", flush=True)
+    value = safe_pull(failures, "season-context", label, function, season)
+    if value is None or frame_empty(value) or OPTIONS.no_cache:
+        return value
+
+    OPTIONS.cache_dir.mkdir(parents=True, exist_ok=True)
+    meta = {
+        "schema": 2,
+        "label": label,
+        "season": season,
+        "python": platform.python_version_tuple()[:2],
+        "sportsdataverse": library_version(),
+        "fetched_at_utc": now.isoformat(),
+    }
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="wb", prefix=".nhl_sdv_",
+                                         suffix=".tmp", dir=OPTIONS.cache_dir,
+                                         delete=False) as stream:
+            tmp_path = Path(stream.name)
+            pickle.dump((meta, value), stream, protocol=pickle.HIGHEST_PROTOCOL)
+        os.replace(tmp_path, path)
+        with TIMING_LOCK:
+            CACHE_COUNTS["write"] += 1
+    except (OSError, TypeError, ValueError, pickle.PicklingError) as exc:
+        print(f"WARN | SDV cache write {label}: {exc}", file=sys.stderr)
+    finally:
+        if tmp_path is not None:
+            tmp_path.unlink(missing_ok=True)
+    return value
+
+
+def write_timing_report(wall_seconds: float) -> None:
+    TIMING_PATH.parent.mkdir(parents=True, exist_ok=True)
+    summary: dict[str, dict[str, float | int]] = {}
+    for event in TIMING_EVENTS:
+        stat = summary.setdefault(event["name"], {"count": 0, "seconds": 0.0})
+        stat["count"] += 1
+        stat["seconds"] = round(stat["seconds"] + event["seconds"], 5)
+    report = {
+        "finished_at_utc": datetime.now(timezone.utc).isoformat(),
+        "wall_seconds": round(wall_seconds, 3),
+        "cache": dict(CACHE_COUNTS),
+        "summary": summary,
+        "events": list(TIMING_EVENTS),
+    }
+    TIMING_PATH.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"SDV TIMING | total | {wall_seconds:.2f}s", flush=True)
+    for name, stat in sorted(summary.items(),
+                             key=lambda item: item[1]["seconds"], reverse=True)[:15]:
+        print(f"SDV TIMING SUMMARY | {name} | "
+              f"{stat['seconds']:.2f}s | calls={stat['count']}", flush=True)
+    print(f"SDV TIMING REPORT | {TIMING_PATH}", flush=True)
+
 
 TEAM_STRENGTH_FIELDS = (
     "adj_xgf",
@@ -214,6 +395,21 @@ def parse_args() -> argparse.Namespace:
         default="all",
         help="Comma-separated category names, or 'all'.",
     )
+    parser.add_argument("--include-raw", action="store_true",
+                        help="Also fetch duplicate raw API responses for diagnostics")
+    parser.add_argument("--include-diagnostics", action="store_true",
+                        help="Fetch roster, goalie-profile, standings and season diagnostic data")
+    parser.add_argument("--max-workers", type=int, default=3,
+                        help="Bounded parallel team schedule requests (1-4, default 3)")
+    parser.add_argument("--cache-dir", type=Path,
+                        default=Path(os.environ.get("NHL_SDV_CACHE_DIR",
+                                       str(Path.home() / ".cache" / "nhl_sdv_season_v2"))))
+    parser.add_argument("--no-cache", action="store_true",
+                        help="Force season source downloads, bypass persistent cache")
+    parser.add_argument("--cache-current-hours", type=float, default=8.0)
+    parser.add_argument("--cache-historical-days", type=float, default=30.0)
+    parser.add_argument("--compare-baseline-dir", type=Path,
+                        help="Compare latest production CSVs with an independently saved baseline")
     return parser.parse_args()
 
 
@@ -246,7 +442,7 @@ def requested_seasons(args: argparse.Namespace) -> list[int]:
 
 def requested_categories(args: argparse.Namespace) -> set[str]:
     if str(args.categories).strip().lower() == "all":
-        return set(CATEGORIES)
+        return set(CATEGORIES) - {"odds"}
 
     values = {
         x.strip()
@@ -360,6 +556,7 @@ def game_date_time_cutoff_utc(
     return None
 
 
+@lru_cache(maxsize=1)
 def official_schedule_cutoff_lookup() -> dict[
     str,
     datetime,
@@ -884,6 +1081,19 @@ def save_object(
         is_polars_frame(obj)
         or is_pandas_frame(obj)
     ):
+        production_features = {
+            ("fatigue", "fatigue"),
+            ("team-strength", "team_ratings_asof"),
+            ("goalie", "game_goalie_features_asof"),
+            ("lineup-strength", "game_lineup_features_asof"),
+        }
+        if (category, label) in production_features and len(obj.columns) == 0:
+            print(
+                f"SDV empty feature snapshot skipped: "
+                f"{category}/{label} ({prefix})"
+            )
+            return written
+
         snap = (
             out_dir
             / f"{prefix}_{label}.csv"
@@ -947,23 +1157,20 @@ def safe_pull(
     *args,
     **kwargs,
 ):
+    start = time.perf_counter()
+    status = "ok"
     try:
-        return fn(
-            *args,
-            **kwargs,
-        )
-
+        return fn(*args, **kwargs)
     except Exception as exc:
-        failures.append(
-            f"{category}/{label}: {exc}"
-        )
-
-        print(
-            f"WARN | {category}/{label} | {exc}",
-            file=sys.stderr,
-        )
-
+        status = "error"
+        with TIMING_LOCK:
+            failures.append(f"{category}/{label}: {exc}")
+        print(f"WARN | {category}/{label} | {exc}", file=sys.stderr)
         return None
+    finally:
+        record_timing(f"request/{category}/{label}",
+                      time.perf_counter() - start, status)
+
 
 
 def frame_empty(obj: Any) -> bool:
@@ -1232,12 +1439,12 @@ def save_pair(
             current=current,
         )
 
-    raw = safe_pull(
+    raw = (safe_pull(
         failures,
         category,
         f"{label}_raw",
         raw_fn,
-    )
+    ) if OPTIONS.include_raw else None)
 
     if raw is not None:
         save_object(
@@ -2366,14 +2573,14 @@ def pull_schedule(
             date=target_date.isoformat(),
         )
 
-        raw = safe_pull(
+        raw = (safe_pull(
             failures,
             "schedule",
             "nhl_web_schedule_raw",
             nhl.nhl_web_schedule,
             date=target_date.isoformat(),
             return_parsed=False,
-        )
+        ) if OPTIONS.include_raw else None)
 
         if parsed is not None:
             save_object(
@@ -2497,90 +2704,91 @@ def pull_team_strength(
                     current=True,
                 )
 
-    standings_date = (
-        target_date.isoformat()
-    )
+    if OPTIONS.include_diagnostics:
+        standings_date = (
+            target_date.isoformat()
+        )
 
-    standings = safe_pull(
-        failures,
-        "team-strength",
-        "standings",
-        nhl.nhl_standings,
-        date=standings_date,
-    )
-
-    if standings is not None:
-        save_object(
+        standings = safe_pull(
+            failures,
             "team-strength",
             "standings",
-            standings,
-            prefix=prefix,
-            current=current,
+            nhl.nhl_standings,
+            date=standings_date,
         )
 
-    standings_raw = safe_pull(
-        failures,
-        "team-strength",
-        "standings_raw",
-        nhl.nhl_standings,
-        date=standings_date,
-        return_parsed=False,
-    )
+        if standings is not None:
+            save_object(
+                "team-strength",
+                "standings",
+                standings,
+                prefix=prefix,
+                current=current,
+            )
 
-    if standings_raw is not None:
-        save_object(
+        standings_raw = (safe_pull(
+            failures,
             "team-strength",
             "standings_raw",
-            standings_raw,
-            prefix=prefix,
-            current=current,
-        )
+            nhl.nhl_standings,
+            date=standings_date,
+            return_parsed=False,
+        ) if OPTIONS.include_raw else None)
 
-    for team in teams:
-        parsed = safe_pull(
-            failures,
-            "team-strength",
-            f"{team}_club_stats",
-            nhl.nhl_club_stats,
-            team=team,
-            season=(
-                None
-                if current
-                else season
-            ),
-        )
-
-        if parsed is not None:
+        if standings_raw is not None:
             save_object(
+                "team-strength",
+                "standings_raw",
+                standings_raw,
+                prefix=prefix,
+                current=current,
+            )
+
+        for team in teams:
+            parsed = safe_pull(
+                failures,
                 "team-strength",
                 f"{team}_club_stats",
-                parsed,
-                prefix=prefix,
-                current=current,
+                nhl.nhl_club_stats,
+                team=team,
+                season=(
+                    None
+                    if current
+                    else season
+                ),
             )
 
-        raw = safe_pull(
-            failures,
-            "team-strength",
-            f"{team}_club_stats_raw",
-            nhl.nhl_club_stats,
-            team=team,
-            season=(
-                None
-                if current
-                else season
-            ),
-            return_parsed=False,
-        )
+            if parsed is not None:
+                save_object(
+                    "team-strength",
+                    f"{team}_club_stats",
+                    parsed,
+                    prefix=prefix,
+                    current=current,
+                )
 
-        if raw is not None:
-            save_object(
+            raw = (safe_pull(
+                failures,
                 "team-strength",
                 f"{team}_club_stats_raw",
-                raw,
-                prefix=prefix,
-                current=current,
-            )
+                nhl.nhl_club_stats,
+                team=team,
+                season=(
+                    None
+                    if current
+                    else season
+                ),
+                return_parsed=False,
+            ) if OPTIONS.include_raw else None)
+
+            if raw is not None:
+                save_object(
+                    "team-strength",
+                    f"{team}_club_stats_raw",
+                    raw,
+                    prefix=prefix,
+                    current=current,
+                )
 
     return ratings
 
@@ -2624,7 +2832,7 @@ def pull_rosters(
                 current=current,
             )
 
-        raw = safe_pull(
+        raw = (safe_pull(
             failures,
             "lineup-strength",
             f"{team}_roster_raw",
@@ -2636,7 +2844,7 @@ def pull_rosters(
                 else season
             ),
             return_parsed=False,
-        )
+        ) if OPTIONS.include_raw else None)
 
         if raw is not None:
             save_object(
@@ -2737,14 +2945,14 @@ def pull_goalie_live_profiles(
                     current=current,
                 )
 
-            raw = safe_pull(
+            raw = (safe_pull(
                 failures,
                 "goalie",
                 f"{team}_{player_id}_player_landing_raw",
                 nhl.nhl_player_landing,
                 player_id=player_id,
                 return_parsed=False,
-            )
+            ) if OPTIONS.include_raw else None)
 
             if raw is not None:
                 save_object(
@@ -2760,46 +2968,32 @@ def pull_season_context(
     failures: list[str],
     *,
     season: int,
+    current: bool,
+    need_shifts: bool = True,
 ):
+    # Only PBP and shifts feed the production goalie/lineup calculations.
+    # Other full-season datasets are retained behind diagnostic opt-in.
     context = {
-        "pbp": safe_pull(
-            failures,
-            "lineup-strength",
-            "load_nhl_pbp_full",
-            nhl.load_nhl_pbp_full,
-            season,
+        "pbp": cached_season_pull(
+            failures, "pbp", nhl.load_nhl_pbp_full, season, current=current,
         ),
-        "shifts": safe_pull(
-            failures,
-            "lineup-strength",
-            "load_nhl_shifts",
-            nhl.load_nhl_shifts,
-            season,
-        ),
-        "goalie_box": safe_pull(
-            failures,
-            "goalie",
-            "load_nhl_goalie_boxscores",
-            nhl.load_nhl_goalie_boxscores,
-            season,
-        ),
-        "skater_box": safe_pull(
-            failures,
-            "lineup-strength",
-            "load_nhl_skater_boxscores",
-            nhl.load_nhl_skater_boxscores,
-            season,
-        ),
-        "rosters": safe_pull(
-            failures,
-            "lineup-strength",
-            "load_nhl_rosters",
-            nhl.load_nhl_rosters,
-            season,
+        "shifts": (
+            cached_season_pull(
+                failures, "shifts", nhl.load_nhl_shifts, season, current=current,
+            ) if need_shifts else None
         ),
     }
-
+    if OPTIONS.include_diagnostics:
+        for label, function, key, category in (
+            ("goalie_box", nhl.load_nhl_goalie_boxscores, "goalie_box", "goalie"),
+            ("skater_box", nhl.load_nhl_skater_boxscores, "skater_box", "lineup-strength"),
+            ("rosters", nhl.load_nhl_rosters, "rosters", "lineup-strength"),
+        ):
+            context[key] = cached_season_pull(
+                failures, label, function, season, current=current,
+            )
     return context
+
 
 
 def save_season_context(
@@ -4387,53 +4581,42 @@ def pull_fatigue(
 
     fatigue_frames = []
 
-    for team in teams:
+    def fetch_team_schedule(team: str):
         parsed = safe_pull(
-            failures,
-            "fatigue",
-            f"{team}_club_schedule",
-            nhl.nhl_club_schedule_season,
-            team=team,
+            failures, "fatigue", f"{team}_club_schedule",
+            nhl.nhl_club_schedule_season, team=team,
         )
+        raw = (
+            safe_pull(
+                failures, "fatigue", f"{team}_club_schedule_raw",
+                nhl.nhl_club_schedule_season, team=team, return_parsed=False,
+            ) if OPTIONS.include_raw else None
+        )
+        return team, parsed, raw
 
+    with ThreadPoolExecutor(max_workers=OPTIONS.max_workers) as pool:
+        futures = {pool.submit(fetch_team_schedule, team): team for team in teams}
+        responses = {}
+        for future in as_completed(futures):
+            team = futures[future]
+            responses[team] = future.result()
+
+    for team in teams:
+        _, parsed, raw = responses[team]
         if parsed is not None:
             save_object(
-                "fatigue",
-                f"{team}_club_schedule",
-                parsed,
-                prefix=prefix,
-                current=True,
+                "fatigue", f"{team}_club_schedule", parsed,
+                prefix=prefix, current=True,
             )
-
-            f = (
-                build_fatigue_from_team_schedule(
-                    team,
-                    parsed,
-                    target_date=target_date,
-                )
+            f = build_fatigue_from_team_schedule(
+                team, parsed, target_date=target_date,
             )
-
             if not f.is_empty():
-                fatigue_frames.append(
-                    f
-                )
-
-        raw = safe_pull(
-            failures,
-            "fatigue",
-            f"{team}_club_schedule_raw",
-            nhl.nhl_club_schedule_season,
-            team=team,
-            return_parsed=False,
-        )
-
+                fatigue_frames.append(f)
         if raw is not None:
             save_object(
-                "fatigue",
-                f"{team}_club_schedule_raw",
-                raw,
-                prefix=prefix,
-                current=True,
+                "fatigue", f"{team}_club_schedule_raw", raw,
+                prefix=prefix, current=True,
             )
 
     fatigue = (
@@ -4696,7 +4879,7 @@ def pull_odds(
             )
 
         scoreboard_raw = (
-            safe_pull(
+            (safe_pull(
                 failures,
                 "odds",
                 f"espn_scoreboard_raw_{dates_arg}",
@@ -4704,7 +4887,7 @@ def pull_odds(
                 dates=dates_arg,
                 limit=5000,
                 return_parsed=False,
-            )
+            ) if OPTIONS.include_raw else None)
         )
 
         if scoreboard_raw is not None:
@@ -4840,14 +5023,14 @@ def pull_odds(
                 )
             )
 
-        raw = safe_pull(
+        raw = (safe_pull(
             failures,
             "odds",
             f"espn_odds_raw_{event_id}",
             nhl.espn_nhl_game_odds,
             event_id=event_id,
             return_parsed=False,
-        )
+        ) if OPTIONS.include_raw else None)
 
         if raw is not None:
             raw_by_event[
@@ -4919,7 +5102,7 @@ def run_one(
         (
             schedule,
             slate,
-        ) = pull_schedule(
+        ) = timed_call("stage/schedule", pull_schedule, 
             failures,
             current=current,
             target_date=target_date,
@@ -4962,7 +5145,7 @@ def run_one(
         or "sdv_predictions"
         in categories
     ):
-        ratings = pull_team_strength(
+        ratings = timed_call("stage/team_strength", pull_team_strength, 
             failures,
             current=current,
             target_date=(
@@ -4981,13 +5164,10 @@ def run_one(
         Any,
     ] = {}
 
-    if (
-        "lineup-strength"
-        in categories
-        or "goalie"
-        in categories
+    if OPTIONS.include_diagnostics and (
+        "lineup-strength" in categories or "goalie" in categories
     ):
-        rosters = pull_rosters(
+        rosters = timed_call("stage/diagnostic_rosters", pull_rosters, 
             failures,
             current=current,
             season=season,
@@ -4995,8 +5175,8 @@ def run_one(
             teams=teams,
         )
 
-    if "goalie" in categories:
-        pull_goalie_live_profiles(
+    if OPTIONS.include_diagnostics and "goalie" in categories:
+        timed_call("stage/diagnostic_goalie_profiles", pull_goalie_live_profiles, 
             failures,
             current=current,
             prefix=prefix,
@@ -5004,25 +5184,23 @@ def run_one(
         )
 
     need_context = bool(
-        {
-            "goalie",
-            "lineup-strength",
-            "sdv_predictions",
-        }
-        & categories
+        {"goalie", "lineup-strength"} & categories
+        or (not current and {"sdv_predictions", "team-strength"} & categories)
     )
 
     context = None
 
     if need_context:
         context = (
-            pull_season_context(
+            timed_call("stage/season_context", pull_season_context, 
                 failures,
                 season=season,
+                current=current,
+                need_shifts=bool({"goalie", "lineup-strength"} & categories),
             )
         )
 
-        save_season_context(
+        timed_call("stage/save_season_context", save_season_context, 
             current=current,
             prefix=prefix,
             context=context,
@@ -5041,7 +5219,8 @@ def run_one(
         "lineup-strength" in categories
         and context is not None
     ):
-        lineup_features = safe_pull(
+        lineup_features = timed_call(
+            "stage/lineup_feature_calculation", safe_pull,
             failures,
             "lineup-strength",
             "game_lineup_features_asof",
@@ -5072,7 +5251,8 @@ def run_one(
         "goalie" in categories
         and context is not None
     ):
-        goalie_features = safe_pull(
+        goalie_features = timed_call(
+            "stage/goalie_feature_calculation", safe_pull,
             failures,
             "goalie",
             "game_goalie_features_asof",
@@ -5165,7 +5345,7 @@ def run_one(
         )
 
     if "fatigue" in categories:
-        pull_fatigue(
+        timed_call("stage/fatigue", pull_fatigue, 
             failures,
             current=current,
             target_date=target_date,
@@ -5178,7 +5358,7 @@ def run_one(
         "sdv_predictions"
         in categories
     ):
-        pull_predictions(
+        timed_call("stage/sdv_predictions", pull_predictions, 
             failures,
             current=current,
             prefix=prefix,
@@ -5189,7 +5369,7 @@ def run_one(
         )
 
     if "odds" in categories:
-        pull_odds(
+        timed_call("stage/espn_odds", pull_odds, 
             failures,
             current=current,
             target_date=target_date,
@@ -5200,10 +5380,98 @@ def run_one(
     return failures
 
 
+def compare_baseline_outputs(baseline_dir: Path) -> None:
+    """Compare five production CSVs against a preserved, same-slate baseline.
+
+    The API can legitimately revise data between independent pulls. Only
+    generated-at observation timestamps are ignored here; all model inputs,
+    identities and fixed cutoff fields are compared exactly.
+    """
+    import csv
+
+    targets = (
+        ("fatigue", "latest_fatigue.csv", ("game_date", "team")),
+        ("team-strength", "latest_team_ratings_asof.csv", ("game_id", "team")),
+        ("goalie", "latest_game_goalie_features_asof.csv", ("game_id",)),
+        ("lineup-strength", "latest_game_lineup_features_asof.csv", ("game_id",)),
+        ("sdv_predictions", "latest_predictions.csv", ("game_id",)),
+    )
+    ignored = {
+        "ratings_as_of_utc", "goalie_snapshot_as_of_utc",
+        "lineup_snapshot_as_of_utc", "home_goalie_status_observed_at",
+        "away_goalie_status_observed_at", "home_lineup_observed_at",
+        "away_lineup_observed_at",
+    }
+    results = []
+    problems = []
+    for family, name, identity in targets:
+        actual = ROOT / family / name
+        expected = baseline_dir / family / name
+        if not actual.is_file() or not expected.is_file():
+            problems.append(f"Missing comparison file: {actual} or {expected}")
+            continue
+        def load_rows(path: Path):
+            with path.open(newline="", encoding="utf-8-sig") as handle:
+                reader = csv.DictReader(handle)
+                headers = list(reader.fieldnames or [])
+                rows = list(reader)
+            if not set(identity).issubset(headers):
+                raise ValueError(f"Comparison keys missing: {path}")
+            indexed = {}
+            for row in rows:
+                key = tuple(row[k].strip() for k in identity)
+                if key in indexed:
+                    raise ValueError(f"Duplicate comparison key {key}: {path}")
+                indexed[key] = row
+            return headers, indexed
+        left_header, left = load_rows(expected)
+        right_header, right = load_rows(actual)
+        changes = []
+        if left_header != right_header:
+            changes.append("column sequence changed")
+        for key in sorted(set(left) | set(right)):
+            if key not in left or key not in right:
+                changes.append(f"row set changed: {key}")
+                continue
+            for field in sorted(set(left_header) | set(right_header)):
+                if field in ignored:
+                    continue
+                a = (left[key].get(field) or "").strip()
+                b = (right[key].get(field) or "").strip()
+                if a != b:
+                    changes.append(f"{key}: {field}: {a!r} => {b!r}")
+        results.append({"family": family, "file": name,
+                        "baseline_rows": len(left), "new_rows": len(right),
+                        "difference_count": len(changes),
+                        "differences": changes[:50]})
+        print(f"SDV OUTPUT COMPARE | {family} | differences={len(changes)}")
+        if changes:
+            problems.append(f"{family}: {len(changes)} differences")
+    output = BASE_DIR / "errors" / "00_intake" / "pull_sdv_output_comparison.json"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps({"comparisons": results, "problems": problems},
+                                indent=2), encoding="utf-8")
+    print(f"SDV OUTPUT COMPARE REPORT | {output}")
+    if problems:
+        raise RuntimeError("SDV baseline output mismatches: " + "; ".join(problems))
+
+
 def main() -> None:
     ensure_dirs()
 
     args = parse_args()
+    if not 1 <= args.max_workers <= 4:
+        raise SystemExit("--max-workers must be between 1 and 4")
+    if args.cache_current_hours <= 0 or args.cache_historical_days <= 0:
+        raise SystemExit("Cache freshness durations must be positive")
+    OPTIONS.include_raw = args.include_raw
+    OPTIONS.include_diagnostics = args.include_diagnostics
+    OPTIONS.max_workers = args.max_workers
+    OPTIONS.cache_dir = args.cache_dir.expanduser()
+    OPTIONS.no_cache = args.no_cache
+    OPTIONS.cache_current_hours = args.cache_current_hours
+    OPTIONS.cache_historical_days = args.cache_historical_days
+    OPTIONS.compare_baseline_dir = args.compare_baseline_dir
 
     categories = (
         requested_categories(
@@ -5279,16 +5547,20 @@ def main() -> None:
                 file=sys.stderr,
             )
 
+    if OPTIONS.compare_baseline_dir is not None:
+        compare_baseline_outputs(OPTIONS.compare_baseline_dir)
+
     print(
         "SDV NHL pull complete."
     )
 
 
 if __name__ == "__main__":
-    # noinspection PyBroadException
+    start = time.perf_counter()
     try:
         main()
-
     except Exception:
         traceback.print_exc()
         sys.exit(1)
+    finally:
+        write_timing_report(time.perf_counter() - start)

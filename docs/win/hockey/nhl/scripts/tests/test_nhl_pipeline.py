@@ -6005,3 +6005,83 @@ def test_clv_line_change_blocks_price_comparison_but_keeps_line_clv() -> None:
         )
     )
 
+
+
+# Regression tests: NHL SDV empty historical snapshots.
+@pytest.mark.parametrize(
+    "category,label",
+    [
+        ("fatigue", "fatigue"),
+        ("team-strength", "team_ratings_asof"),
+        ("goalie", "game_goalie_features_asof"),
+        ("lineup-strength", "game_lineup_features_asof"),
+    ],
+)
+def test_nhl_sdv_producer_does_not_write_headerless_feature_files(
+    tmp_path: Path, monkeypatch, category: str, label: str
+) -> None:
+    module = load_repo_module(
+        "docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py"
+    )
+    monkeypatch.setattr(module, "ROOT", tmp_path)
+    (tmp_path / category).mkdir()
+    prefix = "2026_08_20T183742_ET"
+    written = module.save_object(
+        category, label, pd.DataFrame(), prefix=prefix, current=True
+    )
+    assert written == []
+    assert not (tmp_path / category / f"{prefix}_{label}.csv").exists()
+    assert not (tmp_path / category / f"latest_{label}.csv").exists()
+
+
+def test_nhl_sdv_restore_skips_headerless_archives(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    module = load_repo_module(
+        "docs/win/hockey/nhl/scripts/01_merge/restore_nhl_sdv_history.py"
+    )
+    sdv = tmp_path / "sdv"
+    folder = sdv / "fatigue"
+    folder.mkdir(parents=True)
+    monkeypatch.setattr(module, "SDV", sdv)
+    monkeypatch.setattr(
+        module, "FAMILIES", {"fatigue": module.FAMILIES["fatigue"]}
+    )
+    (folder / "2026_08_20T183742_ET_fatigue.csv").write_text(
+        "\n", encoding="utf-8"
+    )
+    valid = folder / "2026_10_10T040000_ET_fatigue.csv"
+    valid.write_text(
+        "team,game_date,previous_game_date,days_rest,back_to_back,"
+        "games_in_4_days,three_in_four,games_in_6_days,four_in_six,"
+        "games_in_7_days\n"
+        "BOS,2026-10-10,2026-10-08,2,False,2,False,3,False,3\n",
+        encoding="utf-8",
+    )
+    module.prepare_history()
+    season = folder / "season_2026_fatigue.csv"
+    assert season.is_file()
+    rows = pd.read_csv(season)
+    assert len(rows) == 1
+    assert rows.loc[0, "team"] == "BOS"
+    assert "SDV empty historical snapshot skipped" in capsys.readouterr().out
+
+
+def test_nhl_sdv_restore_rejects_duplicate_headers(
+    tmp_path: Path, monkeypatch
+) -> None:
+    module = load_repo_module(
+        "docs/win/hockey/nhl/scripts/01_merge/restore_nhl_sdv_history.py"
+    )
+    sdv = tmp_path / "sdv"
+    folder = sdv / "fatigue"
+    folder.mkdir(parents=True)
+    monkeypatch.setattr(module, "SDV", sdv)
+    monkeypatch.setattr(
+        module, "FAMILIES", {"fatigue": module.FAMILIES["fatigue"]}
+    )
+    (folder / "2026_10_10T040000_ET_fatigue.csv").write_text(
+        "team,team\nBOS,BOS\n", encoding="utf-8"
+    )
+    with pytest.raises(RuntimeError, match="Missing or duplicate CSV headers"):
+        module.prepare_history()

@@ -93,7 +93,7 @@ def record_timing(name: str, elapsed: float, status: str = "ok") -> None:
 
 @contextmanager
 def timed_operation(name: str):
-    start = time.perf_counter()
+    started_at = time.perf_counter()
     status = "ok"
     try:
         yield
@@ -101,7 +101,7 @@ def timed_operation(name: str):
         status = "error"
         raise
     finally:
-        duration = time.perf_counter() - start
+        duration = time.perf_counter() - started_at
         record_timing(name, duration, status)
         print(f"SDV TIMING | {name} | {duration:.2f}s | {status}", flush=True)
 
@@ -109,6 +109,7 @@ def timed_operation(name: str):
 def timed_call(name: str, function, *args, **kwargs):
     with timed_operation(name):
         return function(*args, **kwargs)
+    return None
 
 
 def library_version() -> str:
@@ -1157,7 +1158,7 @@ def safe_pull(
     *args,
     **kwargs,
 ):
-    start = time.perf_counter()
+    started_at = time.perf_counter()
     status = "ok"
     try:
         return fn(*args, **kwargs)
@@ -1169,7 +1170,7 @@ def safe_pull(
         return None
     finally:
         record_timing(f"request/{category}/{label}",
-                      time.perf_counter() - start, status)
+                      time.perf_counter() - started_at, status)
 
 
 
@@ -4582,17 +4583,17 @@ def pull_fatigue(
     fatigue_frames = []
 
     def fetch_team_schedule(team: str):
-        parsed = safe_pull(
+        team_schedule_parsed = safe_pull(
             failures, "fatigue", f"{team}_club_schedule",
             nhl.nhl_club_schedule_season, team=team,
         )
-        raw = (
+        team_schedule_raw = (
             safe_pull(
                 failures, "fatigue", f"{team}_club_schedule_raw",
                 nhl.nhl_club_schedule_season, team=team, return_parsed=False,
             ) if OPTIONS.include_raw else None
         )
-        return team, parsed, raw
+        return team, team_schedule_parsed, team_schedule_raw
 
     with ThreadPoolExecutor(max_workers=OPTIONS.max_workers) as pool:
         futures = {pool.submit(fetch_team_schedule, team): team for team in teams}
@@ -5419,10 +5420,10 @@ def compare_baseline_outputs(baseline_dir: Path) -> None:
                 raise ValueError(f"Comparison keys missing: {path}")
             indexed = {}
             for row in rows:
-                key = tuple(row[k].strip() for k in identity)
-                if key in indexed:
-                    raise ValueError(f"Duplicate comparison key {key}: {path}")
-                indexed[key] = row
+                identity_key = tuple(row[k].strip() for k in identity)
+                if identity_key in indexed:
+                    raise ValueError(f"Duplicate comparison key {identity_key}: {path}")
+                indexed[identity_key] = row
             return headers, indexed
         left_header, left = load_rows(expected)
         right_header, right = load_rows(actual)

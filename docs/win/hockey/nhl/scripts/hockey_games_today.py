@@ -35,7 +35,7 @@ def read_csv(path: Path):
             if game_id in rows:
                 raise ValueError(f"{path}:{line}: duplicate game_id {game_id}")
             rows[game_id] = row
-        return headers, rows
+    return headers, rows
 
 
 def combine_date(date: str, source_files: dict) -> tuple[list[str], list[dict[str, str]]]:

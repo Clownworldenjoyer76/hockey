@@ -596,7 +596,7 @@ def _derived_field(derived_model: str, weighted_field: str, meta_field: str) -> 
         return weighted_field
     if derived_model == "meta":
         return meta_field
-    fail(f"Unsupported secondary derived model: {derived_model!r}")
+    return fail(f"Unsupported secondary derived model: {derived_model!r}")
 
 
 def _puck_probability(
@@ -856,7 +856,7 @@ def add_direct_model_probabilities(
         )
         return out
 
-    fail(f"Unsupported market type for secondary model probabilities: {market_type!r}")
+    return fail(f"Unsupported market type for secondary model probabilities: {market_type!r}")
 
 
 def _market_type_from_path(path: Path) -> str:
@@ -867,7 +867,7 @@ def _market_type_from_path(path: Path) -> str:
         return "puck_line"
     if name.endswith("_NHL_total.csv"):
         return "total"
-    fail(f"Unable to determine market type from EV/Kelly file: {path}")
+    return fail(f"Unable to determine market type from EV/Kelly file: {path}")
 
 
 def wipe_outputs() -> None:

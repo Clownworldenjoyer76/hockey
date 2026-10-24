@@ -92,9 +92,10 @@ def utc_stamp(value: str, where: str) -> datetime:
         )
     except ValueError:
         error(f"Invalid timestamp {value!r}: {where}")
-    if stamp.tzinfo is None:
-        error(f"Missing UTC timezone in timestamp {value!r}: {where}")
-    return stamp.astimezone(timezone.utc)
+    else:
+        if stamp.tzinfo is None:
+            error(f"Missing UTC timezone in timestamp {value!r}: {where}")
+        return stamp.astimezone(timezone.utc)
 
 
 def validate_source_row(

@@ -1,4 +1,4 @@
-name: Export NHL Frontend Slate
+name: Export NHL Frontend CSV
 
 on:
   workflow_dispatch:
@@ -19,17 +19,17 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Create combined NHL frontend JSON
+      - name: Create combined NHL frontend CSV
         run: python docs/win/hockey/nhl/scripts/frontend.py
 
-      - name: Commit and push NHL frontend JSON
+      - name: Commit and push NHL frontend CSV
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add frontend/data/nhl_slate.json
+          git add frontend/data/nhl_slate.csv
           if git diff --cached --quiet; then
             echo "No NHL frontend changes to commit"
             exit 0
           fi
-          git commit -m "Update NHL frontend slate"
+          git commit -m "Update NHL frontend slate CSV"
           git push origin HEAD:main

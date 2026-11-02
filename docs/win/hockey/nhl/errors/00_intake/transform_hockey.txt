@@ -1,112 +1,121 @@
-=== transform_hockey RUN 2026-10-30T11:58:09.589336 ===
-2026-10-30T11:58:09.589411 | Input directory: docs/win/hockey/nhl/00_intake/predictions/scraper
-2026-10-30T11:58:09.589429 | Output directory: docs/win/hockey/nhl/00_intake/predictions
-2026-10-30T11:58:09.589443 | Mapping file: docs/win/hockey/nhl/config/mapping/team_map_nhl.csv
-2026-10-30T11:58:09.589456 | No-map file: docs/win/hockey/nhl/config/mapping/no_map_nhl_pred.csv
-2026-10-30T11:58:09.589468 | Official NHL game_id assignment is deferred to reconcile_game_ids.py
-2026-10-30T11:58:09.601384 | Loaded team map: docs/win/hockey/nhl/config/mapping/team_map_nhl.csv
-2026-10-30T11:58:09.601417 | Team map source: dratings
-2026-10-30T11:58:09.601434 | Team aliases loaded: 71
-2026-10-30T11:58:09.601450 | Stable NHL team IDs loaded: 32
-2026-10-30T11:58:09.601733 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_09_29_nhl_predictions.csv
-2026-10-30T11:58:09.611145 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_29.csv (5 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.611268 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_09_30_nhl_predictions.csv
-2026-10-30T11:58:09.616602 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_30.csv (3 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.616700 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_01_nhl_predictions.csv
-2026-10-30T11:58:09.622143 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_01.csv (8 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.622248 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_02_nhl_predictions.csv
-2026-10-30T11:58:09.628252 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_02.csv (5 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.628380 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_03_nhl_predictions.csv
-2026-10-30T11:58:09.633487 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_03.csv (13 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.633567 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_04_nhl_predictions.csv
-2026-10-30T11:58:09.637351 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_04.csv (5 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.637429 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_05_nhl_predictions.csv
-2026-10-30T11:58:09.641179 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_05.csv (4 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.641260 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_06_nhl_predictions.csv
-2026-10-30T11:58:09.646781 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_06.csv (9 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.646860 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_07_nhl_predictions.csv
-2026-10-30T11:58:09.650672 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_07.csv (3 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.650782 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_08_nhl_predictions.csv
-2026-10-30T11:58:09.654849 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_08.csv (10 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.654922 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_09_nhl_predictions.csv
-2026-10-30T11:58:09.659263 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_09.csv (4 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.659363 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_10_nhl_predictions.csv
-2026-10-30T11:58:09.664056 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_10.csv (14 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.664133 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_11_nhl_predictions.csv
-2026-10-30T11:58:09.668900 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_11.csv (3 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.669032 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_12_nhl_predictions.csv
-2026-10-30T11:58:09.673771 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_12.csv (3 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.673878 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_13_nhl_predictions.csv
-2026-10-30T11:58:09.679875 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_13.csv (16 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.679959 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_14_nhl_predictions.csv
-2026-10-30T11:58:09.687084 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_14.csv (2 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.687172 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_15_nhl_predictions.csv
-2026-10-30T11:58:09.694469 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_15.csv (11 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.694789 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_16_nhl_predictions.csv
-2026-10-30T11:58:09.698526 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_16.csv (2 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.698602 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_17_nhl_predictions.csv
-2026-10-30T11:58:09.702498 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_17.csv (14 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.702576 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_18_nhl_predictions.csv
-2026-10-30T11:58:09.706005 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_18.csv (2 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.706081 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_19_nhl_predictions.csv
-2026-10-30T11:58:09.712885 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_19.csv (4 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.713052 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_20_nhl_predictions.csv
-2026-10-30T11:58:09.723052 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_20.csv (11 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.723310 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_21_nhl_predictions.csv
-2026-10-30T11:58:09.731640 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_21.csv (2 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.731712 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_22_nhl_predictions.csv
-2026-10-30T11:58:09.739580 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_22.csv (12 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.739763 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_23_nhl_predictions.csv
-2026-10-30T11:58:09.746743 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_23.csv (2 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.746815 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_24_nhl_predictions.csv
-2026-10-30T11:58:09.755972 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_24.csv (12 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.756058 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_25_nhl_predictions.csv
-2026-10-30T11:58:09.764802 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_25.csv (5 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.764869 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_26_nhl_predictions.csv
-2026-10-30T11:58:09.768585 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_26.csv (3 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.768654 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_27_nhl_predictions.csv
-2026-10-30T11:58:09.783499 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_27.csv (11 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.783574 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_28_nhl_predictions.csv
-2026-10-30T11:58:09.787295 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_28.csv (4 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.787366 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_29_nhl_predictions.csv
-2026-10-30T11:58:09.791317 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_29.csv (11 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.791396 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_30_nhl_predictions.csv
-2026-10-30T11:58:09.794816 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_30.csv (3 rows); game_id left blank for reconcile_game_ids.py
-2026-10-30T11:58:09.798234 | WROTE no-map file with 0 rows: docs/win/hockey/nhl/config/mapping/no_map_nhl_pred.csv
-2026-10-30T11:58:09.798249 | --- SUMMARY ---
-2026-10-30T11:58:09.798261 | Input files processed: 32
-2026-10-30T11:58:09.798272 | Files written: 32
-2026-10-30T11:58:09.798299 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_29.csv (5 rows)
-2026-10-30T11:58:09.798317 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_30.csv (3 rows)
-2026-10-30T11:58:09.798328 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_01.csv (8 rows)
-2026-10-30T11:58:09.798338 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_02.csv (5 rows)
-2026-10-30T11:58:09.798349 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_03.csv (13 rows)
-2026-10-30T11:58:09.798360 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_04.csv (5 rows)
-2026-10-30T11:58:09.798370 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_05.csv (4 rows)
-2026-10-30T11:58:09.798381 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_06.csv (9 rows)
-2026-10-30T11:58:09.798395 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_07.csv (3 rows)
-2026-10-30T11:58:09.798406 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_08.csv (10 rows)
-2026-10-30T11:58:09.798417 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_09.csv (4 rows)
-2026-10-30T11:58:09.798427 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_10.csv (14 rows)
-2026-10-30T11:58:09.798438 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_11.csv (3 rows)
-2026-10-30T11:58:09.798449 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_12.csv (3 rows)
-2026-10-30T11:58:09.798459 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_13.csv (16 rows)
-2026-10-30T11:58:09.798470 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_14.csv (2 rows)
-2026-10-30T11:58:09.798481 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_15.csv (11 rows)
-2026-10-30T11:58:09.798492 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_16.csv (2 rows)
-2026-10-30T11:58:09.798502 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_17.csv (14 rows)
-2026-10-30T11:58:09.798513 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_18.csv (2 rows)
-2026-10-30T11:58:09.798524 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_19.csv (4 rows)
-2026-10-30T11:58:09.798534 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_20.csv (11 rows)
-2026-10-30T11:58:09.798544 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_21.csv (2 rows)
-2026-10-30T11:58:09.798555 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_22.csv (12 rows)
-2026-10-30T11:58:09.798566 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_23.csv (2 rows)
-2026-10-30T11:58:09.798576 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_24.csv (12 rows)
-2026-10-30T11:58:09.798586 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_25.csv (5 rows)
-2026-10-30T11:58:09.798597 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_26.csv (3 rows)
-2026-10-30T11:58:09.798607 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_27.csv (11 rows)
-2026-10-30T11:58:09.798618 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_28.csv (4 rows)
-2026-10-30T11:58:09.798628 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_29.csv (11 rows)
-2026-10-30T11:58:09.798639 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_30.csv (3 rows)
-2026-10-30T11:58:09.798650 | No-map records: 0
-2026-10-30T11:58:09.798660 | STATUS: SUCCESS
+=== transform_hockey RUN 2026-11-02T09:44:11.618103 ===
+2026-11-02T09:44:11.618211 | Input directory: docs/win/hockey/nhl/00_intake/predictions/scraper
+2026-11-02T09:44:11.618245 | Output directory: docs/win/hockey/nhl/00_intake/predictions
+2026-11-02T09:44:11.618291 | Mapping file: docs/win/hockey/nhl/config/mapping/team_map_nhl.csv
+2026-11-02T09:44:11.618324 | No-map file: docs/win/hockey/nhl/config/mapping/no_map_nhl_pred.csv
+2026-11-02T09:44:11.618346 | Official NHL game_id assignment is deferred to reconcile_game_ids.py
+2026-11-02T09:44:11.645704 | Loaded team map: docs/win/hockey/nhl/config/mapping/team_map_nhl.csv
+2026-11-02T09:44:11.645758 | Team map source: dratings
+2026-11-02T09:44:11.645784 | Team aliases loaded: 71
+2026-11-02T09:44:11.645807 | Stable NHL team IDs loaded: 32
+2026-11-02T09:44:11.646252 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_09_29_nhl_predictions.csv
+2026-11-02T09:44:11.660433 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_29.csv (5 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.660699 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_09_30_nhl_predictions.csv
+2026-11-02T09:44:11.670335 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_30.csv (3 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.670539 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_01_nhl_predictions.csv
+2026-11-02T09:44:11.680255 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_01.csv (8 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.680478 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_02_nhl_predictions.csv
+2026-11-02T09:44:11.691298 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_02.csv (5 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.691500 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_03_nhl_predictions.csv
+2026-11-02T09:44:11.701434 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_03.csv (13 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.701681 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_04_nhl_predictions.csv
+2026-11-02T09:44:11.711348 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_04.csv (5 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.711533 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_05_nhl_predictions.csv
+2026-11-02T09:44:11.720461 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_05.csv (4 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.720699 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_06_nhl_predictions.csv
+2026-11-02T09:44:11.729948 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_06.csv (9 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.730126 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_07_nhl_predictions.csv
+2026-11-02T09:44:11.738327 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_07.csv (3 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.738496 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_08_nhl_predictions.csv
+2026-11-02T09:44:11.746662 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_08.csv (10 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.746831 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_09_nhl_predictions.csv
+2026-11-02T09:44:11.754382 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_09.csv (4 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.754519 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_10_nhl_predictions.csv
+2026-11-02T09:44:11.763012 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_10.csv (14 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.763150 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_11_nhl_predictions.csv
+2026-11-02T09:44:11.770704 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_11.csv (3 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.770842 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_12_nhl_predictions.csv
+2026-11-02T09:44:11.778707 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_12.csv (3 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.778851 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_13_nhl_predictions.csv
+2026-11-02T09:44:11.787747 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_13.csv (16 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.787912 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_14_nhl_predictions.csv
+2026-11-02T09:44:11.796074 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_14.csv (2 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.796222 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_15_nhl_predictions.csv
+2026-11-02T09:44:11.804467 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_15.csv (11 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.804606 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_16_nhl_predictions.csv
+2026-11-02T09:44:11.811839 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_16.csv (2 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.811975 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_17_nhl_predictions.csv
+2026-11-02T09:44:11.820290 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_17.csv (14 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.820430 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_18_nhl_predictions.csv
+2026-11-02T09:44:11.827555 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_18.csv (2 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.827721 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_19_nhl_predictions.csv
+2026-11-02T09:44:11.835150 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_19.csv (4 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.835332 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_20_nhl_predictions.csv
+2026-11-02T09:44:11.843347 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_20.csv (11 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.843487 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_21_nhl_predictions.csv
+2026-11-02T09:44:11.851350 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_21.csv (2 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.851518 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_22_nhl_predictions.csv
+2026-11-02T09:44:11.860509 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_22.csv (12 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.860738 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_23_nhl_predictions.csv
+2026-11-02T09:44:11.868651 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_23.csv (2 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.868799 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_24_nhl_predictions.csv
+2026-11-02T09:44:11.877079 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_24.csv (12 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.877224 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_25_nhl_predictions.csv
+2026-11-02T09:44:11.885071 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_25.csv (5 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.885213 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_26_nhl_predictions.csv
+2026-11-02T09:44:11.892576 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_26.csv (3 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.892734 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_27_nhl_predictions.csv
+2026-11-02T09:44:11.900788 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_27.csv (11 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.900929 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_28_nhl_predictions.csv
+2026-11-02T09:44:11.908449 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_28.csv (4 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.908594 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_29_nhl_predictions.csv
+2026-11-02T09:44:11.916779 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_29.csv (11 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.916924 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_30_nhl_predictions.csv
+2026-11-02T09:44:11.924391 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_30.csv (3 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.924526 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_10_31_nhl_predictions.csv
+2026-11-02T09:44:11.932609 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_31.csv (10 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.932769 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_11_01_nhl_predictions.csv
+2026-11-02T09:44:11.940466 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_11_01.csv (5 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.940605 | Processing prediction input: docs/win/hockey/nhl/00_intake/predictions/scraper/2026_11_02_nhl_predictions.csv
+2026-11-02T09:44:11.948414 | WROTE unreconciled prediction output: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_11_02.csv (4 rows); game_id left blank for reconcile_game_ids.py
+2026-11-02T09:44:11.949239 | WROTE no-map file with 0 rows: docs/win/hockey/nhl/config/mapping/no_map_nhl_pred.csv
+2026-11-02T09:44:11.949285 | --- SUMMARY ---
+2026-11-02T09:44:11.949319 | Input files processed: 35
+2026-11-02T09:44:11.949339 | Files written: 35
+2026-11-02T09:44:11.949357 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_29.csv (5 rows)
+2026-11-02T09:44:11.949375 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_09_30.csv (3 rows)
+2026-11-02T09:44:11.949393 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_01.csv (8 rows)
+2026-11-02T09:44:11.949409 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_02.csv (5 rows)
+2026-11-02T09:44:11.949426 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_03.csv (13 rows)
+2026-11-02T09:44:11.949442 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_04.csv (5 rows)
+2026-11-02T09:44:11.949459 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_05.csv (4 rows)
+2026-11-02T09:44:11.949475 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_06.csv (9 rows)
+2026-11-02T09:44:11.949492 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_07.csv (3 rows)
+2026-11-02T09:44:11.949509 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_08.csv (10 rows)
+2026-11-02T09:44:11.949525 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_09.csv (4 rows)
+2026-11-02T09:44:11.949542 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_10.csv (14 rows)
+2026-11-02T09:44:11.949578 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_11.csv (3 rows)
+2026-11-02T09:44:11.949599 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_12.csv (3 rows)
+2026-11-02T09:44:11.949616 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_13.csv (16 rows)
+2026-11-02T09:44:11.949662 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_14.csv (2 rows)
+2026-11-02T09:44:11.949699 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_15.csv (11 rows)
+2026-11-02T09:44:11.949720 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_16.csv (2 rows)
+2026-11-02T09:44:11.949737 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_17.csv (14 rows)
+2026-11-02T09:44:11.949753 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_18.csv (2 rows)
+2026-11-02T09:44:11.949770 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_19.csv (4 rows)
+2026-11-02T09:44:11.949786 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_20.csv (11 rows)
+2026-11-02T09:44:11.949802 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_21.csv (2 rows)
+2026-11-02T09:44:11.949818 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_22.csv (12 rows)
+2026-11-02T09:44:11.949834 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_23.csv (2 rows)
+2026-11-02T09:44:11.949851 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_24.csv (12 rows)
+2026-11-02T09:44:11.949867 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_25.csv (5 rows)
+2026-11-02T09:44:11.949883 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_26.csv (3 rows)
+2026-11-02T09:44:11.949899 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_27.csv (11 rows)
+2026-11-02T09:44:11.949916 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_28.csv (4 rows)
+2026-11-02T09:44:11.949932 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_29.csv (11 rows)
+2026-11-02T09:44:11.949948 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_30.csv (3 rows)
+2026-11-02T09:44:11.949964 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_10_31.csv (10 rows)
+2026-11-02T09:44:11.949980 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_11_01.csv (5 rows)
+2026-11-02T09:44:11.949996 |   FILE: docs/win/hockey/nhl/00_intake/predictions/hockey_2026_11_02.csv (4 rows)
+2026-11-02T09:44:11.950013 | No-map records: 0
+2026-11-02T09:44:11.950030 | STATUS: SUCCESS

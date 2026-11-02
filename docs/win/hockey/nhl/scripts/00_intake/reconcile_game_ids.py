@@ -111,6 +111,7 @@ def load_team_map() -> dict:
         "sportsbook",
         "official_nhl",
         "shared",
+        "final_scores",
     }
 
     with MAP_PATH.open(

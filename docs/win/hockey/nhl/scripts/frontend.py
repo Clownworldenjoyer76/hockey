@@ -137,6 +137,41 @@ def main():
 
 
 
+def load_game_times():
+    """Index game times from the slate this script already produces."""
+    _, slate_rows = read_csv(OUTPUT)
+    game_times = {}
+
+    for row in slate_rows:
+        date = (row.get("game_date") or "").strip()
+        game_id = (row.get("game_id") or "").strip()
+        game_time = (row.get("game_time") or "").strip()
+        if not (date and game_id and game_time):
+            continue
+
+        key = (date, game_id)
+        existing = game_times.get(key)
+        if existing is not None and existing != game_time:
+            raise ValueError(
+                f"Conflicting NHL game times for {date} game {game_id}: "
+                f"{existing!r} and {game_time!r}"
+            )
+        game_times[key] = game_time
+
+    return game_times
+
+
+def has_final_score(row):
+    """Both teams must have recorded, nonnegative integer final scores."""
+    try:
+        return all(
+            int(str(row.get(column, "")).strip()) >= 0
+            for column in ("away_score", "home_score")
+        )
+    except (ValueError, TypeError):
+        return False
+
+
 def build_nhl_final():
     scores_dir = NHL / "05_final_scores/final_scores"
     graded_dir = NHL / "05_final_scores/graded"
@@ -154,6 +189,7 @@ def build_nhl_final():
 
     headers = []
     output_rows = []
+    game_times = load_game_times()
 
     for date in sorted(score_files.keys() | graded_files.keys()):
         score_columns, scores = read_csv(
@@ -190,8 +226,24 @@ def build_nhl_final():
             if game_id not in scored_game_ids:
                 output_rows.extend(bets)
 
+    # Score-only rows do not carry graded-bet metadata. Fill the scheduled
+    # time from nhl_slate.csv and mark games final only when both scores exist.
+    for column in ("game_time", "is_final"):
+        if column not in headers:
+            headers.append(column)
+
     aliases, canonical_teams = load_team_map()
     for row in output_rows:
+        if not (row.get("game_time") or "").strip():
+            key = (
+                (row.get("game_date") or "").strip(),
+                (row.get("game_id") or "").strip(),
+            )
+            row["game_time"] = game_times.get(key, "")
+
+        if not (row.get("is_final") or "").strip() and has_final_score(row):
+            row["is_final"] = "True"
+
         for field in ("away_team", "home_team"):
             if field in row:
                 row[field] = normalize_team_name(

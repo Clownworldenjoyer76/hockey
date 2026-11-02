@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Combine NHL games, sportsbook odds, predictions, and picks into one CSV."""
+"""Combine NHL slate sources and final-score/graded-bet sources into CSVs."""
 
 import csv
 from collections import defaultdict
@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[5]
 NHL = ROOT / "docs/win/hockey/nhl"
 OUTPUT = ROOT / "frontend/data/nhl_slate.csv"
+FINAL_OUTPUT = ROOT / "frontend/data/nhl/nhl_final.csv"
 
 
 def read_csv(path):
@@ -71,5 +72,67 @@ def main():
         writer.writerows(output_rows)
 
 
+
+def build_nhl_final():
+    scores_dir = NHL / "05_final_scores/final_scores"
+    graded_dir = NHL / "05_final_scores/graded"
+    score_suffix = "_NHL_final_scores.csv"
+    graded_suffix = "_results_NHL.csv"
+
+    score_files = {
+        path.name.removesuffix(score_suffix): path
+        for path in scores_dir.glob(f"????_??_??{score_suffix}")
+    }
+    graded_files = {
+        path.name.removesuffix(graded_suffix): path
+        for path in graded_dir.glob(f"????_??_??{graded_suffix}")
+    }
+
+    headers = []
+    output_rows = []
+
+    for date in sorted(score_files.keys() | graded_files.keys()):
+        score_columns, scores = read_csv(
+            score_files.get(date, scores_dir / f"{date}{score_suffix}")
+        )
+        graded_columns, graded = read_csv(
+            graded_files.get(date, graded_dir / f"{date}{graded_suffix}")
+        )
+
+        for column in score_columns + graded_columns:
+            if column not in headers:
+                headers.append(column)
+
+        grades_by_game = defaultdict(list)
+        for bet in graded:
+            grades_by_game[bet["game_id"]].append(bet)
+
+        scored_game_ids = set()
+        for score in scores:
+            game_id = score["game_id"]
+            scored_game_ids.add(game_id)
+            bets = grades_by_game.get(game_id)
+            if not bets:
+                output_rows.append(score)
+                continue
+
+            for bet in bets:
+                combined = score.copy()
+                combined.update({key: value for key, value in bet.items() if value})
+                output_rows.append(combined)
+
+        # Retain graded bets even if their matching final-scores row is absent.
+        for game_id, bets in grades_by_game.items():
+            if game_id not in scored_game_ids:
+                output_rows.extend(bets)
+
+    FINAL_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    with FINAL_OUTPUT.open("w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(output_rows)
+
+
 if __name__ == "__main__":
     main()
+    build_nhl_final()

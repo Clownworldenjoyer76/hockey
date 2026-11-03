@@ -37,12 +37,13 @@ markets:
         enabled: true
         # based on home_model_prob_moneyline from the moneyline EV file
         prob_bands:
-          - [0.00, 1.0]
+          - [0.00, 0.50]
+          - [0.70, 1.0]
         # Direct probability produced by the configured NHL secondary model.
         my_model_prob_bands:
           - [0.00, 1.0]
         odds_bands:
-          - [-500, -150]
+          - [-300, -150]
           - [101, 150]
         ev_bands:
           - [0.00, 999.9999]
@@ -58,7 +59,7 @@ markets:
         my_model_prob_bands:
           - [0.65, 1.00]
         odds_bands:
-          - [-500, -110]
+          - [-300, -110]
           - [101, 150]
         ev_bands:
           - [0.00, 1.00]

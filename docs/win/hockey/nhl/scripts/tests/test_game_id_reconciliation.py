@@ -202,6 +202,11 @@ def prepare_workspace(
         work_base / "scripts" / "00_intake",
     )
 
+    shutil.copy2(
+        BASE_DIR / "scripts" / "odds_price_common.py",
+        work_base / "scripts" / "odds_price_common.py",
+    )
+
     shutil.copytree(
         BASE_DIR / "config" / "mapping",
         work_base / "config" / "mapping",

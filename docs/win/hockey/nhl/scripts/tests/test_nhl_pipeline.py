@@ -6124,7 +6124,7 @@ def test_intake_espn_rounding_and_fraction_validation() -> None:
         1.0 + 100.0 / 218.0, abs=1e-12
     )
     row["away_team_odds_current_spread_fraction"] = "1/3"
-    assert module.puck_line_from_provider(row)["away_decimal"] == ""
+    assert module.puck_line_from_provider(row) is None
 
 
 def test_price_contract_reconciles_all_markets_and_metrics() -> None:

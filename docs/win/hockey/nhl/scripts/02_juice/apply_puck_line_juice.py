@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # hockey/nhl/scripts/02_juice/apply_puck_line_juice.py
 
@@ -100,6 +101,15 @@ OUTPUT_COLUMNS = REQUIRED_INPUT_COLUMNS + [
     "away_normalized_prob_puck_line",
     "home_normalized_prob_puck_line",
 ]
+
+MAX_PUCK_LINE_PROBABILITY = 0.99
+
+
+def cap_calibrated_puck_line_decimal(decimal: float) -> float:
+    # Limit calibrated implied probabilities to 99% without altering valid lower values.
+    if not math.isfinite(decimal) or decimal <= 0:
+        return decimal
+    return max(decimal, 1.0 / MAX_PUCK_LINE_PROBABILITY)
 
 
 def find_model_calibration_adjustment(
@@ -287,6 +297,13 @@ def process_file(
             away_juiced_decimal,
             home_juiced_decimal,
         ) = adjusted_decimals
+
+        away_juiced_decimal = cap_calibrated_puck_line_decimal(
+            away_juiced_decimal
+        )
+        home_juiced_decimal = cap_calibrated_puck_line_decimal(
+            home_juiced_decimal
+        )
 
         probabilities = (
             calculate_juiced_probabilities_or_quarantine(

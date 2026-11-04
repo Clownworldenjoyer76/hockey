@@ -6167,7 +6167,6 @@ def test_clv_and_settlement_use_same_canonical_payout() -> None:
             "price_decimal": 1.45,
         },
         ("price_american",),
-        ("price_decimal",),
     )
     assert quoted is not None
     assert quoted[1] == pytest.approx(1 + 100/218)

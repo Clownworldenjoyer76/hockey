@@ -466,7 +466,7 @@ def prepare_df(df: pd.DataFrame) -> pd.DataFrame:
         & canonical.notna()
         & (original_decimal.sub(canonical).abs() > 1e-6)
     )
-    audit = df.loc[changed, [
+    audit = df.reindex(columns=[
         "game_date",
         "game_id",
         "market_type",
@@ -475,7 +475,7 @@ def prepare_df(df: pd.DataFrame) -> pd.DataFrame:
         "pulled_at",
         "dk_odds_american",
         "model_prob",
-    ]].copy()
+    ]).loc[changed].copy()
     audit["original_decimal"] = original_decimal.loc[changed]
     audit["revalued_decimal"] = canonical.loc[changed]
     audit["original_edge"] = original_edge.loc[changed]

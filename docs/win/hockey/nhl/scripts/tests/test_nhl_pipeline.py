@@ -949,7 +949,7 @@ def test_transform_hockey_odds_parses_espn_main_lines() -> None:
         "away_line": "-1.5",
         "home_american": "-167",
         "away_american": "+135",
-        "home_decimal": "1.6",
+        "home_decimal": "1.59880239520958",
         "away_decimal": "2.35",
     }
 
@@ -957,8 +957,8 @@ def test_transform_hockey_odds_parses_espn_main_lines() -> None:
         "total": "6.5",
         "over_american": "-110",
         "under_american": "-110",
-        "over_decimal": "1.91",
-        "under_decimal": "1.91",
+        "over_decimal": "1.90909090909091",
+        "under_decimal": "1.90909090909091",
     }
 
 
@@ -6085,3 +6085,121 @@ def test_nhl_sdv_restore_rejects_duplicate_headers(
     )
     with pytest.raises(RuntimeError, match="Missing or duplicate CSV headers"):
         module.prepare_history()
+
+# ---------------------------------------------------------------------
+# NHL canonical sportsbook payout regression tests (2026-11-04)
+# ---------------------------------------------------------------------
+
+def test_american_odds_are_canonical_for_all_six_intake_prices() -> None:
+    module = load_repo_module(
+        "docs/win/hockey/nhl/scripts/00_intake/transform_hockey_odds.py"
+    )
+    row = espn_provider_row()
+    market_rows = [
+        module.moneyline_from_provider(row),
+        module.puck_line_from_provider(row),
+        module.total_from_provider(row),
+    ]
+    assert all(market_rows)
+    for parsed in market_rows:
+        for side in ("home", "away", "over", "under"):
+            american = parsed.get(f"{side}_american")
+            decimal = parsed.get(f"{side}_decimal")
+            if american is None:
+                continue
+            assert float(decimal) == pytest.approx(
+                float(module.american_to_decimal(american)), abs=1e-12
+            )
+
+
+def test_intake_espn_rounding_and_fraction_validation() -> None:
+    module = load_repo_module(
+        "docs/win/hockey/nhl/scripts/00_intake/transform_hockey_odds.py"
+    )
+    row = espn_provider_row()
+    row["away_team_odds_current_spread_american"] = "-218"
+    row["away_team_odds_current_spread_decimal"] = 1.45
+    row["away_team_odds_current_spread_fraction"] = "50/109"
+    assert float(module.puck_line_from_provider(row)["away_decimal"]) == pytest.approx(
+        1.0 + 100.0 / 218.0, abs=1e-12
+    )
+    row["away_team_odds_current_spread_fraction"] = "1/3"
+    assert module.puck_line_from_provider(row)["away_decimal"] == ""
+
+
+def test_price_contract_reconciles_all_markets_and_metrics() -> None:
+    prices = load_repo_module(
+        "docs/win/hockey/nhl/scripts/odds_price_common.py"
+    )
+    df = pd.DataFrame({
+        "american": [-218, -110, 125, np.nan, 0],
+        "decimal": [1.45, 1.91, 2.25, 1.80, 1.8],
+    })
+    prices.reconcile_dataframe_prices(df, [("american", "decimal")])
+    assert df.loc[0, "decimal"] == pytest.approx(1 + 100/218)
+    assert df.loc[1, "decimal"] == pytest.approx(1 + 100/110)
+    assert df.loc[2, "decimal"] == pytest.approx(2.25)
+    assert np.isnan(df.loc[3, "decimal"])
+    assert np.isnan(df.loc[4, "decimal"])
+
+    edge, ev, kelly = prices.price_metrics(
+        pd.Series([0.7973035387]),
+        pd.Series([df.loc[0, "decimal"]]),
+    )
+    decimal = 1 + 100 / 218
+    assert edge.iloc[0] == pytest.approx(0.7973035387 - 1/decimal)
+    assert ev.iloc[0] == pytest.approx(0.7973035387 * decimal - 1)
+    assert kelly.iloc[0] == pytest.approx(
+        max(0, (0.7973035387 * decimal - 1)/(decimal - 1))
+    )
+
+
+def test_clv_and_settlement_use_same_canonical_payout() -> None:
+    clv = load_repo_module(
+        "docs/win/hockey/nhl/scripts/05_final_scores/04_nhl_clv.py"
+    )
+    report = load_repo_module(
+        "docs/win/hockey/nhl/scripts/05_final_scores/03_nhl_results_reports.py"
+    )
+    quoted = clv.market_price(
+        {
+            "price_american": -218,
+            "price_decimal": 1.45,
+        },
+        ("price_american",),
+        ("price_decimal",),
+    )
+    assert quoted is not None
+    assert quoted[1] == pytest.approx(1 + 100/218)
+    assert report.grade_to_units({
+        "bet_result": "win", "dk_odds_american": -218,
+    }) == pytest.approx(quoted[1] - 1)
+
+
+def test_reporting_revalues_legacy_ev_without_mutating_input(tmp_path, monkeypatch):
+    report = load_repo_module(
+        "docs/win/hockey/nhl/scripts/05_final_scores/03_nhl_results_reports.py"
+    )
+    monkeypatch.setattr(report, "FINAL_ROOT", tmp_path)
+    (tmp_path / "reports").mkdir(parents=True)
+    df = pd.DataFrame([{
+        "league": "nhl", "market_type": "moneyline",
+        "bet_side": "home", "game_date": "2026_10_01",
+        "game_id": "2026020001", "selected_provider_name": "MGM",
+        "pulled_at": "2026-10-01T08:00:00-04:00",
+        "dk_odds_american": -218, "dk_odds_decimal": 1.45,
+        "model_prob": 0.7973035387, "my_model_prob": 0.80,
+        "edge": 0.01, "ev": 0.15609, "kelly": 0.03,
+        "line": np.nan, "away_score": 1, "home_score": 2,
+        "total_score": 3, "bet_result": "win",
+    }])
+    old = df.copy(deep=True)
+    out = report.prepare_df(df)
+    assert df.equals(old)
+    decimal = 1 + 100/218
+    assert out.loc[0, "dk_odds_decimal"] == pytest.approx(decimal)
+    assert out.loc[0, "ev"] == pytest.approx(0.7973035387*decimal-1)
+    assert out.loc[0, "units"] == pytest.approx(decimal-1)
+    trail = pd.read_csv(tmp_path / "reports" / "nhl_price_revaluations.csv")
+    assert len(trail) == 1
+    assert trail.loc[0, "original_decimal"] == pytest.approx(1.45)

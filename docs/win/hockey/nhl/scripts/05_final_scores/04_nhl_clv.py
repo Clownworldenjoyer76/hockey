@@ -270,34 +270,14 @@ def ordered_provider_rows(rows: list[dict]) -> list[dict]:
 def market_price(
     row: dict,
     american_keys: tuple[str, ...],
-    decimal_keys: tuple[str, ...],
 ) -> tuple[float, float] | None:
-    american = numeric(
-        first_value(
-            row,
-            *american_keys,
-        )
-    )
-    if american is None or american == 0:
+    # ESPN's rounded decimal quote is display-only; the American quote
+    # determines the canonical price used by selection and settlement.
+    american = numeric(first_value(row, *american_keys))
+    decimal = american_to_decimal(american)
+    if american is None or decimal is None or decimal <= 1:
         return None
-
-    decimal = numeric(
-        first_value(
-            row,
-            *decimal_keys,
-        )
-    )
-    if decimal is None or decimal <= 1:
-        decimal = american_to_decimal(
-            american
-        )
-    if decimal is None or decimal <= 1:
-        return None
-
-    return (
-        american,
-        decimal,
-    )
+    return american, decimal
 
 
 def moneyline_market(
@@ -311,9 +291,6 @@ def moneyline_market(
             (
                 f"{side}_team_odds_current_money_line_american",
                 f"{side}_team_odds_money_line",
-            ),
-            (
-                f"{side}_team_odds_current_money_line_decimal",
             ),
         )
 
@@ -374,9 +351,6 @@ def puck_line_market(
                 f"{side}_team_odds_current_spread_american",
                 f"{side}_team_odds_spread_odds",
             ),
-            (
-                f"{side}_team_odds_current_spread_decimal",
-            ),
         )
 
         if price is None:
@@ -420,9 +394,6 @@ def total_market(
             (
                 f"current_{side}_american",
                 f"{side}_odds",
-            ),
-            (
-                f"current_{side}_decimal",
             ),
         )
 
@@ -697,6 +668,25 @@ def reference_rows_for_bet(
     return references
 
 
+def _selected_bet_block_reason(
+    source: str,
+    event_id: str,
+    game_start: datetime | None,
+    selected_pulled_at: datetime | None,
+    selected_decimal: float | None,
+) -> str | None:
+    if source != "espn":
+        return "unsupported_odds_source"
+    if not event_id:
+        return "sportsbook_event_id_missing"
+    if game_start is None:
+        return "invalid_game_start"
+    if selected_pulled_at is None:
+        return "invalid_selected_pulled_at"
+    if selected_decimal is None or selected_decimal <= 1:
+        return "invalid_selected_odds"
+    return None
+
 def process_bets(
     bets: pd.DataFrame,
     event_map: dict[str, str],
@@ -719,12 +709,14 @@ def process_bets(
         selected_pulled_at = parse_timestamp(
             bet.get("pulled_at")
         )
-        selected_decimal = numeric(
-            bet.get("dk_odds_decimal")
-        )
         selected_american = numeric(
             bet.get("dk_odds_american")
         )
+        selected_decimal = american_to_decimal(selected_american)
+        # For legacy selections, the raw rounded decimal is retained in the
+        # immutable selection CSV; all CLV price comparisons are revalued
+        # against the exact American payout.
+
         selected_line = numeric(bet.get("line"))
 
         base_summary = {
@@ -745,24 +737,11 @@ def process_bets(
             implied_probability(selected_decimal)
         )
 
-        if source != "espn":
-            base_summary["clv_status"] = "unsupported_odds_source"
-            summary_rows.append(base_summary)
-            continue
-        if not event_id:
-            base_summary["clv_status"] = "sportsbook_event_id_missing"
-            summary_rows.append(base_summary)
-            continue
-        if game_start is None:
-            base_summary["clv_status"] = "invalid_game_start"
-            summary_rows.append(base_summary)
-            continue
-        if selected_pulled_at is None:
-            base_summary["clv_status"] = "invalid_selected_pulled_at"
-            summary_rows.append(base_summary)
-            continue
-        if selected_decimal is None or selected_decimal <= 1:
-            base_summary["clv_status"] = "invalid_selected_odds"
+        blocked_reason = _selected_bet_block_reason(
+            source, event_id, game_start, selected_pulled_at, selected_decimal
+        )
+        if blocked_reason is not None:
+            base_summary["clv_status"] = blocked_reason
             summary_rows.append(base_summary)
             continue
 

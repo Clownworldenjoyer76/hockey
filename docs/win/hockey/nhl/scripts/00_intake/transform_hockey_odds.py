@@ -7,10 +7,17 @@ import csv
 import json
 import math
 import traceback
+import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
+
+SCRIPTS_DIR = str(Path(__file__).resolve().parents[1])
+if SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, SCRIPTS_DIR)
+
+from odds_price_common import american_to_decimal as _price_decimal
 
 
 ET = ZoneInfo(
@@ -218,56 +225,17 @@ def clean_american(
 def clean_decimal(
     value,
 ) -> str:
-    number = numeric(
-        value
-    )
-
-    if (
-        number is None
-        or number <= 1
-    ):
+    number = numeric(value)
+    if number is None or number <= 1:
         return ""
-
-    return (
-        f"{number:.6f}"
-        .rstrip("0")
-        .rstrip(".")
-    )
+    # Keep enough digits for EV/Kelly and settlement to use the same payout.
+    return format(number, ".15g")
 
 
 def american_to_decimal(
     value,
 ) -> str:
-    number = numeric(
-        value
-    )
-
-    if (
-        number is None
-        or number == 0
-    ):
-        return ""
-
-    if number > 0:
-        dec = (
-            1.0
-            + (
-                number
-                / 100.0
-            )
-        )
-    else:
-        dec = (
-            1.0
-            + (
-                100.0
-                / abs(number)
-            )
-        )
-
-    return clean_decimal(
-        dec
-    )
+    return clean_decimal(_price_decimal(value))
 
 
 def first_value(
@@ -285,6 +253,48 @@ def first_value(
             return value
 
     return ""
+
+
+def canonical_market_decimal(
+    row: dict,
+    american: str,
+    raw_decimal_key: str,
+) -> str:
+    """Use exact American price; log rounded ESPN decimal without trusting it."""
+    canonical = american_to_decimal(american)
+    if not canonical:
+        return ""
+
+    raw_fraction = first_value(
+        row,
+        raw_decimal_key.replace("_decimal", "_fraction"),
+    )
+    if not blank(raw_fraction):
+        try:
+            numerator, denominator = str(raw_fraction).split("/", 1)
+            fractional_decimal = 1 + float(numerator) / float(denominator)
+        except (TypeError, ValueError, ZeroDivisionError, OverflowError):
+            log(f"PRICE REJECTED {raw_decimal_key}: invalid fractional={raw_fraction}")
+            return ""
+        if (
+            not math.isfinite(fractional_decimal)
+            or abs(fractional_decimal - float(canonical)) > 1e-6
+        ):
+            log(
+                f"PRICE REJECTED {raw_decimal_key}: "
+                f"american={american} fraction={raw_fraction}"
+            )
+            return ""
+
+    raw_decimal = numeric(first_value(row, raw_decimal_key))
+    if raw_decimal is not None and abs(raw_decimal - float(canonical)) > 1e-6:
+        log(
+            f"PRICE RECONCILED {raw_decimal_key}: "
+            f"american={american} raw_decimal={raw_decimal} "
+            f"canonical_decimal={canonical}"
+        )
+
+    return canonical
 
 
 def to_et_date_time(
@@ -483,29 +493,20 @@ def moneyline_from_provider(
     ):
         return None
 
-    home_decimal = (
-        clean_decimal(
-            first_value(
-                row,
-                "home_team_odds_current_money_line_decimal",
-            )
-        )
-        or american_to_decimal(
-            home_american
-        )
+    home_decimal = canonical_market_decimal(
+        row,
+        home_american,
+        "home_team_odds_current_money_line_decimal",
     )
 
-    away_decimal = (
-        clean_decimal(
-            first_value(
-                row,
-                "away_team_odds_current_money_line_decimal",
-            )
-        )
-        or american_to_decimal(
-            away_american
-        )
+    away_decimal = canonical_market_decimal(
+        row,
+        away_american,
+        "away_team_odds_current_money_line_decimal",
     )
+
+    if not away_decimal or not home_decimal:
+        return None
 
     return {
         "home_american": (
@@ -604,29 +605,20 @@ def puck_line_from_provider(
     ):
         return None
 
-    home_decimal = (
-        clean_decimal(
-            first_value(
-                row,
-                "home_team_odds_current_spread_decimal",
-            )
-        )
-        or american_to_decimal(
-            home_american
-        )
+    home_decimal = canonical_market_decimal(
+        row,
+        home_american,
+        "home_team_odds_current_spread_decimal",
     )
 
-    away_decimal = (
-        clean_decimal(
-            first_value(
-                row,
-                "away_team_odds_current_spread_decimal",
-            )
-        )
-        or american_to_decimal(
-            away_american
-        )
+    away_decimal = canonical_market_decimal(
+        row,
+        away_american,
+        "away_team_odds_current_spread_decimal",
     )
+
+    if not away_decimal or not home_decimal:
+        return None
 
     return {
         "home_line": clean_line(
@@ -695,29 +687,20 @@ def total_from_provider(
     ):
         return None
 
-    over_decimal = (
-        clean_decimal(
-            first_value(
-                row,
-                "current_over_decimal",
-            )
-        )
-        or american_to_decimal(
-            over_american
-        )
+    over_decimal = canonical_market_decimal(
+        row,
+        over_american,
+        "current_over_decimal",
     )
 
-    under_decimal = (
-        clean_decimal(
-            first_value(
-                row,
-                "current_under_decimal",
-            )
-        )
-        or american_to_decimal(
-            under_american
-        )
+    under_decimal = canonical_market_decimal(
+        row,
+        under_american,
+        "current_under_decimal",
     )
+
+    if not under_decimal or not over_decimal:
+        return None
 
     return {
         "total": clean_line(

@@ -15,6 +15,7 @@ if SCRIPTS_DIR not in sys.path:
 
 # noinspection PyPep8
 from market_common import normalize_market, normalize_side
+from odds_price_common import american_to_decimal, price_metrics
 
 
 ###############################################################
@@ -444,6 +445,50 @@ def prepare_df(df: pd.DataFrame) -> pd.DataFrame:
     df["is_push"] = (
         result_clean == "push"
     ).astype(int)
+
+    # Recalculate report valuation against the exact same quote used for
+    # settlement; the immutable selected/graded CSVs are never edited here.
+    canonical = df["dk_odds_american"].map(american_to_decimal)
+    original_decimal = df["dk_odds_decimal"].copy()
+    original_edge = df["edge"].copy()
+    original_ev = df["ev"].copy()
+    original_kelly = df["kelly"].copy()
+
+    df["dk_odds_decimal"] = canonical
+    df["edge"], df["ev"], df["kelly"] = price_metrics(
+        df["model_prob"],
+        df["dk_odds_decimal"],
+    )
+    # Historical comparisons are explicitly revaluations, not a claim that
+    # the original selections or an actual bet ticket used these prices.
+    changed = (
+        original_decimal.notna()
+        & canonical.notna()
+        & (original_decimal.sub(canonical).abs() > 1e-6)
+    )
+    audit = df.loc[changed, [
+        "game_date",
+        "game_id",
+        "market_type",
+        "bet_side",
+        "selected_provider_name",
+        "pulled_at",
+        "dk_odds_american",
+        "model_prob",
+    ]].copy()
+    audit["original_decimal"] = original_decimal.loc[changed]
+    audit["revalued_decimal"] = canonical.loc[changed]
+    audit["original_edge"] = original_edge.loc[changed]
+    audit["revalued_edge"] = df.loc[changed, "edge"]
+    audit["original_ev"] = original_ev.loc[changed]
+    audit["revalued_ev"] = df.loc[changed, "ev"]
+    audit["original_kelly"] = original_kelly.loc[changed]
+    audit["revalued_kelly"] = df.loc[changed, "kelly"]
+    audit["status"] = "counterfactual_report_revaluation_not_execution"
+    audit.to_csv(
+        FINAL_ROOT / "reports" / "nhl_price_revaluations.csv",
+        index=False,
+    )
 
     df["units"] = df.apply(
         grade_to_units,

@@ -8,6 +8,11 @@ from pathlib import Path
 
 import pandas as pd
 
+SCRIPTS_ROOT = str(Path(__file__).resolve().parents[1])
+if SCRIPTS_ROOT not in sys.path:
+    sys.path.insert(0, SCRIPTS_ROOT)
+from odds_price_common import reconcile_dataframe_prices
+
 JUICE_HELPER_DIR = str(Path(__file__).resolve().parent)
 if JUICE_HELPER_DIR not in sys.path:
     sys.path.insert(0, JUICE_HELPER_DIR)
@@ -131,6 +136,11 @@ def process_file(
     )
 
     df = original_df.copy()
+    reconcile_dataframe_prices(
+        df,
+        [["away_dk_puck_line_american","away_dk_puck_line_decimal"],["home_dk_puck_line_american","home_dk_puck_line_decimal"]],
+        log=lambda message, level: log(f"{level} {message}"),
+    )
 
     for col in [
         *FATIGUE_FEATURE_COLUMNS,

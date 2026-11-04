@@ -9,6 +9,11 @@ from pathlib import Path
 import pandas as pd
 
 
+SCRIPTS_ROOT = str(Path(__file__).resolve().parents[1])
+if SCRIPTS_ROOT not in sys.path:
+    sys.path.insert(0, SCRIPTS_ROOT)
+from odds_price_common import reconcile_dataframe_prices
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -247,6 +252,12 @@ def process_moneyline(
         file_path,
     )
 
+    reconcile_dataframe_prices(
+        df,
+        [["away_dk_moneyline_american","away_dk_moneyline_decimal"],["home_dk_moneyline_american","home_dk_moneyline_decimal"]],
+        log=_log,
+    )
+
     df = to_numeric(
         df,
         required_cols[1:],
@@ -309,6 +320,12 @@ def process_puck_line(
         file_path,
     )
 
+    reconcile_dataframe_prices(
+        df,
+        [["away_dk_puck_line_american","away_dk_puck_line_decimal"],["home_dk_puck_line_american","home_dk_puck_line_decimal"]],
+        log=_log,
+    )
+
     df = to_numeric(
         df,
         required_cols[1:],
@@ -369,6 +386,12 @@ def process_total(
         df,
         required_cols,
         file_path,
+    )
+
+    reconcile_dataframe_prices(
+        df,
+        [["dk_total_over_american","dk_total_over_decimal"],["dk_total_under_american","dk_total_under_decimal"]],
+        log=_log,
     )
 
     df = to_numeric(

@@ -505,6 +505,9 @@ def moneyline_from_provider(
         "away_team_odds_current_money_line_decimal",
     )
 
+    if not away_decimal or not home_decimal:
+        return None
+
     return {
         "home_american": (
             home_american
@@ -614,6 +617,9 @@ def puck_line_from_provider(
         "away_team_odds_current_spread_decimal",
     )
 
+    if not away_decimal or not home_decimal:
+        return None
+
     return {
         "home_line": clean_line(
             home_line
@@ -692,6 +698,9 @@ def total_from_provider(
         under_american,
         "current_under_decimal",
     )
+
+    if not under_decimal or not over_decimal:
+        return None
 
     return {
         "total": clean_line(

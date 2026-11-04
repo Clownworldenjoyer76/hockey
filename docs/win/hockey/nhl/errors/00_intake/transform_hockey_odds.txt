@@ -1,95 +1,866 @@
-=== transform_hockey_odds RUN 2026-11-04T03:03:30.691899-05:00 ===
-2026-11-04T03:03:30.692246-05:00 | Odds input directory: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds
-2026-11-04T03:03:30.692278-05:00 | JSON files found: 37
-2026-11-04T03:03:30.693601-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_09_29.json | events=5 | provider_rows=5
-2026-11-04T03:03:30.694456-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_09_30.json | events=3 | provider_rows=3
-2026-11-04T03:03:30.696980-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_01.json | events=8 | provider_rows=8
-2026-11-04T03:03:30.698091-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_02.json | events=5 | provider_rows=5
-2026-11-04T03:03:30.701279-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_03.json | events=13 | provider_rows=13
-2026-11-04T03:03:30.702408-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_04.json | events=5 | provider_rows=5
-2026-11-04T03:03:30.703194-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_05.json | events=4 | provider_rows=4
-2026-11-04T03:03:30.704988-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_06.json | events=9 | provider_rows=9
-2026-11-04T03:03:30.705679-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_07.json | events=3 | provider_rows=3
-2026-11-04T03:03:30.707363-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_08.json | events=10 | provider_rows=10
-2026-11-04T03:03:30.708186-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_09.json | events=4 | provider_rows=4
-2026-11-04T03:03:30.711038-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_10.json | events=14 | provider_rows=14
-2026-11-04T03:03:30.711777-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_11.json | events=3 | provider_rows=3
-2026-11-04T03:03:30.712353-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_12.json | events=3 | provider_rows=3
-2026-11-04T03:03:30.715342-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_13.json | events=16 | provider_rows=16
-2026-11-04T03:03:30.715921-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_14.json | events=2 | provider_rows=2
-2026-11-04T03:03:30.717842-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_15.json | events=11 | provider_rows=11
-2026-11-04T03:03:30.718360-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_16.json | events=2 | provider_rows=2
-2026-11-04T03:03:30.720689-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_17.json | events=14 | provider_rows=14
-2026-11-04T03:03:30.721243-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_18.json | events=2 | provider_rows=2
-2026-11-04T03:03:30.721977-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_19.json | events=4 | provider_rows=4
-2026-11-04T03:03:30.723881-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_20.json | events=11 | provider_rows=11
-2026-11-04T03:03:30.724401-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_21.json | events=2 | provider_rows=2
-2026-11-04T03:03:30.726347-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_22.json | events=12 | provider_rows=12
-2026-11-04T03:03:30.726867-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_23.json | events=2 | provider_rows=2
-2026-11-04T03:03:30.728784-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_24.json | events=12 | provider_rows=12
-2026-11-04T03:03:30.730026-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_25.json | events=5 | provider_rows=5
-2026-11-04T03:03:30.730652-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_26.json | events=3 | provider_rows=3
-2026-11-04T03:03:30.732391-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_27.json | events=11 | provider_rows=11
-2026-11-04T03:03:30.733230-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_28.json | events=4 | provider_rows=4
-2026-11-04T03:03:30.734990-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_29.json | events=11 | provider_rows=11
-2026-11-04T03:03:30.735680-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_30.json | events=3 | provider_rows=3
-2026-11-04T03:03:30.737341-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_31.json | events=10 | provider_rows=10
-2026-11-04T03:03:30.738357-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_01.json | events=5 | provider_rows=5
-2026-11-04T03:03:30.739172-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_02.json | events=4 | provider_rows=4
-2026-11-04T03:03:30.740978-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_03.json | events=11 | provider_rows=11
-2026-11-04T03:03:30.741848-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_04.json | events=4 | provider_rows=4
-2026-11-04T03:03:30.742651-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_29.csv rows=5
-2026-11-04T03:03:30.743042-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_30.csv rows=3
-2026-11-04T03:03:30.743453-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_01.csv rows=8
-2026-11-04T03:03:30.743776-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_02.csv rows=5
-2026-11-04T03:03:30.744204-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_03.csv rows=13
-2026-11-04T03:03:30.744515-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_04.csv rows=5
-2026-11-04T03:03:30.744804-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_05.csv rows=4
-2026-11-04T03:03:30.745188-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_06.csv rows=9
-2026-11-04T03:03:30.745442-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_07.csv rows=3
-2026-11-04T03:03:30.745795-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_08.csv rows=10
-2026-11-04T03:03:30.746077-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_09.csv rows=4
-2026-11-04T03:03:30.746484-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_10.csv rows=14
-2026-11-04T03:03:30.746736-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_11.csv rows=3
-2026-11-04T03:03:30.746974-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_12.csv rows=3
-2026-11-04T03:03:30.747439-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_13.csv rows=16
-2026-11-04T03:03:30.747686-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_14.csv rows=2
-2026-11-04T03:03:30.748038-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_15.csv rows=11
-2026-11-04T03:03:30.748291-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_16.csv rows=2
-2026-11-04T03:03:30.748693-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_17.csv rows=14
-2026-11-04T03:03:30.748928-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_18.csv rows=2
-2026-11-04T03:03:30.749189-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_19.csv rows=4
-2026-11-04T03:03:30.749555-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_20.csv rows=11
-2026-11-04T03:03:30.749796-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_21.csv rows=2
-2026-11-04T03:03:30.750191-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_22.csv rows=12
-2026-11-04T03:03:30.750455-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_23.csv rows=2
-2026-11-04T03:03:30.750846-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_24.csv rows=12
-2026-11-04T03:03:30.751141-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_25.csv rows=5
-2026-11-04T03:03:30.751403-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_26.csv rows=3
-2026-11-04T03:03:30.751774-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_27.csv rows=11
-2026-11-04T03:03:30.752037-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_28.csv rows=4
-2026-11-04T03:03:30.752439-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_29.csv rows=11
-2026-11-04T03:03:30.752698-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_30.csv rows=3
-2026-11-04T03:03:30.753048-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_31.csv rows=10
-2026-11-04T03:03:30.753359-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_01.csv rows=5
-2026-11-04T03:03:30.753653-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_02.csv rows=4
-2026-11-04T03:03:30.753998-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_03.csv rows=11
-2026-11-04T03:03:30.754165-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_04.csv rows=4
-2026-11-04T03:03:30.754182-05:00 | Provider priority: Titanbets -> MGM -> Bet365 -> Caesars Sportsbook -> SugarHouse -> others
-2026-11-04T03:03:30.754193-05:00 | Live Odds providers excluded from production selection
-2026-11-04T03:03:30.754205-05:00 | --- SUMMARY ---
-2026-11-04T03:03:30.754220-05:00 | csv_files_written: 37
-2026-11-04T03:03:30.754232-05:00 | events_found: 250
-2026-11-04T03:03:30.754243-05:00 | json_files_processed: 37
-2026-11-04T03:03:30.754254-05:00 | moneyline_provider:Draft Kings: 50
-2026-11-04T03:03:30.754266-05:00 | moneyline_provider:DraftKings: 200
-2026-11-04T03:03:30.754276-05:00 | odds_provider_rows_found: 250
-2026-11-04T03:03:30.754287-05:00 | puck_line_provider:Draft Kings: 50
-2026-11-04T03:03:30.754298-05:00 | puck_line_provider:DraftKings: 200
-2026-11-04T03:03:30.754309-05:00 | rows_added: 4
-2026-11-04T03:03:30.754320-05:00 | rows_built: 250
-2026-11-04T03:03:30.754331-05:00 | rows_unchanged: 231
-2026-11-04T03:03:30.754342-05:00 | rows_updated: 15
-2026-11-04T03:03:30.754354-05:00 | total_provider:Draft Kings: 50
-2026-11-04T03:03:30.754365-05:00 | total_provider:DraftKings: 200
-2026-11-04T03:03:30.754376-05:00 | STATUS: SUCCESS
+=== transform_hockey_odds RUN 2026-11-04T10:12:16.949475-05:00 ===
+2026-11-04T10:12:16.949807-05:00 | Odds input directory: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds
+2026-11-04T10:12:16.949835-05:00 | JSON files found: 37
+2026-11-04T10:12:16.951111-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.951213-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.951245-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.951283-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.951320-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.951373-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.951411-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.951450-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:16.951481-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.951527-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-305 raw_decimal=1.32 canonical_decimal=1.32786885245902
+2026-11-04T10:12:16.951560-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.951580-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.951608-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.951629-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.951669-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.951713-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.951751-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_09_29.json | events=5 | provider_rows=5
+2026-11-04T10:12:16.952524-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.952570-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.952601-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.952648-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.952682-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.952709-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.952756-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.952792-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.952822-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.952860-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_09_30.json | events=3 | provider_rows=3
+2026-11-04T10:12:16.954445-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.954474-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.954508-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.954539-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.954581-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.954614-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.954664-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.954690-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.954719-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.954759-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.954785-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.954814-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.954850-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.954869-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.954898-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-278 raw_decimal=1.35 canonical_decimal=1.35971223021583
+2026-11-04T10:12:16.954942-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.954972-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.954997-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.955035-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.955060-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.955091-05:00 | PRICE RECONCILED current_under_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.955126-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.955150-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.955179-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.955198-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.955223-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_01.json | events=8 | provider_rows=8
+2026-11-04T10:12:16.956676-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.956720-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.956750-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.956797-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.956829-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.956876-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.956915-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.956951-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.956982-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.957007-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.957043-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.957073-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.957098-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.957126-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_02.json | events=5 | provider_rows=5
+2026-11-04T10:12:16.960256-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.960305-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.960370-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.960410-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.960443-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.960463-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.960501-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.960534-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.960564-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.960598-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.960629-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.960676-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.960706-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.960734-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.960769-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.960789-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.960814-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-285 raw_decimal=1.35 canonical_decimal=1.35087719298246
+2026-11-04T10:12:16.960846-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.960879-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.960909-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.960934-05:00 | PRICE RECONCILED current_over_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.960953-05:00 | PRICE RECONCILED current_under_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.960988-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.961017-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.961045-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.961083-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.961115-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.961143-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.961179-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.961204-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.961235-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.961268-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-298 raw_decimal=1.33 canonical_decimal=1.33557046979866
+2026-11-04T10:12:16.961295-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.961314-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.961359-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:16.961379-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:16.961423-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:16.961470-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.961501-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:16.961533-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.961561-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_03.json | events=13 | provider_rows=13
+2026-11-04T10:12:16.962903-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.962934-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.962962-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-285 raw_decimal=1.35 canonical_decimal=1.35087719298246
+2026-11-04T10:12:16.962994-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.963040-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.963073-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.963099-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.963138-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.963164-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.963191-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.963210-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.963244-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.963273-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.963318-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.963357-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.963381-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_04.json | events=5 | provider_rows=5
+2026-11-04T10:12:16.964254-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.964296-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.964324-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.964367-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.964387-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.964424-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:16.964453-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.964490-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.964521-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:16.964551-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.964570-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.964604-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.964635-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.964663-05:00 | PRICE RECONCILED current_under_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.964689-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_05.json | events=4 | provider_rows=4
+2026-11-04T10:12:16.966554-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.966592-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.966628-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.966669-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.966701-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.966727-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.966764-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.966784-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.966811-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.966838-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.966884-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.966928-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.966948-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.966973-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.967004-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.967037-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.967068-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:16.967093-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.967132-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.967157-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.967185-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.967230-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:16.967255-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.967287-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.967320-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.967339-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.967364-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.967392-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.967436-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_06.json | events=9 | provider_rows=9
+2026-11-04T10:12:16.968352-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.968409-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.968441-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.968461-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.968506-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.968533-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-166 raw_decimal=1.6 canonical_decimal=1.60240963855422
+2026-11-04T10:12:16.968562-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.968582-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.968620-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.968645-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.968673-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.968702-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_07.json | events=3 | provider_rows=3
+2026-11-04T10:12:16.970664-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.970711-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.970786-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.970825-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.970845-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.970872-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.970903-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.970945-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.970979-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:16.971025-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.971056-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.971082-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.971118-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-325 raw_decimal=1.3 canonical_decimal=1.30769230769231
+2026-11-04T10:12:16.971157-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.971176-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.971209-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.971240-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.971282-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.971314-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.971360-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.971410-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.971446-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:16.971477-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.971505-05:00 | PRICE RECONCILED current_under_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.971531-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_08.json | events=10 | provider_rows=10
+2026-11-04T10:12:16.972562-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.972602-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.972634-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.972675-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.972708-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.972754-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.972794-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.972813-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.972873-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.972894-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.972919-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_09.json | events=4 | provider_rows=4
+2026-11-04T10:12:16.976009-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.976056-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.976086-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.976133-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-285 raw_decimal=1.35 canonical_decimal=1.35087719298246
+2026-11-04T10:12:16.976164-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.976183-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.976209-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.976229-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.976267-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.976292-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.976320-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.976339-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.976372-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.976416-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.976442-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.976461-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.976496-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.976515-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.976540-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-290 raw_decimal=1.34 canonical_decimal=1.3448275862069
+2026-11-04T10:12:16.976570-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.976603-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.976634-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.976662-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.976694-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.976725-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.976756-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.976794-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.976818-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.976868-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:16.976905-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.976941-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.976972-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.976997-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.977032-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.977062-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.977087-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.977106-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.977141-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:16.977165-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.977192-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.977211-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.977254-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.977282-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.977300-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.977333-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.977364-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:16.977391-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.977430-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_10.json | events=14 | provider_rows=14
+2026-11-04T10:12:16.978560-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.978606-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.978638-05:00 | PRICE RECONCILED current_under_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.978680-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:16.978715-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.978735-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.978761-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.978803-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.978829-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:16.978871-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_11.json | events=3 | provider_rows=3
+2026-11-04T10:12:16.979576-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.979602-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.979634-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-278 raw_decimal=1.35 canonical_decimal=1.35971223021583
+2026-11-04T10:12:16.979664-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.979704-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.979737-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.979783-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.979803-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.979831-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.979857-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.979889-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_12.json | events=3 | provider_rows=3
+2026-11-04T10:12:16.983228-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.983261-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.983295-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-285 raw_decimal=1.35 canonical_decimal=1.35087719298246
+2026-11-04T10:12:16.983328-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.983387-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:16.983433-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.983471-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.983501-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.983527-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.983551-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.983586-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.983617-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.983662-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.983692-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:16.983718-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.983757-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.983782-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.983809-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.983845-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.983875-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.983900-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.983936-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.983966-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.983994-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.984029-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.984053-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.984081-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.984100-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.984132-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.984152-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.984179-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-278 raw_decimal=1.35 canonical_decimal=1.35971223021583
+2026-11-04T10:12:16.984222-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.984242-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.984266-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.984297-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.984332-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.984360-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.984390-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.984437-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.984469-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.984494-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.984513-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.984546-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.984576-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.984604-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.984647-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:16.984678-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.984710-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:16.984729-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:16.984757-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.984784-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.984809-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_13.json | events=16 | provider_rows=16
+2026-11-04T10:12:16.985660-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.985701-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.985728-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.985748-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.985787-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.985819-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:16.985845-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.985876-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_14.json | events=2 | provider_rows=2
+2026-11-04T10:12:16.988007-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.988035-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.988067-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:16.988100-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.988143-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.988176-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:16.988202-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.988222-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.988257-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.988300-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.988333-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-298 raw_decimal=1.33 canonical_decimal=1.33557046979866
+2026-11-04T10:12:16.988361-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.988385-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.988425-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.988460-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.988490-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.988518-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.988549-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.988579-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.988603-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.988641-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.988665-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.988696-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.988728-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.988759-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.988786-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.988817-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.988846-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.988871-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.988920-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.988949-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.988968-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.989000-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-305 raw_decimal=1.32 canonical_decimal=1.32786885245902
+2026-11-04T10:12:16.989051-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_15.json | events=11 | provider_rows=11
+2026-11-04T10:12:16.989713-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.989752-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.989780-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.989800-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.989838-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.989858-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.989883-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.989926-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_16.json | events=2 | provider_rows=2
+2026-11-04T10:12:16.992622-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:16.992662-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.992707-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.992734-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:16.992766-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.992801-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-395 raw_decimal=1.25 canonical_decimal=1.25316455696203
+2026-11-04T10:12:16.992829-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.992857-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.992876-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.992910-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.992941-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.992985-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.993016-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:16.993044-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.993077-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.993113-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.993138-05:00 | PRICE RECONCILED current_over_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:16.993157-05:00 | PRICE RECONCILED current_under_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:16.993190-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.993220-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.993245-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.993264-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.993298-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.993323-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.993350-05:00 | PRICE RECONCILED current_over_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.993370-05:00 | PRICE RECONCILED current_under_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.993414-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.993447-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.993495-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:16.993520-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.993551-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.993583-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.993603-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.993627-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.993655-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.993689-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.993720-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.993763-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.993793-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.993818-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.993837-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.993869-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:16.993913-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.993932-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.993958-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_17.json | events=14 | provider_rows=14
+2026-11-04T10:12:16.994686-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.994726-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.994755-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:16.994797-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.994823-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.994855-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.994880-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_18.json | events=2 | provider_rows=2
+2026-11-04T10:12:16.995741-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.995780-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.995835-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.995861-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.995892-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:16.995926-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:16.995957-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.996003-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:16.996034-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.996071-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_19.json | events=4 | provider_rows=4
+2026-11-04T10:12:16.998131-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:16.998172-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.998200-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.998219-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.998259-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.998279-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.998304-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.998358-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.998392-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.998431-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.998468-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:16.998498-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.998523-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.998560-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:16.998590-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:16.998617-05:00 | PRICE RECONCILED current_under_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.998649-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:16.998680-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:16.998704-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.998740-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:16.998769-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:16.998794-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:16.998812-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:16.998844-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:16.998874-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:16.998901-05:00 | PRICE RECONCILED current_under_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:16.998932-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.998952-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.998979-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:16.999004-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.999023-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.999058-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-298 raw_decimal=1.33 canonical_decimal=1.33557046979866
+2026-11-04T10:12:16.999082-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.999100-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.999129-05:00 | PRICE RECONCILED current_over_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:16.999148-05:00 | PRICE RECONCILED current_under_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:16.999181-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:16.999201-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:16.999228-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:16.999267-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_20.json | events=11 | provider_rows=11
+2026-11-04T10:12:17.000014-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:17.000062-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.000092-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.000138-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.000160-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.000190-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-290 raw_decimal=1.34 canonical_decimal=1.3448275862069
+2026-11-04T10:12:17.000233-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_21.json | events=2 | provider_rows=2
+2026-11-04T10:12:17.002612-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.002658-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.002688-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.002735-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.002756-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.002782-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:17.002811-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.002831-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.002865-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.002897-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.002922-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.002941-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.002974-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:17.003005-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:17.003036-05:00 | PRICE RECONCILED current_over_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.003055-05:00 | PRICE RECONCILED current_under_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.003089-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.003108-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.003145-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.003181-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.003201-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.003229-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-285 raw_decimal=1.35 canonical_decimal=1.35087719298246
+2026-11-04T10:12:17.003253-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.003272-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.003316-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:17.003347-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.003381-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:17.003432-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.003460-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.003501-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:17.003526-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.003553-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.003588-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.003608-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.003643-05:00 | PRICE RECONCILED current_over_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.003662-05:00 | PRICE RECONCILED current_under_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.003697-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:17.003722-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.003750-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.003770-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.003806-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:17.003836-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:17.003864-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.003883-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.003909-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_22.json | events=12 | provider_rows=12
+2026-11-04T10:12:17.004631-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:17.004667-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.004698-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.004718-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.004774-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:17.004803-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.004831-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_23.json | events=2 | provider_rows=2
+2026-11-04T10:12:17.007035-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.007079-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:17.007134-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.007169-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.007217-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.007249-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.007275-05:00 | PRICE RECONCILED current_over_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.007295-05:00 | PRICE RECONCILED current_under_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.007344-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:17.007374-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.007445-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:17.007475-05:00 | PRICE RECONCILED current_over_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.007495-05:00 | PRICE RECONCILED current_under_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.007543-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:17.007569-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.007589-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.007632-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.007658-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:17.007689-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.007725-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.007750-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:17.007781-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.007814-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.007845-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.007870-05:00 | PRICE RECONCILED current_over_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:17.007905-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:17.007935-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.007961-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.007980-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.008015-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:17.008039-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:17.008067-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.008105-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.008133-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.008163-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.008189-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_24.json | events=12 | provider_rows=12
+2026-11-04T10:12:17.009582-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.009619-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.009655-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.009696-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-198 raw_decimal=1.5 canonical_decimal=1.50505050505051
+2026-11-04T10:12:17.009729-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.009755-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.009774-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.009817-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.009842-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:17.009871-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.009910-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:17.009936-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.009964-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.009983-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.010019-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.010043-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.010071-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.010091-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.010116-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_25.json | events=5 | provider_rows=5
+2026-11-04T10:12:17.010873-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.010913-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:17.010941-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.010986-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.011012-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.011041-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.011078-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.011110-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:17.011136-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.011155-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.011181-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_26.json | events=3 | provider_rows=3
+2026-11-04T10:12:17.013295-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:17.013335-05:00 | PRICE RECONCILED current_over_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.013357-05:00 | PRICE RECONCILED current_under_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.013410-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.013446-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.013503-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.013530-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:17.013559-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.013597-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.013641-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.013675-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.013707-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:17.013732-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.013783-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:17.013809-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.013828-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.013864-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.013890-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:17.013917-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.013952-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.013983-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:17.014008-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.014028-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.014061-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.014092-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.014117-05:00 | PRICE RECONCILED current_over_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.014136-05:00 | PRICE RECONCILED current_under_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.014169-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:17.014200-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.014250-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:17.014275-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:17.014303-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.014336-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_27.json | events=11 | provider_rows=11
+2026-11-04T10:12:17.015376-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:17.015427-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.015482-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.015514-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.015540-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.015559-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.015592-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:17.015623-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:17.015651-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.015688-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.015726-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.015755-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_28.json | events=4 | provider_rows=4
+2026-11-04T10:12:17.017809-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:17.017852-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.017883-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.017933-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.017962-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-205 raw_decimal=1.48 canonical_decimal=1.48780487804878
+2026-11-04T10:12:17.017994-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.018034-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:17.018065-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.018094-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.018127-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.018160-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:17.018188-05:00 | PRICE RECONCILED current_under_decimal: american=-142 raw_decimal=1.7 canonical_decimal=1.70422535211268
+2026-11-04T10:12:17.018221-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.018241-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.018273-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:17.018298-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.018334-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.018353-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.018380-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:17.018425-05:00 | PRICE RECONCILED current_under_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.018460-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.018492-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.018521-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.018554-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.018584-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.018609-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.018647-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.018672-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.018718-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.018739-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.018763-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-278 raw_decimal=1.35 canonical_decimal=1.35971223021583
+2026-11-04T10:12:17.018809-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.018840-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.018865-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.018894-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_29.json | events=11 | provider_rows=11
+2026-11-04T10:12:17.019776-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.019802-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.019833-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:17.019862-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.019900-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:17.019937-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.019967-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.020000-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.020020-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.020044-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:17.020075-05:00 | PRICE RECONCILED current_under_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.020100-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_30.json | events=3 | provider_rows=3
+2026-11-04T10:12:17.022064-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:17.022106-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.022138-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.022178-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.022199-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.022225-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-270 raw_decimal=1.37 canonical_decimal=1.37037037037037
+2026-11-04T10:12:17.022279-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:17.022305-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:17.022336-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.022373-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.022410-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-225 raw_decimal=1.44 canonical_decimal=1.44444444444444
+2026-11-04T10:12:17.022463-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.022489-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:17.022516-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.022555-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.022580-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.022608-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.022627-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.022659-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.022690-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.022721-05:00 | PRICE RECONCILED current_over_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.022741-05:00 | PRICE RECONCILED current_under_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.022776-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-166 raw_decimal=1.6 canonical_decimal=1.60240963855422
+2026-11-04T10:12:17.022801-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.022847-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:17.022879-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:17.022904-05:00 | PRICE RECONCILED current_over_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.022923-05:00 | PRICE RECONCILED current_under_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.022956-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-410 raw_decimal=1.24 canonical_decimal=1.24390243902439
+2026-11-04T10:12:17.022984-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-180 raw_decimal=1.55 canonical_decimal=1.55555555555556
+2026-11-04T10:12:17.023012-05:00 | PRICE RECONCILED current_over_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.023031-05:00 | PRICE RECONCILED current_under_decimal: american=-110 raw_decimal=1.9 canonical_decimal=1.90909090909091
+2026-11-04T10:12:17.023056-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_10_31.json | events=10 | provider_rows=10
+2026-11-04T10:12:17.024261-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:17.024297-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-105 raw_decimal=1.95 canonical_decimal=1.95238095238095
+2026-11-04T10:12:17.024318-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-115 raw_decimal=1.86 canonical_decimal=1.8695652173913
+2026-11-04T10:12:17.024348-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.024386-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.024418-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.024446-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-285 raw_decimal=1.35 canonical_decimal=1.35087719298246
+2026-11-04T10:12:17.024477-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.024516-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.024542-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:17.024574-05:00 | PRICE RECONCILED current_under_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.024622-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-230 raw_decimal=1.43 canonical_decimal=1.43478260869565
+2026-11-04T10:12:17.024647-05:00 | PRICE RECONCILED current_over_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.024667-05:00 | PRICE RECONCILED current_under_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.024706-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.024727-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.024751-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-245 raw_decimal=1.4 canonical_decimal=1.40816326530612
+2026-11-04T10:12:17.024779-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.024809-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_01.json | events=5 | provider_rows=5
+2026-11-04T10:12:17.025703-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.025729-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.025757-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-265 raw_decimal=1.37 canonical_decimal=1.37735849056604
+2026-11-04T10:12:17.025814-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:17.025846-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-170 raw_decimal=1.58 canonical_decimal=1.58823529411765
+2026-11-04T10:12:17.025895-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:17.025920-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.025979-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-238 raw_decimal=1.42 canonical_decimal=1.42016806722689
+2026-11-04T10:12:17.026005-05:00 | PRICE RECONCILED current_over_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.026024-05:00 | PRICE RECONCILED current_under_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.026049-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_02.json | events=4 | provider_rows=4
+2026-11-04T10:12:17.028119-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.028153-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.028185-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.028227-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.028260-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-162 raw_decimal=1.61 canonical_decimal=1.61728395061728
+2026-11-04T10:12:17.028286-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.028337-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.028365-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.028436-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.028478-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:17.028503-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-175 raw_decimal=1.57 canonical_decimal=1.57142857142857
+2026-11-04T10:12:17.028537-05:00 | PRICE RECONCILED current_over_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.028573-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-102 raw_decimal=1.98 canonical_decimal=1.98039215686275
+2026-11-04T10:12:17.028593-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-118 raw_decimal=1.84 canonical_decimal=1.84745762711864
+2026-11-04T10:12:17.028618-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:17.028665-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-112 raw_decimal=1.89 canonical_decimal=1.89285714285714
+2026-11-04T10:12:17.028684-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-108 raw_decimal=1.92 canonical_decimal=1.92592592592593
+2026-11-04T10:12:17.028709-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-290 raw_decimal=1.34 canonical_decimal=1.3448275862069
+2026-11-04T10:12:17.028737-05:00 | PRICE RECONCILED current_over_decimal: american=-120 raw_decimal=1.83 canonical_decimal=1.83333333333333
+2026-11-04T10:12:17.028775-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.028800-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.028847-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.028878-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.028906-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.028942-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.028967-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-148 raw_decimal=1.67 canonical_decimal=1.67567567567568
+2026-11-04T10:12:17.029016-05:00 | PRICE RECONCILED away_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.029040-05:00 | PRICE RECONCILED home_team_odds_current_spread_decimal: american=-185 raw_decimal=1.54 canonical_decimal=1.54054054054054
+2026-11-04T10:12:17.029069-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.029099-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_03.json | events=11 | provider_rows=11
+2026-11-04T10:12:17.030192-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.030231-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.030259-05:00 | PRICE RECONCILED current_over_decimal: american=-122 raw_decimal=1.81 canonical_decimal=1.81967213114754
+2026-11-04T10:12:17.030302-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-258 raw_decimal=1.38 canonical_decimal=1.38759689922481
+2026-11-04T10:12:17.030342-05:00 | PRICE RECONCILED current_over_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.030378-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-155 raw_decimal=1.64 canonical_decimal=1.64516129032258
+2026-11-04T10:12:17.030422-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-192 raw_decimal=1.52 canonical_decimal=1.52083333333333
+2026-11-04T10:12:17.030475-05:00 | PRICE RECONCILED home_team_odds_current_money_line_decimal: american=-135 raw_decimal=1.74 canonical_decimal=1.74074074074074
+2026-11-04T10:12:17.030506-05:00 | PRICE RECONCILED away_team_odds_current_spread_decimal: american=-218 raw_decimal=1.45 canonical_decimal=1.45871559633028
+2026-11-04T10:12:17.030534-05:00 | PRICE RECONCILED current_under_decimal: american=-130 raw_decimal=1.76 canonical_decimal=1.76923076923077
+2026-11-04T10:12:17.030560-05:00 | READ /home/runner/work/hockey/hockey/docs/win/hockey/nhl/odds/2026_11_04.json | events=4 | provider_rows=4
+2026-11-04T10:12:17.031374-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_29.csv rows=5
+2026-11-04T10:12:17.031767-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_09_30.csv rows=3
+2026-11-04T10:12:17.032206-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_01.csv rows=8
+2026-11-04T10:12:17.032603-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_02.csv rows=5
+2026-11-04T10:12:17.033110-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_03.csv rows=13
+2026-11-04T10:12:17.033518-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_04.csv rows=5
+2026-11-04T10:12:17.033870-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_05.csv rows=4
+2026-11-04T10:12:17.034303-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_06.csv rows=9
+2026-11-04T10:12:17.034645-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_07.csv rows=3
+2026-11-04T10:12:17.035081-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_08.csv rows=10
+2026-11-04T10:12:17.035447-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_09.csv rows=4
+2026-11-04T10:12:17.035956-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_10.csv rows=14
+2026-11-04T10:12:17.036285-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_11.csv rows=3
+2026-11-04T10:12:17.036614-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_12.csv rows=3
+2026-11-04T10:12:17.037156-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_13.csv rows=16
+2026-11-04T10:12:17.037480-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_14.csv rows=2
+2026-11-04T10:12:17.037924-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_15.csv rows=11
+2026-11-04T10:12:17.038225-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_16.csv rows=2
+2026-11-04T10:12:17.038740-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_17.csv rows=14
+2026-11-04T10:12:17.039040-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_18.csv rows=2
+2026-11-04T10:12:17.039371-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_19.csv rows=4
+2026-11-04T10:12:17.039827-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_20.csv rows=11
+2026-11-04T10:12:17.040126-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_21.csv rows=2
+2026-11-04T10:12:17.040580-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_22.csv rows=12
+2026-11-04T10:12:17.040880-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_23.csv rows=2
+2026-11-04T10:12:17.041334-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_24.csv rows=12
+2026-11-04T10:12:17.041705-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_25.csv rows=5
+2026-11-04T10:12:17.042012-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_26.csv rows=3
+2026-11-04T10:12:17.042471-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_27.csv rows=11
+2026-11-04T10:12:17.042809-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_28.csv rows=4
+2026-11-04T10:12:17.043253-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_29.csv rows=11
+2026-11-04T10:12:17.043612-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_30.csv rows=3
+2026-11-04T10:12:17.044054-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_10_31.csv rows=10
+2026-11-04T10:12:17.044469-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_01.csv rows=5
+2026-11-04T10:12:17.044821-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_02.csv rows=4
+2026-11-04T10:12:17.045271-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_03.csv rows=11
+2026-11-04T10:12:17.045630-05:00 | WROTE /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_04.csv rows=4
+2026-11-04T10:12:17.045654-05:00 | Provider priority: Titanbets -> MGM -> Bet365 -> Caesars Sportsbook -> SugarHouse -> others
+2026-11-04T10:12:17.045670-05:00 | Live Odds providers excluded from production selection
+2026-11-04T10:12:17.045686-05:00 | --- SUMMARY ---
+2026-11-04T10:12:17.045713-05:00 | csv_files_written: 37
+2026-11-04T10:12:17.045730-05:00 | events_found: 250
+2026-11-04T10:12:17.045745-05:00 | json_files_processed: 37
+2026-11-04T10:12:17.045759-05:00 | moneyline_provider:Draft Kings: 50
+2026-11-04T10:12:17.045774-05:00 | moneyline_provider:DraftKings: 200
+2026-11-04T10:12:17.045788-05:00 | odds_provider_rows_found: 250
+2026-11-04T10:12:17.045803-05:00 | puck_line_provider:Draft Kings: 50
+2026-11-04T10:12:17.045817-05:00 | puck_line_provider:DraftKings: 200
+2026-11-04T10:12:17.045831-05:00 | rows_built: 250
+2026-11-04T10:12:17.045845-05:00 | rows_updated: 250
+2026-11-04T10:12:17.045859-05:00 | total_provider:Draft Kings: 50
+2026-11-04T10:12:17.045874-05:00 | total_provider:DraftKings: 200
+2026-11-04T10:12:17.045888-05:00 | STATUS: SUCCESS

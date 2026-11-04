@@ -272,32 +272,13 @@ def market_price(
     american_keys: tuple[str, ...],
     decimal_keys: tuple[str, ...],
 ) -> tuple[float, float] | None:
-    american = numeric(
-        first_value(
-            row,
-            *american_keys,
-        )
-    )
-    if american is None or american == 0:
+    # ESPN's rounded decimal quote is display-only; the American quote
+    # determines the canonical price used by selection and settlement.
+    american = numeric(first_value(row, *american_keys))
+    decimal = american_to_decimal(american)
+    if american is None or decimal is None or decimal <= 1:
         return None
-
-    decimal = numeric(
-        first_value(
-            row,
-            *decimal_keys,
-        )
-    )
-    if decimal is None or decimal <= 1:
-        decimal = american_to_decimal(
-            american
-        )
-    if decimal is None or decimal <= 1:
-        return None
-
-    return (
-        american,
-        decimal,
-    )
+    return american, decimal
 
 
 def moneyline_market(
@@ -719,12 +700,14 @@ def process_bets(
         selected_pulled_at = parse_timestamp(
             bet.get("pulled_at")
         )
-        selected_decimal = numeric(
-            bet.get("dk_odds_decimal")
-        )
         selected_american = numeric(
             bet.get("dk_odds_american")
         )
+        selected_decimal = american_to_decimal(selected_american)
+        # For legacy selections, the raw rounded decimal is retained in the
+        # immutable selection CSV; all CLV price comparisons are revalued
+        # against the exact American payout.
+
         selected_line = numeric(bet.get("line"))
 
         base_summary = {

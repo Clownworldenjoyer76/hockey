@@ -81,6 +81,11 @@ TIMING_EVENTS: list[dict[str, Any]] = []
 CACHE_COUNTS = {"hit": 0, "miss": 0, "write": 0, "invalid": 0}
 TIMING_PATH = BASE_DIR / "errors" / "00_intake" / "pull_sdv_timing.json"
 
+# Only applies to current-slate fatigue team schedule requests.
+# Three total attempts: initial request plus two bounded retries.
+FATIGUE_SCHEDULE_MAX_ATTEMPTS = 3
+FATIGUE_SCHEDULE_RETRY_SECONDS = 1.0
+
 
 def record_timing(name: str, elapsed: float, status: str = "ok") -> None:
     with TIMING_LOCK:
@@ -4553,8 +4558,153 @@ def pull_advanced_player_strength(
         )
 
 
-def pull_fatigue(
+def _fetch_valid_fatigue_schedule(
+    team: str,
+    target_date: date,
+) -> tuple[Any, dict[str, Any], pl.DataFrame]:
+    """Fetch one NHL payload, parse THAT payload, and validate the slate game.
 
+    No independently fetched parsed/raw pair can disagree because parsing
+    and fatigue calculation both use the same verified raw response.
+    Empty/malformed responses and exceptions are retried with bounded backoff.
+    This function never writes to the repository.
+    """
+    target = target_date.isoformat()
+    attempt_errors: list[str] = []
+
+    for attempt in range(1, FATIGUE_SCHEDULE_MAX_ATTEMPTS + 1):
+        started_at = time.perf_counter()
+        stage = "fetch"
+        try:
+            raw = nhl.nhl_club_schedule_season(
+                team=team,
+                return_parsed=False,
+            )
+
+            stage = "validate_raw"
+            if not isinstance(raw, dict):
+                raise ValueError(
+                    f"Expected a raw JSON object, got {type(raw).__name__}"
+                )
+            games = raw.get("games")
+            if not isinstance(games, list) or not games:
+                raise ValueError(
+                    "Raw schedule has no games array or it is empty "
+                    "(the HTTP response status is not available here)"
+                )
+
+            target_games = [
+                game for game in games
+                if isinstance(game, dict)
+                and game.get("gameDate") == target
+                and team in (
+                    (game.get("homeTeam") or {}).get("abbrev"),
+                    (game.get("awayTeam") or {}).get("abbrev"),
+                )
+            ]
+            if len(target_games) != 1:
+                raise ValueError(
+                    f"Expected one {team} game on {target} in raw "
+                    f"schedule, found {len(target_games)}"
+                )
+
+            stage = "parse_raw"
+            # Public SportsDataverse parser; do not make a second request.
+            parsed = nhl.parse_nhl_web_club_schedule(raw)
+            if not (is_polars_frame(parsed) or is_pandas_frame(parsed)):
+                raise TypeError(
+                    f"Parser returned {type(parsed).__name__}, not a DataFrame"
+                )
+            if frame_empty(parsed):
+                raise ValueError(
+                    "Parser returned no rows for a populated raw schedule"
+                )
+            parsed_pdf = as_pandas(parsed)
+            if len(parsed_pdf) != len(games):
+                raise ValueError(
+                    f"Parser row count {len(parsed_pdf)} differs from "
+                    f"raw games count {len(games)}"
+                )
+            date_col = first_col(
+                parsed, ("game_date", "schedule_date", "date")
+            )
+            if date_col is None:
+                raise ValueError("Parsed club schedule is missing a date column")
+            game_dates = pd.to_datetime(
+                parsed_pdf[date_col], errors="coerce"
+            )
+            if int((game_dates.dt.date == target_date).sum()) != 1:
+                raise ValueError(
+                    f"Parsed schedule does not contain exactly one "
+                    f"game for {team} on {target}"
+                )
+            if "id" in parsed_pdf.columns:
+                expected_id = str(target_games[0].get("id", ""))
+                parsed_id = str(
+                    parsed_pdf.loc[game_dates.dt.date == target_date, "id"].iloc[0]
+                )
+                if parsed_id != expected_id:
+                    raise ValueError(
+                        f"Parsed game ID {parsed_id!r} does not match "
+                        f"raw game ID {expected_id!r}"
+                    )
+
+            stage = "calculate_fatigue"
+            fatigue = build_fatigue_from_team_schedule(
+                team, parsed, target_date=target_date
+            )
+            if frame_empty(fatigue) or fatigue.height != 1:
+                raise ValueError(
+                    f"Expected exactly one fatigue record for {team} "
+                    f"on {target}, got "
+                    f"{0 if frame_empty(fatigue) else fatigue.height}"
+                )
+            feature = fatigue.to_dicts()[0]
+            if feature.get("team") != team or feature.get("game_date") != target:
+                raise ValueError(
+                    f"Fatigue record does not match {team} on {target}"
+                )
+
+            record_timing(
+                f"request/fatigue/{team}_club_schedule_attempt_{attempt}",
+                time.perf_counter() - started_at,
+                "ok",
+            )
+            if attempt > 1:
+                print(
+                    f"SDV FATIGUE RECOVERED | {team} | "
+                    f"date={target} | attempt={attempt}",
+                    flush=True,
+                )
+            return parsed, raw, fatigue
+        except Exception as exc:
+            detail = (
+                f"attempt={attempt}/{FATIGUE_SCHEDULE_MAX_ATTEMPTS} "
+                f"stage={stage} {type(exc).__name__}: {exc}"
+            )
+            attempt_errors.append(detail)
+            record_timing(
+                f"request/fatigue/{team}_club_schedule_attempt_{attempt}",
+                time.perf_counter() - started_at,
+                "error",
+            )
+            print(
+                f"WARN | fatigue/{team}_club_schedule | {detail}",
+                file=sys.stderr, flush=True,
+            )
+            if attempt < FATIGUE_SCHEDULE_MAX_ATTEMPTS:
+                time.sleep(
+                    FATIGUE_SCHEDULE_RETRY_SECONDS * 2 ** (attempt - 1)
+                )
+
+    raise RuntimeError(
+        f"fatigue/{team}_club_schedule: no valid schedule for "
+        f"{target} after {FATIGUE_SCHEDULE_MAX_ATTEMPTS} "
+        f"attempts; " + " | ".join(attempt_errors)
+    )
+
+
+def pull_fatigue(
     failures: list[str],
     *,
     current: bool,
@@ -4564,77 +4714,93 @@ def pull_fatigue(
     schedule: Any,
 ):
     if not current:
-        fatigue = (
-            build_fatigue_from_league_schedule(
-                schedule
-            )
-        )
-
+        fatigue = build_fatigue_from_league_schedule(schedule)
         save_object(
-            "fatigue",
-            "fatigue",
-            fatigue,
-            prefix=prefix,
-            current=False,
+            "fatigue", "fatigue", fatigue,
+            prefix=prefix, current=False,
         )
-
         return
 
-    fatigue_frames = []
-
-    def fetch_team_schedule(team: str):
-        team_schedule_parsed = safe_pull(
-            failures, "fatigue", f"{team}_club_schedule",
-            nhl.nhl_club_schedule_season, team=team,
+    if frame_empty(schedule):
+        raise RuntimeError(
+            "Cannot validate current fatigue coverage: "
+            "NHL schedule is unavailable or empty"
         )
-        team_schedule_raw = (
-            safe_pull(
-                failures, "fatigue", f"{team}_club_schedule_raw",
-                nhl.nhl_club_schedule_season, team=team, return_parsed=False,
-            ) if OPTIONS.include_raw else None
+    if not teams:
+        print(
+            f"SDV FATIGUE | No scheduled teams for "
+            f"{target_date.isoformat()}; no fatigue snapshot required",
+            flush=True,
         )
-        return team, team_schedule_parsed, team_schedule_raw
+        return
 
+    if len(teams) != len(set(teams)):
+        raise ValueError("Duplicate teams in the current NHL slate")
+
+    results: dict[str, tuple[Any, dict[str, Any], pl.DataFrame]] = {}
+    problems: list[str] = []
+
+    # Keep existing concurrency bound. Every team gets one raw fetch
+    # per attempt, then that SAME payload is parsed and validated.
     with ThreadPoolExecutor(max_workers=OPTIONS.max_workers) as pool:
-        futures = {pool.submit(fetch_team_schedule, team): team for team in teams}
-        responses = {}
+        futures = {
+            pool.submit(_fetch_valid_fatigue_schedule, team, target_date): team
+            for team in teams
+        }
         for future in as_completed(futures):
             team = futures[future]
-            responses[team] = future.result()
+            try:
+                results[team] = future.result()
+            except Exception as exc:
+                problems.append(f"{team}: {exc}")
 
+    if problems or len(results) != len(teams):
+        missing = sorted(set(teams) - set(results))
+        problem = (
+            f"Required NHL fatigue schedules incomplete for "
+            f"{target_date.isoformat()}: "
+            f"expected={len(teams)}, valid={len(results)}, "
+            f"missing={missing}; details: {'; '.join(sorted(problems))}"
+        )
+        with TIMING_LOCK:
+            failures.append(problem)
+        # Never publish partial daily or latest fatigue snapshots.
+        raise RuntimeError(problem)
+
+    fatigue = pl.concat(
+        [results[team][2] for team in teams],
+        how="diagonal_relaxed",
+    )
+    keys = [(str(row["team"]), str(row["game_date"]))
+            for row in fatigue.to_dicts()]
+    expected_keys = {(team, target_date.isoformat()) for team in teams}
+    if len(keys) != len(teams) or set(keys) != expected_keys:
+        raise RuntimeError(
+            f"Fatigue output validation failed for {target_date}: "
+            f"expected={sorted(expected_keys)}, actual={keys}"
+        )
+
+    # All scheduled teams were validated before writing any output.
     for team in teams:
-        _, parsed, raw = responses[team]
-        if parsed is not None:
-            save_object(
-                "fatigue", f"{team}_club_schedule", parsed,
-                prefix=prefix, current=True,
-            )
-            f = build_fatigue_from_team_schedule(
-                team, parsed, target_date=target_date,
-            )
-            if not f.is_empty():
-                fatigue_frames.append(f)
-        if raw is not None:
+        parsed, raw, _ = results[team]
+        save_object(
+            "fatigue", f"{team}_club_schedule", parsed,
+            prefix=prefix, current=True,
+        )
+        if OPTIONS.include_raw:
             save_object(
                 "fatigue", f"{team}_club_schedule_raw", raw,
                 prefix=prefix, current=True,
             )
 
-    fatigue = (
-        pl.concat(
-            fatigue_frames,
-            how="diagonal_relaxed",
-        )
-        if fatigue_frames
-        else pl.DataFrame()
-    )
-
     save_object(
-        "fatigue",
-        "fatigue",
-        fatigue,
-        prefix=prefix,
-        current=True,
+        "fatigue", "fatigue", fatigue,
+        prefix=prefix, current=True,
+    )
+    print(
+        f"SDV FATIGUE VERIFIED | date={target_date.isoformat()} "
+        f"| teams={len(teams)} | rows={fatigue.height}",
+        flush=True,
     )
 
 

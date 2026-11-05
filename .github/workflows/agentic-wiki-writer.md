@@ -28,13 +28,7 @@ steps:
     run: mkdir -p .github/agentic-wiki
 
 tools:
-  bash:
-    - "find * -type f -not -path"
-    - "tree *"
-    - "wc *"
-    - "ls"
-    - "cat *"
-    - "head *"
+  bash: ["*"]
   edit:
   repo-memory:
     branch-name: memory/agentic-wiki

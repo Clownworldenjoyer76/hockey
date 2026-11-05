@@ -119,7 +119,7 @@ jobs:
           if [ -z "$SELECT_FILE" ]; then
             echo "::warning::No NHL select files were produced or found. Grading, analysis, reports, CLV, and dashboard steps will be skipped."
             echo "has_inputs=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            exit "$SELECT_RC"
           fi
 
           echo "Selected NHL file found: $SELECT_FILE"

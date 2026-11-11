@@ -21,7 +21,7 @@ markets:
       home:
         enabled: true
         my_model_prob_bands:
-          - [0.00, 1.00]
+          - [0.50, 1.00]
         prob_bands:
           - [0.00, 1.00]
         odds_bands:
@@ -34,9 +34,9 @@ markets:
       away:
         enabled: true
         my_model_prob_bands:
-          - [0.00, 1.00]
+          - [0.45, 1.00]
         prob_bands:
-          - [0.00, 1.00]
+          - [0.45, 1.00]
         odds_bands:
           - [-500, 500]
         ev_bands:
@@ -53,13 +53,13 @@ markets:
       home:
         enabled: true
         prob_bands:
-          - [0.0, 1.0]
+          - [0.70, 1.0]
         line_bands:
           - [-5.0, 5.0]
         my_model_prob_bands:
-          - [0.0, 1.0]
+          - [0.60, 1.0]
         odds_bands:
-          - [-500, 500]
+          - [-500, -200]
         ev_bands:
           - [0.00, 100.0]
         kelly_bands:
@@ -68,13 +68,14 @@ markets:
       away:
         enabled: true
         prob_bands:
-          - [0.0, 1.0]
+          - [0.70, 1.0]
         line_bands:
           - [-5.0, 5.0]
         my_model_prob_bands:
-          - [0.0, 1.0]
+          - [0.60, 1.0]
         odds_bands:
-          - [-500, 500]
+          - [-999, -150]
+          - [-109, 100]
         ev_bands:
           - [0.00, 100.0]
         kelly_bands:
@@ -90,7 +91,7 @@ markets:
       over:
         enabled: true
         prob_bands:
-          - [0.0, 1.00]
+          - [0.60, 1.00]
         line_bands:
           - [0.0, 100.0]
         my_model_prob_bands:
@@ -105,7 +106,7 @@ markets:
       under:
         enabled: true
         prob_bands:
-          - [0.0, 1.00]
+          - [0.55, 1.00]
         line_bands:
           - [0.0, 100.0]
         my_model_prob_bands:

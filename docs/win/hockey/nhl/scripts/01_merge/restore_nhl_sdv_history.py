@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import os
 import re
 import subprocess
@@ -252,6 +253,15 @@ def atomic_csv(
             os.unlink(temp_name)
 
 
+def _same_archived_war(left: str, right: str) -> bool:
+    if left == right:
+        return True
+    try:
+        return math.isclose(float(left), float(right), rel_tol=0.0, abs_tol=1e-7)
+    except (TypeError, ValueError):
+        return False
+
+
 def prepare_history() -> None:
     for family, (
         directory, suffix, key_fields, value_fields
@@ -312,7 +322,25 @@ def prepare_history() -> None:
                 )
                 alternatives.append((path, header, rows))
 
-            # Most complete slate wins; earliest file breaks ties.
+            # WAR archives must be completely and consistently recalculated before restoration.
+            # Validate EVERY same-day lineup candidate; a partially restored old-formula
+            # archive must fail rather than silently overwrite a repaired one.
+            # Preserve the original earlier-file selection for all families because
+            # the stored season rows can have distinct later snapshot timestamps.
+            if family == "lineup-strength" and len(alternatives) > 1:
+                snapshot_war = {}
+                for alternative_path, _, alternative_rows in alternatives:
+                    for candidate_row in alternative_rows:
+                        candidate_key = make_key(candidate_row, key_fields)
+                        triplet = tuple((candidate_row.get(column) or "").strip()
+                                        for column in ("home_skater_war", "away_skater_war",
+                                                       "skater_war_differential"))
+                        if candidate_key in snapshot_war and any(not _same_archived_war(a, b) for a, b in zip(triplet, snapshot_war[candidate_key][0])):
+                            error("Unrepaired lineup WAR archive conflict: "
+                                  f"{candidate_key} "
+                                  f"{snapshot_war[candidate_key][1]} versus {alternative_path}")
+                        snapshot_war[candidate_key] = (triplet, alternative_path)
+            # Prefer most complete; retain originally selected archive on ties.
             selected = min(
                 alternatives,
                 key=lambda item: (-len(item[2]), item[0].name),

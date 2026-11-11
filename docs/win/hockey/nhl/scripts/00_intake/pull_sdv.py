@@ -32,6 +32,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import lru_cache
+from collections import defaultdict
 import json
 import shutil
 import sys
@@ -3825,83 +3826,201 @@ def build_game_goalie_features_asof(
 
 
 
-def _unit_player_team_lookup(
-    *unit_frames: Any,
-) -> dict[str, str]:
-    counts: dict[
-        str,
-        dict[str, int],
-    ] = {}
+def normalize_historical_shift_team_names(
+    prior_shifts: Any,
+    prior_pbp: Any | None = None,
+) -> Any:
+    """Normalize NHL shift team names BEFORE SDV stint/RAPM/WAR calculations.
 
-    for frame in unit_frames:
-        if frame_empty(frame):
+    SportsDataverse's build_stints() recognizes canonical team names but does
+    not recognize source mojibake such as 'MontrÃ©al Canadiens'. Fixing only
+    the final player-to-team lookup does not repair omitted upstream stints.
+    Require all identifiable teams in prior PBP games to have matching shifts.
+    """
+    from sportsdataverse.nhl.nhl_player_impact_constants import team_fullname_to_abbr
+
+    if frame_empty(prior_shifts):
+        raise RuntimeError("Cannot normalize historical shift teams: empty shifts")
+    pdf = as_pandas(prior_shifts)
+    required = {"game_id", "game_seconds", "event_team", "ids_on", "ids_off"}
+    missing = required - set(pdf.columns)
+    if missing:
+        raise RuntimeError(f"Historical shifts missing fields: {sorted(missing)}")
+
+    repairs: dict[str, str] = {}
+    team_names: dict[str, str] = {}
+    unknown: set[str] = set()
+    active = (
+        pdf["ids_on"].fillna("").astype(str).str.strip().ne("")
+        | pdf["ids_off"].fillna("").astype(str).str.strip().ne("")
+    )
+    for raw in pdf.loc[active, "event_team"].fillna("").astype(str).unique():
+        canonical = raw.strip()
+        abbr = team_fullname_to_abbr(canonical)
+        if abbr is None:
+            candidate = canonical
+            for _ in range(2):
+                try:
+                    candidate = candidate.encode("latin-1").decode("utf-8")
+                except (UnicodeError, ValueError):
+                    break
+                abbr = team_fullname_to_abbr(candidate)
+                if abbr is not None:
+                    canonical = candidate
+                    break
+        if abbr is None:
+            unknown.add(raw)
             continue
+        team_names[canonical] = abbr
+        if raw != canonical:
+            repairs[raw] = canonical
+    if unknown:
+        raise RuntimeError(
+            "Unrecognized source shift team names before RAPM/WAR: "
+            + repr(sorted(unknown)[:15])
+        )
+    if repairs:
+        for raw, fixed in sorted(repairs.items()):
+            count = int((pdf["event_team"] == raw).sum())
+            print(
+                f"PLAYER-STRENGTH SHIFT TEAM REPAIR | {raw!r} -> {fixed!r} "
+                f"| rows={count}", flush=True,
+            )
+        pdf["event_team"] = pdf["event_team"].replace(repairs)
 
-        pdf = as_pandas(frame)
+    # SDV's build_stints() uses team_abbr preferentially when that column
+    # exists; merely repairing event_team would not change its model inputs.
+    # Validate the actual identifier used by the third-party model as well.
+    filled_abbr = False
+    if "team_abbr" in pdf.columns:
+        canonical_abbr = pdf["event_team"].map(team_names)
+        current_abbr = pdf["team_abbr"].fillna("").astype(str).str.strip()
+        inconsistent = active & current_abbr.ne("") & canonical_abbr.notna() & current_abbr.ne(canonical_abbr)
+        if inconsistent.any():
+            details = pdf.loc[inconsistent, ["game_id", "event_team", "team_abbr"]].head(8).to_dict("records")
+            raise RuntimeError(f"Conflicting shift team_abbr identities: {details}")
+        missing_abbr = active & current_abbr.eq("") & canonical_abbr.notna()
+        if missing_abbr.any():
+            pdf.loc[missing_abbr, "team_abbr"] = canonical_abbr.loc[missing_abbr]
+            filled_abbr = True
+            print(f"WAR SHIFT team_abbr RECOVERED | rows={int(missing_abbr.sum())}", flush=True)
+    print(
+        "WAR SHIFT TEAM FIELD | "
+        + ("team_abbr" if "team_abbr" in pdf.columns else "event_team"),
+        flush=True,
+    )
 
-        if (
-            "team" not in pdf.columns
-            or "unit_ids" not in pdf.columns
-        ):
+    # Historical source PBP and shifts must describe the same TWO teams for
+    # every matched game. This detects partial team loss (including Montreal)
+    # before the third-party stint builder silently omits those records.
+    if not frame_empty(prior_pbp):
+        pbp = as_pandas(prior_pbp)
+        need = {"game_id", "home_abbr", "away_abbr"}
+        if not need.issubset(pbp.columns):
+            raise RuntimeError(
+                "Cannot verify pre-WAR team coverage: PBP missing "
+                + repr(sorted(need - set(pbp.columns)))
+            )
+        game_teams = pbp[["game_id", "home_abbr", "away_abbr"]].dropna(
+            subset=["game_id"]
+        ).drop_duplicates()
+        expected = {
+            (str(gid), str(abbr).strip())
+            for gid, home, away in game_teams.itertuples(index=False, name=None)
+            for abbr in (home, away)
+            if pd.notna(abbr) and str(abbr).strip()
+        }
+        shifted = pdf.loc[active, ["game_id", "event_team"]].dropna().drop_duplicates()
+        observed = {
+            (str(gid), team_names.get(str(name).strip()))
+            for gid, name in shifted.itertuples(index=False, name=None)
+        }
+        missing_coverage = sorted(expected - observed)
+        if missing_coverage:
+            raise RuntimeError(
+                f"Historical shift/PBP coverage mismatch: "
+                f"missing_game_team_pairs={len(missing_coverage)} "
+                f"sample={missing_coverage[:12]}; WAR not published"
+            )
+        print(
+            f"WAR GAME-TEAM COVERAGE PASS | pairs={len(expected)} "
+            f"| shift_pairs={len(observed)}", flush=True,
+        )
+
+    changed = bool(repairs) or filled_abbr
+    return pl.from_pandas(pdf) if changed and is_polars_frame(prior_shifts) else (
+        pdf if changed else prior_shifts
+    )
+
+
+def _shift_player_team_weights(
+    prior_shifts: Any,
+) -> dict[str, dict[str, float]]:
+    """Attribute player values by observed time-on-ice for each historical team.
+
+    Count actual seconds spent on the ice, not CHANGE-event counts. A player
+    traded mid-season receives shares proportional to time actually played.
+    Input team names MUST already be canonicalized before all SDV calculations.
+    """
+    from sportsdataverse.nhl.nhl_player_impact_constants import team_fullname_to_abbr
+
+    if frame_empty(prior_shifts):
+        raise RuntimeError("Cannot attribute WAR: empty historical shifts")
+    pdf = as_pandas(prior_shifts)
+    required = {"game_id", "game_seconds", "event_team", "ids_on", "ids_off"}
+    if not required.issubset(pdf.columns):
+        raise RuntimeError(
+            "Cannot attribute WAR: shifts missing "
+            + repr(sorted(required - set(pdf.columns)))
+        )
+    pdf["_seconds"] = pd.to_numeric(pdf["game_seconds"], errors="coerce")
+    if pdf["game_id"].isna().any() or pdf["_seconds"].isna().any():
+        raise RuntimeError("Historical shift records have invalid game/time keys")
+
+    def ids(raw: Any) -> set[str]:
+        if pd.isna(raw) or not str(raw).strip():
+            return set()
+        return {
+            player for entry in str(raw).split(",")
+            if (player := normalize_player_id(entry)) and player != "0"
+        }
+
+    seconds: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+    unmapped: set[str] = set()
+    for (_, team_name), group in pdf.groupby(["game_id", "event_team"], sort=False):
+        abbr = team_fullname_to_abbr(str(team_name).strip())
+        if abbr is None:
+            if any(ids(x) for x in group["ids_on"]) or any(ids(x) for x in group["ids_off"]):
+                unmapped.add(str(team_name))
             continue
+        running: set[str] = set()
+        prior_second: float | None = None
+        for t, at_t in group.groupby("_seconds", sort=True):
+            current_second = float(t)
+            if prior_second is not None:
+                duration = current_second - prior_second
+                if duration < 0:
+                    raise RuntimeError("Unordered shift seconds detected")
+                if duration:
+                    for player in running:
+                        seconds[player][abbr] += duration
+            # All players leaving at a shared timestamp depart before on-ice
+            # sets are sampled, as in SDV's own build_stints implementation.
+            for off in at_t["ids_off"]:
+                running.difference_update(ids(off))
+            for on in at_t["ids_on"]:
+                running.update(ids(on))
+            prior_second = current_second
+    if unmapped:
+        raise RuntimeError(f"Unmapped historical shift teams: {sorted(unmapped)[:15]}")
+    if not seconds:
+        raise RuntimeError("No usable historical skater time-on-ice")
+    return {
+        player: {team: sec / total for team, sec in sorted(by_team.items())}
+        for player, by_team in seconds.items()
+        if (total := sum(by_team.values())) > 0
+    }
 
-        for _, row in pdf.iterrows():
-            team = str(
-                row.get(
-                    "team",
-                    "",
-                )
-            ).strip()
-
-            if not team:
-                continue
-
-            raw_ids = str(
-                row.get(
-                    "unit_ids",
-                    "",
-                )
-            ).strip()
-
-            for raw_id in raw_ids.split("-"):
-                player_id = normalize_player_id(
-                    raw_id
-                )
-
-                if not player_id:
-                    continue
-
-                counts.setdefault(
-                    player_id,
-                    {},
-                )[team] = (
-                    counts.setdefault(
-                        player_id,
-                        {},
-                    ).get(
-                        team,
-                        0,
-                    )
-                    + 1
-                )
-
-    lookup: dict[
-        str,
-        str,
-    ] = {}
-
-    for player_id, by_team in counts.items():
-        lookup[
-            player_id
-        ] = sorted(
-            by_team.items(),
-            key=lambda item: (
-                -item[1],
-                item[0],
-            ),
-        )[0][0]
-
-    return lookup
 
 
 def _weighted_mean(
@@ -3958,99 +4077,67 @@ def _weighted_mean(
 
 def _player_metric_by_team(
     frame: Any,
-    player_team: dict[str, str],
+    player_team: dict[str, dict[str, float]],
     *,
     value_col: str,
     mode: str,
     weight_col: str | None = None,
 ) -> dict[str, float]:
+    """Aggregate one per-player value using shift-based team shares.
+
+    WAR/PP/PK sums are conserved when a player changes teams. RAPM is
+    weighted by the relevant share of player TOI, not number of line units.
+    """
     if frame_empty(frame):
         return {}
-
     pdf = as_pandas(frame)
-
-    if (
-        "player_id" not in pdf.columns
-        or value_col not in pdf.columns
-    ):
+    if "player_id" not in pdf.columns or value_col not in pdf.columns:
         return {}
-
-    work = pdf.copy()
-    work["_player_key"] = work[
-        "player_id"
-    ].map(
-        normalize_player_id
-    )
-    work["_team"] = work[
-        "_player_key"
-    ].map(
-        player_team
-    )
-    work["_value"] = pd.to_numeric(
-        work[
-            value_col
-        ],
-        errors="coerce",
-    )
-
-    work = work.loc[
-        work[
-            "_team"
-        ].notna()
-        & work[
-            "_value"
-        ].notna()
-    ].copy()
-
-    if work.empty:
-        return {}
-
-    output: dict[
-        str,
-        float,
-    ] = {}
-
-    for team, group in work.groupby(
-        "_team",
-        dropna=False,
-    ):
-        if mode == "sum":
-            output[
-                str(team)
-            ] = float(
-                group[
-                    "_value"
-                ].sum()
-            )
+    rows: list[dict[str, float | str]] = []
+    missing_players: set[str] = set()
+    for _, record in pdf.iterrows():
+        player = normalize_player_id(record["player_id"])
+        value = pd.to_numeric(record[value_col], errors="coerce")
+        if not player or not pd.notna(value):
             continue
+        allocation = player_team.get(player)
+        if not allocation:
+            missing_players.add(player)
+            continue
+        player_weight = (
+            pd.to_numeric(record.get(weight_col), errors="coerce")
+            if weight_col else None
+        )
+        for team, share in allocation.items():
+            rows.append({
+                "_team": team,
+                "_value": float(value) * share if mode == "sum" else float(value),
+                "_weight": (
+                    float(player_weight) * share
+                    if player_weight is not None and pd.notna(player_weight)
+                    else float("nan")
+                ),
+            })
 
-        if (
-            mode == "weighted_mean"
-            and weight_col is not None
-            and weight_col in group.columns
-        ):
-            value = _weighted_mean(
-                group[
-                    "_value"
-                ],
-                group[
-                    weight_col
-                ],
-            )
+    if missing_players:
+        print(
+            f"WARN | {value_col}: {len(missing_players)} player IDs absent "
+            f"from historical shift-team mapping; sample={sorted(missing_players)[:8]}",
+            file=sys.stderr, flush=True,
+        )
+    if not rows:
+        return {}
+    work = pd.DataFrame(rows)
+    output: dict[str, float] = {}
+    for team, group in work.groupby("_team", dropna=False):
+        if mode == "sum":
+            output[str(team)] = float(group["_value"].sum())
+        elif mode == "weighted_mean" and weight_col is not None:
+            computed = _weighted_mean(group["_value"], group["_weight"])
+            if computed is not None:
+                output[str(team)] = computed
         else:
-            value = float(
-                group[
-                    "_value"
-                ].mean()
-            )
-
-        if value is not None:
-            output[
-                str(team)
-            ] = float(
-                value
-            )
-
+            output[str(team)] = float(group["_value"].mean())
     return output
 
 
@@ -4139,17 +4226,22 @@ def compute_lineup_team_metrics(
     ):
         return {}
 
+    # Canonicalize historical team names before all upstream model inputs;
+    # unrecognized club labels otherwise drop player shifts.
+    prior_shifts = normalize_historical_shift_team_names(prior_shifts, prior_pbp)
+
     rapm = nhl.nhl_skater_rapm(
         prior_pbp,
         prior_shifts,
     )
 
-    war = clean_war_rows(
-        nhl.nhl_skater_war(
-            prior_pbp,
-            prior_shifts,
-        )
-    )
+    # Independently rebuilt 5v5 WAR + official NHL PP/PK, penalty and faceoff
+    # contributions. Uses current season source PBP/shifts and official NHL
+    # game reports, not a CSV or archive in Downloads.
+    from nhl_war_production import compute_all_32_war
+    verified_team_war, war_audit = compute_all_32_war(prior_pbp, prior_shifts)
+    if war_audit["teams"] != 32:
+        raise RuntimeError("Verified NHL WAR must contain all 32 teams")
 
     special = nhl.nhl_special_teams_value(
         prior_pbp,
@@ -4170,10 +4262,7 @@ def compute_lineup_team_metrics(
         min_toi=0.0,
     )
 
-    player_team = _unit_player_team_lookup(
-        forward_units,
-        defense_units,
-    )
+    player_team = _shift_player_team_weights(prior_shifts)
 
     metric_maps = {
         "skater_rapm": (
@@ -4185,14 +4274,7 @@ def compute_lineup_team_metrics(
                 weight_col="toi_minutes",
             )
         ),
-        "skater_war": (
-            _player_metric_by_team(
-                war,
-                player_team,
-                value_col="war",
-                mode="sum",
-            )
-        ),
+        "skater_war": verified_team_war,
         "pp_value": (
             _player_metric_by_team(
                 special,
@@ -4221,6 +4303,16 @@ def compute_lineup_team_metrics(
         ),
     }
 
+    # Full official player-game component identity, traded-player allocation,
+    # independent 5v5 model and 32-team reconciliation are verified inside
+    # nhl_war_production.compute_all_32_war before returning team values.
+    if set(metric_maps["skater_war"]) != set(verified_team_war):
+        raise RuntimeError("Verified WAR team mapping changed during aggregation")
+    for team in sorted(verified_team_war):
+        value = metric_maps["skater_war"].get(team)
+        if value is None or not pd.notna(value):
+            raise RuntimeError(f"Missing verified WAR for team {team}")
+
     teams = sorted(
         {
             team
@@ -4240,6 +4332,203 @@ def compute_lineup_team_metrics(
         }
         for team in teams
     }
+
+
+
+@lru_cache(maxsize=1)
+def load_player_strength_snapshots() -> list[dict[str, Any]]:
+    """Read immutable, independently refreshed player-strength snapshots.
+
+    Reject malformed schemas; do not silently substitute a different season,
+    a future snapshot, or a snapshot containing games on/after the target date.
+    """
+    import csv
+    import math
+
+    folder = ROOT / "lineup-strength" / "player_strength_snapshots"
+    paths = sorted(folder.glob("*_team_player_strength.csv"))
+    if not paths:
+        raise RuntimeError(
+            f"No weekly player-strength snapshots at {folder}; "
+            "run nhl_player_strength_manual workflow before daily NHL pipeline"
+        )
+
+    required = {
+        "schema_version", "season", "history_exclusive_date",
+        "snapshot_as_of_utc", "team", *LINEUP_TEAM_METRICS,
+    }
+    output: list[dict[str, Any]] = []
+    for path in paths:
+        with path.open("r", newline="", encoding="utf-8-sig") as handle:
+            reader = csv.DictReader(handle)
+            headers = reader.fieldnames or []
+            if len(headers) != len(set(headers)) or not required.issubset(headers):
+                raise RuntimeError(f"Invalid player-strength snapshot headers: {path}")
+            rows = list(reader)
+        if not rows:
+            raise RuntimeError(f"Empty player-strength snapshot: {path}")
+        first = rows[0]
+        if first.get("schema_version") != "1":
+            raise RuntimeError(f"Unknown player-strength snapshot schema: {path}")
+        try:
+            season = int(first["season"])
+            exclusive_date = date.fromisoformat(first["history_exclusive_date"])
+        except (ValueError, TypeError) as exc:
+            raise RuntimeError(f"Invalid player-strength date/season: {path}") from exc
+        asof = parse_timestamp_utc(first.get("snapshot_as_of_utc"))
+        if asof is None:
+            raise RuntimeError(f"Missing snapshot as-of timestamp: {path}")
+
+        teams: dict[str, dict[str, float | None]] = {}
+        for number, rec in enumerate(rows, start=2):
+            if rec.get(None) is not None:
+                raise RuntimeError(f"Extra CSV fields {path}:{number}")
+            if (
+                rec.get("schema_version") != "1"
+                or rec.get("season") != str(season)
+                or rec.get("history_exclusive_date") != exclusive_date.isoformat()
+                or parse_timestamp_utc(rec.get("snapshot_as_of_utc")) != asof
+            ):
+                raise RuntimeError(f"Inconsistent snapshot metadata: {path}:{number}")
+            team = str(rec.get("team") or "").strip()
+            if not team or team in teams:
+                raise RuntimeError(f"Missing/duplicate player team {team!r}: {path}:{number}")
+            metrics: dict[str, float | None] = {}
+            for metric in LINEUP_TEAM_METRICS:
+                raw = str(rec.get(metric) or "").strip()
+                if not raw:
+                    metrics[metric] = None
+                    continue
+                try:
+                    number_value = float(raw)
+                except (TypeError, ValueError) as exc:
+                    raise RuntimeError(
+                        f"Invalid {metric} for {team} in {path}:{number}"
+                    ) from exc
+                if not math.isfinite(number_value):
+                    raise RuntimeError(f"Non-finite {metric} for {team}: {path}:{number}")
+                metrics[metric] = number_value
+            teams[team] = metrics
+        # A complete league snapshot with negative WAR for every team is not
+        # accepted as a production WAR feature. Preserve the other five
+        # historical strength metrics; mark WAR unavailable without inventing
+        # a replacement-level offset or changing the sign.
+        war_values = [metrics.get("skater_war") for metrics in teams.values()]
+        if (
+            len(teams) == 32
+            and len(war_values) == 32
+            and all(value is not None and value < 0 for value in war_values)
+        ):
+            print(
+                "WARN | lineup-strength/skater_war | all 32 teams have "
+                "negative WAR in " + path.name + "; ignoring WAR until "
+                "player-level source calculation is audited",
+                file=sys.stderr,
+                flush=True,
+            )
+            for metrics in teams.values():
+                metrics["skater_war"] = None
+        output.append({
+            "asof": asof,
+            "history_exclusive_date": exclusive_date,
+            "season": season,
+            "teams": teams,
+            "source": path.name,
+        })
+    return sorted(output, key=lambda row: row["asof"], reverse=True)
+
+
+def build_game_lineup_features_from_snapshots(
+    schedule: Any, *, generated_at_utc: datetime,
+) -> pl.DataFrame:
+    """Produce original game-level lineup schema WITHOUT expensive recomputation.
+
+    Snapshots contain historical team performance, not confirmed lineups.
+    The snapshot creation timestamp must precede the game's fixed T-60 cutoff.
+    Snapshot statistics must exclude the target date and subsequent dates.
+    """
+    if frame_empty(schedule):
+        return pl.DataFrame()
+    games = schedule_games_with_cutoffs(schedule)
+    if games.empty:
+        return pl.DataFrame()
+
+    snapshots = load_player_strength_snapshots()
+    generated_at_utc = generated_at_utc.astimezone(UTC)
+    rows: list[dict[str, Any]] = []
+    for _, game in games.iterrows():
+        game_id = str(game.get("game_id") or "").strip()
+        game_date = str(game.get("game_date") or "").strip()
+        try:
+            game_day = date.fromisoformat(game_date)
+        except ValueError:
+            continue
+        game_start = parse_timestamp_utc(game.get("pregame_cutoff_utc"))
+        cutoff_source = str(game.get("pregame_cutoff_source") or "").strip()
+        if (
+            not game_id or game_start is None
+            or cutoff_source == "conservative_game_date_start_et"
+        ):
+            continue
+        decision_cutoff = lineup_production_cutoff_utc(game_start)
+        if generated_at_utc > decision_cutoff:
+            # Preserve original current-run T-60 behavior: do not backfill late.
+            continue
+
+        current_season = season_start_for_day(game_day)
+        candidates = [
+            snap for snap in snapshots
+            if (
+                snap["season"] == current_season
+                and snap["asof"] <= decision_cutoff
+                and snap["history_exclusive_date"] <= game_day
+                and 0 <= (game_day - snap["history_exclusive_date"]).days <= 8
+            )
+        ]
+        if not candidates:
+            raise RuntimeError(
+                f"No eligible <=8-day pregame player-strength snapshot "
+                f"for game_id={game_id} date={game_date} "
+                f"T-60={utc_iso(decision_cutoff)}; run the weekly workflow"
+            )
+        selected = candidates[0]
+        row: dict[str, Any] = {
+            "game_id": game_id,
+            "game_date": game_date,
+            "home_team": str(game.get("home_team") or "").strip(),
+            "away_team": str(game.get("away_team") or "").strip(),
+            "pregame_cutoff_utc": utc_iso(game_start),
+            "lineup_decision_cutoff_utc": utc_iso(decision_cutoff),
+            "lineup_decision_cutoff_source": LINEUP_PRODUCTION_CUTOFF_SOURCE,
+            "lineup_snapshot_as_of_utc": utc_iso(selected["asof"]),
+            "pregame_cutoff_source": cutoff_source,
+        }
+        for side in ("home", "away"):
+            team = row[f"{side}_team"]
+            if team not in selected["teams"]:
+                raise RuntimeError(
+                    f"Team {team!r} absent from player snapshot {selected['source']} "
+                    f"for game_id={game_id}; no silent fallback permitted"
+                )
+            metrics = selected["teams"][team]
+            for metric in LINEUP_TEAM_METRICS:
+                row[f"{side}_{metric}"] = metrics[metric]
+            row[f"{side}_lineup_status"] = "unknown"
+            row[f"{side}_lineup_observed_at"] = ""
+            row[f"{side}_lineup_source"] = (
+                "sportsdataverse_cached_historical_player_strength_no_lineup_confirmation"
+            )
+
+        for metric in LINEUP_TEAM_METRICS:
+            h = row[f"home_{metric}"]
+            a = row[f"away_{metric}"]
+            row[f"{metric}_differential"] = (
+                float(h) - float(a)
+                if h is not None and a is not None
+                else None
+            )
+        rows.append(row)
+    return pl.from_pandas(pd.DataFrame(rows)) if rows else pl.DataFrame()
 
 
 def build_game_lineup_features_asof(
@@ -5382,28 +5671,31 @@ def run_one(
             current=current,
         )
 
-    if (
-        "lineup-strength" in categories
-        and context is not None
-    ):
-        lineup_features = timed_call(
-            "stage/lineup_feature_calculation", safe_pull,
-            failures,
-            "lineup-strength",
-            "game_lineup_features_asof",
-            build_game_lineup_features_asof,
-            relevant_schedule,
-            context.get(
-                "pbp"
-            ),
-            context.get(
-                "shifts"
-            ),
-            current=current,
-            generated_at_utc=datetime.now(
-                UTC
-            ),
-        )
+    if "lineup-strength" in categories:
+        if current:
+            # Daily current-slate run: read independently refreshed historical
+            # player-strength snapshots. No RAPM/WAR/unit ratings computed here.
+            lineup_features = timed_call(
+                "stage/lineup_strength_snapshot_read",
+                build_game_lineup_features_from_snapshots,
+                relevant_schedule,
+                generated_at_utc=datetime.now(UTC),
+            )
+        elif context is not None:
+            # Historical --season replay retains the original strictly-as-of
+            # per-game calculation, preserving past reprocessing behavior.
+            lineup_features = timed_call(
+                "stage/historical_lineup_feature_calculation",
+                safe_pull, failures, "lineup-strength",
+                "game_lineup_features_asof",
+                build_game_lineup_features_asof,
+                relevant_schedule,
+                context.get("pbp"), context.get("shifts"),
+                current=False,
+                generated_at_utc=datetime.now(UTC),
+            )
+        else:
+            lineup_features = None
 
         if lineup_features is not None:
             save_object(

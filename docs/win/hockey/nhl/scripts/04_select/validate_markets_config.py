@@ -26,6 +26,7 @@ VALID_PICK_PREFERENCES = {
     "all",
     "best_ev",
     "best_prob",
+    "best_my_model_prob",
 }
 
 COMMON_REQUIRED_SIDE_KEYS = {

@@ -606,6 +606,28 @@ def apply_pick_preference(
     elif pick_preference == "best_prob":
         max_prob = max(c["model_prob"] for c in candidates)
         winners = [c for c in candidates if c["model_prob"] == max_prob]
+    elif pick_preference == "best_my_model_prob":
+        # A single qualifying side needs no comparison with another side.
+        if len(candidates) == 1:
+            return candidates
+
+        missing_sides = [
+            c["bet_side"]
+            for c in candidates
+            if c.get("my_model_prob") is None
+        ]
+        if missing_sides:
+            return fail(
+                f"best_my_model_prob cannot compare missing my_model_prob "
+                f"for {market_type} | slate={slate_key} | game_id={game_id} "
+                f"| missing_sides={missing_sides}"
+            )
+
+        max_prob = max(c["my_model_prob"] for c in candidates)
+        winners = [
+            c for c in candidates
+            if c["my_model_prob"] == max_prob
+        ]
     else:
         return fail(
             f"Invalid pick_preference for {market_type}: {pick_preference} | "

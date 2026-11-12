@@ -180,11 +180,22 @@ def check_raw_espn_match(
         return "missing_raw_espn_event", audit
 
     audit["espn_source_file"] = event["_source_file"]
+    # The established matcher accepts a unique reverse-orientation match and
+    # then corrects the CSV home/away fields to the official NHL orientation.
+    # Verify ESPN against the SOURCE orientation when that correction occurred;
+    # otherwise valid reversal fixtures are falsely rejected.
+    reversed_orientation = bool(item["orientation_corrected"])
+    expected_home_id = str(
+        schedule.get("away_team_id" if reversed_orientation else "home_team_id", "")
+    ).strip()
+    expected_away_id = str(
+        schedule.get("home_team_id" if reversed_orientation else "away_team_id", "")
+    ).strip()
     if (
         team_match_key(event.get("home", ""), "sportsbook", team_map)
-        != str(schedule.get("home_team_id", "")).strip()
+        != expected_home_id
         or team_match_key(event.get("away", ""), "sportsbook", team_map)
-        != str(schedule.get("away_team_id", "")).strip()
+        != expected_away_id
     ):
         return "raw_espn_team_mismatch", audit
 

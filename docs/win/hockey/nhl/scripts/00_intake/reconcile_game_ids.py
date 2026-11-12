@@ -4,10 +4,11 @@
 from __future__ import annotations
 
 import csv
+import json
 import sys
 import traceback
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -29,6 +30,7 @@ BASE_DIR = Path("docs/win/hockey/nhl")
 SPORTSBOOK_DIR = BASE_DIR / "00_intake" / "sportsbook"
 PREDICTIONS_DIR = BASE_DIR / "00_intake" / "predictions"
 NHL_SCHEDULE_DIR = BASE_DIR / "00_intake" / "nhl_schedule"
+ESPN_ODDS_DIR = BASE_DIR / "odds"
 RECONCILED_DIR = BASE_DIR / "00_intake" / "reconciled"
 AUDIT_DIR = RECONCILED_DIR / "audit"
 MAP_PATH = BASE_DIR / "config" / "mapping" / "team_map_nhl.csv"
@@ -63,6 +65,11 @@ AUDIT_COLUMNS = [
     "official_away_team",
     "official_home_team",
     "status",
+    "espn_source_file",
+    "espn_start_time_utc",
+    "nhl_start_time_utc",
+    "start_time_difference_minutes",
+    "start_time_status",
 ]
 
 RECONCILED_DIR.mkdir(parents=True, exist_ok=True)
@@ -92,6 +99,169 @@ def normalize_date(value: str) -> str:
             continue
 
     return ""
+
+
+def parse_utc_start(value: object, *, source: str) -> datetime:
+    """Require a real timezone-qualified timestamp; compare absolute instants."""
+    raw = str(value or "").strip()
+    if not raw:
+        raise ValueError(f"{source}: missing UTC start time")
+    try:
+        dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        if dt.tzinfo is None or dt.utcoffset() is None:
+            raise ValueError("missing time zone")
+        return dt.astimezone(timezone.utc)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError(f"{source}: invalid start time {raw!r}") from exc
+
+
+def utc_label(value: datetime) -> str:
+    return value.isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def load_raw_espn_events() -> dict[str, dict]:
+    """Index ESPN game IDs from the same daily JSON inputs as odds transform.
+
+    The last occurrence in sorted daily files wins, consistent with the
+    upstream transform's file order. Repeat snapshots of an event are valid.
+    """
+    if not ESPN_ODDS_DIR.is_dir():
+        return {}
+
+    indexed: dict[str, dict] = {}
+    for path in sorted(ESPN_ODDS_DIR.glob("*.json")):
+        with path.open("r", encoding="utf-8-sig") as handle:
+            payload = json.load(handle)
+        if not isinstance(payload, dict):
+            raise ValueError(f"{path}: expected JSON object")
+        if str(payload.get("source", "")).strip().lower() != "espn":
+            continue
+        events = payload.get("events")
+        if not isinstance(events, list):
+            raise ValueError(f"{path}: ESPN events must be a list")
+        seen_in_file: set[str] = set()
+        for event in events:
+            if not isinstance(event, dict):
+                raise ValueError(f"{path}: malformed ESPN event")
+            event_id = str(event.get("id") or "").strip()
+            if not event_id or event_id in seen_in_file:
+                raise ValueError(
+                    f"{path}: missing or duplicate ESPN event ID {event_id!r}"
+                )
+            seen_in_file.add(event_id)
+            indexed[event_id] = {**event, "_source_file": str(path)}
+    return indexed
+
+
+def check_raw_espn_match(
+    *,
+    item: dict,
+    raw_events: dict[str, dict],
+    team_map: dict,
+    date_value: str,
+) -> tuple[str, dict[str, str]]:
+    """Check the ESPN event, using the NHL schedule for canonical start time.
+
+    A start-time disagreement alone does not change a verified game identity.
+    It is recorded, and the NHL start time is retained in all outputs.
+    """
+    event_id = item["sportsbook_event_id"]
+    game_id = item["official_game_id"]
+    schedule = item["schedule_row"]
+    audit: dict[str, str] = {
+        "espn_source_file": "",
+        "espn_start_time_utc": "",
+        "nhl_start_time_utc": "",
+        "start_time_difference_minutes": "",
+        "start_time_status": "",
+    }
+    event = raw_events.get(event_id)
+    if event is None:
+        return "missing_raw_espn_event", audit
+
+    audit["espn_source_file"] = event["_source_file"]
+    if (
+        team_match_key(event.get("home", ""), "sportsbook", team_map)
+        != str(schedule.get("home_team_id", "")).strip()
+        or team_match_key(event.get("away", ""), "sportsbook", team_map)
+        != str(schedule.get("away_team_id", "")).strip()
+    ):
+        return "raw_espn_team_mismatch", audit
+
+    # Some sportsbook CSVs are already reconciled and carry an NHL game_id;
+    # others are new transformations and have only the ESPN event ID.
+    previous_id = str(item["row"].get("game_id") or "").strip()
+    if previous_id and previous_id not in (event_id, game_id):
+        return "conflicting_existing_game_id", audit
+
+    try:
+        nhl_start = parse_utc_start(
+            schedule.get("start_time_utc"),
+            source=f"official NHL {game_id}",
+        )
+        espn_start = parse_utc_start(
+            event.get("date"), source=f"ESPN event {event_id}"
+        )
+    except ValueError:
+        return "invalid_espn_or_nhl_start_time", audit
+
+    audit["nhl_start_time_utc"] = utc_label(nhl_start)
+    audit["espn_start_time_utc"] = utc_label(espn_start)
+    nhl_date_et = nhl_start.astimezone(ET).strftime("%Y_%m_%d")
+    espn_date_et = espn_start.astimezone(ET).strftime("%Y_%m_%d")
+    official_clock_et = nhl_start.astimezone(ET).strftime("%H:%M")
+
+    if (
+        str(schedule.get("game_time") or "").strip() != official_clock_et
+        or nhl_date_et != date_value
+    ):
+        return "invalid_official_schedule_date_or_time", audit
+    if espn_date_et != date_value:
+        return "raw_espn_game_date_mismatch", audit
+
+    difference = int((espn_start - nhl_start).total_seconds() // 60)
+    audit["start_time_difference_minutes"] = str(difference)
+    if espn_start == nhl_start:
+        audit["start_time_status"] = "exact_match"
+    else:
+        # Never infer a time-zone change or edit the NHL schedule. Its UTC
+        # timestamp is authoritative even when ESPN's timestamp is wrong.
+        audit["start_time_status"] = "espn_time_overridden_by_nhl"
+    return "", audit
+
+
+def validate_cross_date_id_uniqueness(results: list[dict]) -> None:
+    """Prevent one NHL or ESPN event ID from representing multiple games."""
+    nhl_ids: dict[str, tuple[str, str]] = {}
+    espn_ids: dict[str, tuple[str, str]] = {}
+    problems: list[str] = []
+    for result in results:
+        date_value = result["date"]
+        for row in result["reconciled_games"]:
+            game_id = str(row["game_id"]).strip()
+            event_id = str(row["sportsbook_event_id"]).strip()
+            identity = (date_value, game_id)
+            if game_id in nhl_ids:
+                problems.append(
+                    f"NHL game_id={game_id} reused: "
+                    f"{nhl_ids[game_id]} and {(date_value, event_id)}"
+                )
+            else:
+                nhl_ids[game_id] = (date_value, event_id)
+            if event_id in espn_ids:
+                problems.append(
+                    f"ESPN event_id={event_id} reused: "
+                    f"{espn_ids[event_id]} and {identity}"
+                )
+            else:
+                espn_ids[event_id] = identity
+    if problems:
+        for message in problems:
+            log(f"CROSS-DATE GAME ID COLLISION | {message}")
+        raise ValueError(
+            f"Cross-date NHL/ESPN game ID reuse detected: {len(problems)} "
+            "collision(s); no reconciled outputs were rewritten"
+        )
 
 
 def load_team_map() -> dict:
@@ -989,6 +1159,7 @@ def reconcile_date(
     sportsbook_path: Path | None,
     prediction_path: Path | None,
     team_map: dict[str, str],
+    raw_espn_events: dict[str, dict] | None = None,
 ) -> dict:
     schedule_rows, schedule_index = (
         load_schedule_for_date(
@@ -1042,6 +1213,29 @@ def reconcile_date(
         audits.extend(
             sportsbook_audits
         )
+
+        verified_sportsbook: list[dict] = []
+        for item in sportsbook_matched:
+            failure, timestamp_audit = check_raw_espn_match(
+                item=item,
+                raw_events=raw_espn_events or {},
+                team_map=team_map,
+                date_value=date_value,
+            )
+            for audit in audits:
+                if (
+                    audit["source"] == "sportsbook"
+                    and audit["source_row"] == str(item["source_row"])
+                ):
+                    audit.update(timestamp_audit)
+                    break
+            if failure:
+                mark_final_status(
+                    audits, "sportsbook", item["source_row"], failure
+                )
+            else:
+                verified_sportsbook.append(item)
+        sportsbook_matched = verified_sportsbook
 
     if prediction_path is not None:
         (
@@ -1422,6 +1616,12 @@ def reconcile_date(
         "orientation_corrections": (
             orientation_corrections
         ),
+        "start_time_corrections": [
+            row for row in audits
+            if row["source"] == "sportsbook"
+            and row["status"] == "reconciled"
+            and row.get("start_time_status") == "espn_time_overridden_by_nhl"
+        ],
     }
 
 
@@ -1648,6 +1848,11 @@ def main() -> None:
                 "files found to reconcile"
             )
 
+        # Read ESPN's original event IDs and timestamps before writing any
+        # sportsbook, prediction, or reconciled game file.
+        raw_espn_events = load_raw_espn_events()
+        log(f"Raw ESPN game IDs indexed: {len(raw_espn_events)}")
+
         results: list[dict] = []
         total_failures = 0
 
@@ -1665,6 +1870,7 @@ def main() -> None:
                     )
                 ),
                 team_map=team_map,
+                raw_espn_events=raw_espn_events,
             )
 
             results.append(result)
@@ -1693,6 +1899,18 @@ def main() -> None:
                 f"{len(result['failure_rows'])} "
                 f"| audit={audit_path}"
             )
+
+            for correction in result["start_time_corrections"]:
+                log(
+                    "ESPN START TIME CORRECTED FROM NHL | "
+                    f"date={date_value} "
+                    f"| nhl_game_id={correction['official_game_id']} "
+                    f"| espn_event_id={correction['sportsbook_event_id']} "
+                    f"| espn_utc={correction['espn_start_time_utc']} "
+                    f"| nhl_utc={correction['nhl_start_time_utc']} "
+                    f"| difference_minutes="
+                    f"{correction['start_time_difference_minutes']}"
+                )
 
             for correction in result[
                 "orientation_corrections"
@@ -1771,6 +1989,10 @@ def main() -> None:
                 "reconciliation audit files."
             )
 
+        # Global validation must finish before the first source file is
+        # rewritten, so a cross-date collision cannot partially commit.
+        validate_cross_date_id_uniqueness(results)
+
         total_games = 0
         total_orientation_corrections = 0
 
@@ -1801,6 +2023,10 @@ def main() -> None:
         log(
             "Exactly reconciled games: "
             f"{total_games}"
+        )
+        log(
+            "ESPN start times replaced with official NHL start times: "
+            f"{sum(len(r['start_time_corrections']) for r in results)}"
         )
 
         log(

@@ -1,6 +1,6 @@
 {
-  "finished_at_utc": "2026-11-13T08:07:12.553223+00:00",
-  "wall_seconds": 222.695,
+  "finished_at_utc": "2026-11-14T08:21:33.873685+00:00",
+  "wall_seconds": 1053.878,
   "cache": {
     "hit": 0,
     "miss": 2,
@@ -10,35 +10,35 @@
   "summary": {
     "request/schedule/nhl_web_schedule": {
       "count": 1,
-      "seconds": 0.19559
+      "seconds": 0.20735
     },
     "stage/schedule": {
       "count": 1,
-      "seconds": 0.22739
+      "seconds": 0.2261
     },
     "request/team-strength/nhl_team_ratings": {
       "count": 1,
-      "seconds": 1.9543
+      "seconds": 2.65991
     },
     "request/team-strength/normalize_team_ratings_asof": {
       "count": 1,
-      "seconds": 0.14276
+      "seconds": 0.09363
     },
     "stage/team_strength": {
       "count": 1,
-      "seconds": 2.10237
+      "seconds": 2.75795
     },
     "request/season-context/pbp": {
       "count": 1,
-      "seconds": 1.48051
+      "seconds": 1.37029
     },
     "request/season-context/shifts": {
       "count": 1,
-      "seconds": 0.40387
+      "seconds": 0.94673
     },
     "stage/season_context": {
       "count": 1,
-      "seconds": 13.55903
+      "seconds": 16.11611
     },
     "stage/save_season_context": {
       "count": 1,
@@ -46,84 +46,180 @@
     },
     "stage/lineup_strength_snapshot_read": {
       "count": 1,
-      "seconds": 0.12021
+      "seconds": 0.01735
     },
     "request/goalie/game_goalie_features_asof": {
       "count": 1,
-      "seconds": 205.95924
+      "seconds": 970.39687
     },
     "stage/goalie_feature_calculation": {
       "count": 1,
-      "seconds": 205.95944
+      "seconds": 970.39689
     },
-    "request/fatigue/NSH_club_schedule_attempt_1": {
+    "request/fatigue/BUF_club_schedule_attempt_1": {
       "count": 1,
-      "seconds": 0.12954
+      "seconds": 0.36071
     },
-    "request/fatigue/VAN_club_schedule_attempt_1": {
+    "request/fatigue/BOS_club_schedule_attempt_1": {
       "count": 1,
-      "seconds": 0.27099
+      "seconds": 0.41905
     },
-    "request/fatigue/NYR_club_schedule_attempt_1": {
+    "request/fatigue/ANA_club_schedule_attempt_1": {
       "count": 1,
-      "seconds": 0.31148
+      "seconds": 0.48274
     },
-    "request/fatigue/VGK_club_schedule_attempt_1": {
+    "request/fatigue/CAR_club_schedule_attempt_1": {
       "count": 1,
-      "seconds": 0.20629
+      "seconds": 0.47974
+    },
+    "request/fatigue/CBJ_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.48533
+    },
+    "request/fatigue/CGY_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.43262
+    },
+    "request/fatigue/CHI_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.24844
+    },
+    "request/fatigue/DAL_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.28827
+    },
+    "request/fatigue/COL_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.34916
+    },
+    "request/fatigue/DET_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.36657
+    },
+    "request/fatigue/EDM_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.35571
+    },
+    "request/fatigue/FLA_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.33815
+    },
+    "request/fatigue/LAK_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.33409
+    },
+    "request/fatigue/MIN_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.38453
+    },
+    "request/fatigue/MTL_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.37887
+    },
+    "request/fatigue/NJD_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.25129
+    },
+    "request/fatigue/OTT_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.20567
+    },
+    "request/fatigue/PHI_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.23494
+    },
+    "request/fatigue/NYI_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.36433
+    },
+    "request/fatigue/PIT_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.21547
+    },
+    "request/fatigue/SJS_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.2021
+    },
+    "request/fatigue/TBL_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.07006
+    },
+    "request/fatigue/SEA_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.37025
+    },
+    "request/fatigue/STL_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.33882
+    },
+    "request/fatigue/TOR_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.20439
+    },
+    "request/fatigue/UTA_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 0.21628
+    },
+    "request/fatigue/WPG_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 60.38198
+    },
+    "request/fatigue/WSH_club_schedule_attempt_1": {
+      "count": 1,
+      "seconds": 60.35516
     },
     "stage/fatigue": {
       "count": 1,
-      "seconds": 0.48067
+      "seconds": 64.08544
     },
     "request/sdv_predictions/nhl_predict_games": {
       "count": 1,
-      "seconds": 0.0202
+      "seconds": 0.00438
     },
     "stage/sdv_predictions": {
       "count": 1,
-      "seconds": 0.03182
+      "seconds": 0.01221
     }
   },
   "events": [
     {
       "name": "request/schedule/nhl_web_schedule",
-      "seconds": 0.19559,
+      "seconds": 0.20735,
       "status": "ok"
     },
     {
       "name": "stage/schedule",
-      "seconds": 0.22739,
+      "seconds": 0.2261,
       "status": "ok"
     },
     {
       "name": "request/team-strength/nhl_team_ratings",
-      "seconds": 1.9543,
+      "seconds": 2.65991,
       "status": "ok"
     },
     {
       "name": "request/team-strength/normalize_team_ratings_asof",
-      "seconds": 0.14276,
+      "seconds": 0.09363,
       "status": "ok"
     },
     {
       "name": "stage/team_strength",
-      "seconds": 2.10237,
+      "seconds": 2.75795,
       "status": "ok"
     },
     {
       "name": "request/season-context/pbp",
-      "seconds": 1.48051,
+      "seconds": 1.37029,
       "status": "ok"
     },
     {
       "name": "request/season-context/shifts",
-      "seconds": 0.40387,
+      "seconds": 0.94673,
       "status": "ok"
     },
     {
       "name": "stage/season_context",
-      "seconds": 13.55903,
+      "seconds": 16.11611,
       "status": "ok"
     },
     {
@@ -133,52 +229,172 @@
     },
     {
       "name": "stage/lineup_strength_snapshot_read",
-      "seconds": 0.12021,
+      "seconds": 0.01735,
       "status": "ok"
     },
     {
       "name": "request/goalie/game_goalie_features_asof",
-      "seconds": 205.95924,
+      "seconds": 970.39687,
       "status": "ok"
     },
     {
       "name": "stage/goalie_feature_calculation",
-      "seconds": 205.95944,
+      "seconds": 970.39689,
       "status": "ok"
     },
     {
-      "name": "request/fatigue/NSH_club_schedule_attempt_1",
-      "seconds": 0.12954,
+      "name": "request/fatigue/BUF_club_schedule_attempt_1",
+      "seconds": 0.36071,
       "status": "ok"
     },
     {
-      "name": "request/fatigue/VAN_club_schedule_attempt_1",
-      "seconds": 0.27099,
+      "name": "request/fatigue/BOS_club_schedule_attempt_1",
+      "seconds": 0.41905,
       "status": "ok"
     },
     {
-      "name": "request/fatigue/NYR_club_schedule_attempt_1",
-      "seconds": 0.31148,
+      "name": "request/fatigue/ANA_club_schedule_attempt_1",
+      "seconds": 0.48274,
       "status": "ok"
     },
     {
-      "name": "request/fatigue/VGK_club_schedule_attempt_1",
-      "seconds": 0.20629,
+      "name": "request/fatigue/CAR_club_schedule_attempt_1",
+      "seconds": 0.47974,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/CBJ_club_schedule_attempt_1",
+      "seconds": 0.48533,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/CGY_club_schedule_attempt_1",
+      "seconds": 0.43262,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/CHI_club_schedule_attempt_1",
+      "seconds": 0.24844,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/DAL_club_schedule_attempt_1",
+      "seconds": 0.28827,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/COL_club_schedule_attempt_1",
+      "seconds": 0.34916,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/DET_club_schedule_attempt_1",
+      "seconds": 0.36657,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/EDM_club_schedule_attempt_1",
+      "seconds": 0.35571,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/FLA_club_schedule_attempt_1",
+      "seconds": 0.33815,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/LAK_club_schedule_attempt_1",
+      "seconds": 0.33409,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/MIN_club_schedule_attempt_1",
+      "seconds": 0.38453,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/MTL_club_schedule_attempt_1",
+      "seconds": 0.37887,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/NJD_club_schedule_attempt_1",
+      "seconds": 0.25129,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/OTT_club_schedule_attempt_1",
+      "seconds": 0.20567,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/PHI_club_schedule_attempt_1",
+      "seconds": 0.23494,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/NYI_club_schedule_attempt_1",
+      "seconds": 0.36433,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/PIT_club_schedule_attempt_1",
+      "seconds": 0.21547,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/SJS_club_schedule_attempt_1",
+      "seconds": 0.2021,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/TBL_club_schedule_attempt_1",
+      "seconds": 0.07006,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/SEA_club_schedule_attempt_1",
+      "seconds": 0.37025,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/STL_club_schedule_attempt_1",
+      "seconds": 0.33882,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/TOR_club_schedule_attempt_1",
+      "seconds": 0.20439,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/UTA_club_schedule_attempt_1",
+      "seconds": 0.21628,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/WPG_club_schedule_attempt_1",
+      "seconds": 60.38198,
+      "status": "ok"
+    },
+    {
+      "name": "request/fatigue/WSH_club_schedule_attempt_1",
+      "seconds": 60.35516,
       "status": "ok"
     },
     {
       "name": "stage/fatigue",
-      "seconds": 0.48067,
+      "seconds": 64.08544,
       "status": "ok"
     },
     {
       "name": "request/sdv_predictions/nhl_predict_games",
-      "seconds": 0.0202,
+      "seconds": 0.00438,
       "status": "ok"
     },
     {
       "name": "stage/sdv_predictions",
-      "seconds": 0.03182,
+      "seconds": 0.01221,
       "status": "ok"
     }
   ]

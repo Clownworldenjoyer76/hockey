@@ -17,11 +17,11 @@ markets:
 ##########################################################################################################################################################       
     moneyline:
       enabled: true
-      pick_preference: best_my_model_prob
+      pick_preference: best_prob
       home:
         enabled: true
         my_model_prob_bands:
-          - [0.00, 1.00]
+          - [0.70, 1.00]
         prob_bands:
           - [0.00, 1.00]
         odds_bands:
@@ -34,9 +34,10 @@ markets:
       away:
         enabled: true
         my_model_prob_bands:
-          - [0.00, 1.00]
+          - [0.60, 1.00]
         prob_bands:
-          - [0.00, 1.00]
+          - [0.0, 0.499]
+          - [0.7, 1.00]
         odds_bands:
           - [-500, 500]
         ev_bands:
@@ -53,13 +54,13 @@ markets:
       home:
         enabled: true
         prob_bands:
-          - [0.0, 1.0]
+          - [0.70, 1.0]
         line_bands:
           - [-5.0, 5.0]
         my_model_prob_bands:
-          - [0.0, 1.0]
+          - [0.60, 1.0]
         odds_bands:
-          - [-500, 500]
+          - [-500, -200]
         ev_bands:
           - [0.00, 100.0]
         kelly_bands:
@@ -68,13 +69,14 @@ markets:
       away:
         enabled: true
         prob_bands:
-          - [0.0, 1.0]
+          - [0.70, 1.0]
         line_bands:
           - [-5.0, 5.0]
         my_model_prob_bands:
-          - [0.0, 1.0]
+          - [0.65, 1.0]
         odds_bands:
-          - [-500, 500]
+          - [-999, -150]
+          - [-109, 100]
         ev_bands:
           - [0.00, 100.0]
         kelly_bands:
@@ -85,12 +87,12 @@ markets:
 ##########################################################################################################################################################
     total:
       enabled: true
-      pick_preference: best_my_model_prob
+      pick_preference: best_prob
 
       over:
         enabled: true
         prob_bands:
-          - [0.0, 1.00]
+          - [0.60, 1.00]
         line_bands:
           - [0.0, 100.0]
         my_model_prob_bands:
@@ -105,7 +107,7 @@ markets:
       under:
         enabled: true
         prob_bands:
-          - [0.0, 1.00]
+          - [0.55, 1.00]
         line_bands:
           - [0.0, 100.0]
         my_model_prob_bands:
@@ -113,7 +115,7 @@ markets:
         odds_bands:
           - [-500, 500]
         ev_bands:
-          - [0.00, 999.9999]
+          - [0.04, 0.05]
         kelly_bands:
           - [0.0, 999.9999]
 

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Scrape Daily Faceoff starting goalies, joining official NHL game/team IDs and SDV player IDs.
+"""Scrape Daily Faceoff starting goalies, joining verified NHL game/team/player IDs.
 
 Run from GitHub Actions or the repository root:
     python docs/win/hockey/nhl/scripts/00_intake/pull_nhl_starting_goalies.py
 
-Requires the existing dated NHL schedule, NHL team map, and SDV goalie roster
-files in this repository. Writes only the dated starting-goalies CSV, after
-all source records have been matched and validated.
+Requires the dated NHL schedule and team map. Validates goalie identities
+against current official NHL team rosters; compares saved SDV goalie snapshots
+for staleness. Writes only the dated starting-goalies CSV, after all source
+records have been matched and validated.
 """
 
 from __future__ import annotations
@@ -20,9 +21,11 @@ from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 SOURCE_URL = "https://www.dailyfaceoff.com/starting-goalies"
+NHL_API_ROOT = "https://api-web.nhle.com/v1"
 BASE_DIR = Path(__file__).resolve().parents[2]  # docs/win/hockey/nhl
 OUTPUT_DIR = BASE_DIR / "00_intake" / "lineups"
 SCHEDULE_DIR = BASE_DIR / "00_intake" / "nhl_schedule"
@@ -251,6 +254,63 @@ def load_roster(abbrev, roster_dir=ROSTER_DIR):
     return names
 
 
+def fetch_nhl_json(url, attempts=3):
+    """Load fresh NHL roster data; never substitute unverified cached player IDs."""
+    import time
+
+    last_error = None
+    for attempt in range(attempts):
+        try:
+            request = Request(url, headers={
+                "User-Agent": "Mozilla/5.0 (compatible; NHLStartingGoalies/2.0)",
+                "Accept": "application/json",
+            })
+            with urlopen(request, timeout=25) as response:
+                return json.load(response)
+        except (HTTPError, URLError, TimeoutError, OSError, ValueError,
+                UnicodeError, json.JSONDecodeError) as exc:
+            last_error = exc
+            if attempt + 1 < attempts:
+                time.sleep(attempt + 1)
+    raise RuntimeError(f"Official NHL API unavailable: {url}: {last_error}")
+
+
+def load_official_goalies(abbrev, nhl_fetch=None):
+    """Current NHL roster is authoritative for team membership and player IDs."""
+    url = f"{NHL_API_ROOT}/roster/{abbrev}/current"
+    payload = (nhl_fetch or fetch_nhl_json)(url)
+    if not isinstance(payload, dict) or not isinstance(payload.get("goalies"), list):
+        raise ValueError(f"{url}: missing goalies array")
+    goalies = payload["goalies"]
+    if not goalies:
+        raise ValueError(f"{url}: no current goalies; cannot verify team membership")
+
+    names = {}
+    ids = set()
+    for number, record in enumerate(goalies, start=1):
+        context = f"{url} goalie {number}"
+        if not isinstance(record, dict):
+            raise ValueError(f"{context}: not an object")
+        if record.get("positionCode") not in (None, "G"):
+            raise ValueError(f"{context}: unexpected position {record['positionCode']!r}")
+        player_id = nhl_id(record.get("id"), context)
+        first, last = record.get("firstName"), record.get("lastName")
+        if isinstance(first, dict):
+            first = first.get("default")
+        if isinstance(last, dict):
+            last = last.get("default")
+        if not isinstance(first, str) or not isinstance(last, str):
+            raise ValueError(f"{context}: missing firstName/lastName")
+        name = norm_name(first + " " + last)
+        if not name:
+            raise ValueError(f"{context}: missing normalized name")
+        if name in names or player_id in ids:
+            raise ValueError(f"{context}: duplicate official NHL goalie name/ID")
+        names[name] = player_id
+        ids.add(player_id)
+    return names
+
+
 def csv_cell(value):
     if value is None:
         return ""
@@ -259,7 +319,8 @@ def csv_cell(value):
     return value
 
 
-def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR, team_map_path=TEAM_MAP_PATH):
+def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR,
+               team_map_path=TEAM_MAP_PATH, nhl_fetch=None):
     dates = set()
     keys = set()
     for number, game in enumerate(games, start=1):
@@ -279,6 +340,7 @@ def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR, team_map
     team_map = load_team_map(team_map_path)
     schedule = load_schedule(game_date, team_map, schedule_dir)
     roster_cache = {}
+    official_roster_cache = {}
     captured = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     rows = []
     matched_game_ids = set()
@@ -306,12 +368,33 @@ def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR, team_map
             supplied_name = str(game[f"{side}TeamName"]).strip()
             if norm_name(supplied_name) != norm_name(expected_name):
                 raise ValueError(f"{context}: DFO {side} team name {supplied_name!r} doesn't match {abbrev} ({expected_name})")
-            if abbrev not in roster_cache:
-                roster_cache[abbrev] = load_roster(abbrev, roster_dir)
+            if abbrev not in official_roster_cache:
+                official_roster_cache[abbrev] = load_official_goalies(abbrev, nhl_fetch)
             goalie_name = str(game[f"{side}GoalieName"]).strip()
-            player_id = roster_cache[abbrev].get(norm_name(goalie_name))
+            name_key = norm_name(goalie_name)
+            player_id = official_roster_cache[abbrev].get(name_key)
             if player_id is None:
-                raise ValueError(f"{context} game_id={game_id}: unmatched {side} goalie {goalie_name!r} for {abbrev}")
+                raise ValueError(
+                    f"{context} game_id={game_id}: {side} goalie {goalie_name!r} "
+                    f"is not on the official CURRENT NHL goalie roster for {abbrev}; "
+                    "no player ID assigned. Check Daily Faceoff and NHL roster updates."
+                )
+            # SDV roster snapshots are diagnostic, not authoritative: the normal
+            # pipeline does not regenerate them unless diagnostics are requested.
+            if abbrev not in roster_cache:
+                roster_path = roster_dir / f"latest_{abbrev}_goalies_roster.csv"
+                try:
+                    roster_cache[abbrev] = load_roster(abbrev, roster_dir)
+                except (FileNotFoundError, ValueError, UnicodeError, OSError) as exc:
+                    print(f"WARNING: SDV goalie snapshot unavailable/invalid for "
+                          f"{abbrev}: {exc}; using official NHL roster", flush=True)
+                    roster_cache[abbrev] = {}
+            sdv_player_id = roster_cache[abbrev].get(name_key)
+            if sdv_player_id != player_id:
+                print(f"WARNING: stale SDV goalie roster for {abbrev}: "
+                      f"{goalie_name!r} NHL_current_id={player_id} "
+                      f"SDV_snapshot_id={sdv_player_id or 'missing'}; "
+                      "using official NHL roster", flush=True)
             player_ids[side] = player_id
 
         row = {field: csv_cell(game.get(field)) for field in HEADERS}

@@ -538,9 +538,66 @@ def _valid_stints_with_goalies_removed(stints,goalies_by_game):
     return result
 
 
+
+
+def _write_5v5_lineup_error_log(stints, model):
+    """Report whether invalid positive-duration 5v5 lineups entered the RAPM design."""
+    from collections import Counter
+
+    log_path = Path(__file__).resolve().parents[2] / 'errors' / '00_intake' / 'nhl_war_production.txt'
+    bad = []
+    for rec in stints:
+        if str(rec['strength_state']) != '5v5' or float(rec['duration']) <= 0:
+            continue
+        home = rec['home_ids'] or []
+        away = rec['away_ids'] or []
+        if len(home) != 5 or len(away) != 5:
+            bad.append(rec)
+
+    by_game = collections.defaultdict(list)
+    patterns = Counter()
+    for rec in bad:
+        by_game[int(rec['game_id'])].append(rec)
+        patterns[(len(rec['home_ids'] or []), len(rec['away_ids'] or []))] += 1
+    bad_seconds = math.fsum(float(rec['duration']) for rec in bad)
+    lines = [
+        'NHL WAR | HISTORICAL 5v5 LINEUP AUDIT',
+        f'Invalid 5v5 lineups entered RAPM design: {"YES" if bad else "NO"}',
+        f'5v5 stints entering RAPM: {model["stints"]}',
+        f'Invalid 5v5 stints entering RAPM: {len(model["bad_lineups"])}',
+        f'Invalid RAPM observations: {2 * len(model["bad_lineups"])}',
+        f'Affected games: {len(by_game)}',
+        f'Invalid stint duration (seconds): {bad_seconds:.3f}',
+        'Skater counts (home/away): ' + (
+            ', '.join(f'{home}/{away}={count}' for (home, away), count in sorted(patterns.items()))
+            if patterns else 'none'),
+    ]
+    if len(bad) != len(model['bad_lineups']):
+        lines.append(f'WARNING: source records matched={len(bad)}; model flagged={len(model["bad_lineups"])}')
+    ranked = sorted(by_game.items(), key=lambda item: (-math.fsum(float(r['duration']) for r in item[1]), item[0]))
+    for game_id, rows in ranked[:20]:
+        seconds = math.fsum(float(r['duration']) for r in rows)
+        lines.append(f'GAME {game_id}: invalid_stints={len(rows)} duration_s={seconds:.3f}')
+        for rec in sorted(rows, key=lambda r: (-float(r['duration']), float(r.get('start_s') or 0)))[:2]:
+            home, away = rec['home_ids'] or [], rec['away_ids'] or []
+            lines.append(
+                f'  start_s={rec.get("start_s")} end_s={rec.get("end_s")}'
+                f' duration_s={rec["duration"]} home_count={len(home)} away_count={len(away)}'
+                f' home_ids={list(home)} away_ids={list(away)}'
+                f' xgf_home={rec.get("xgf_home")} xgf_away={rec.get("xgf_away")}'
+            )
+    if len(ranked) > 20:
+        lines.append(f'Additional affected games not detailed: {len(ranked) - 20}')
+    try:
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    except OSError as exc:
+        print(f'WAR 5v5 audit log could not be written: {log_path}: {exc}', file=sys.stderr)
+
 def _model_and_player_times(records):
     """Rebuild two-sided RAPM independently, preserving per-game team attribution."""
     model=create_model(records)
+    _write_5v5_lineup_error_log(records, model)
     coefficients,residual=ridge(model,RIDGE_LAMBDA)
     n=len(model['players'])
     rates={pid:(float(coefficients[i]),float(-coefficients[n+i]))

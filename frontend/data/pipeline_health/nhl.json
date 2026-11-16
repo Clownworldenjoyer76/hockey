@@ -1,166 +1,166 @@
 {
   "counts": {
-    "game_rows": 5,
+    "game_rows": 2,
     "graded_bets": 0,
-    "merged_games": 5,
-    "prediction_games": 5,
-    "scheduled_games": 5,
+    "merged_games": 2,
+    "prediction_games": 2,
+    "scheduled_games": 2,
     "selected_bets": 1,
-    "sportsbook_games": 5
+    "sportsbook_games": 2
   },
   "fatal_errors": [],
-  "game_date_new_york": "2026_11_15",
-  "generated_at_utc": "2026-11-15T08:11:31.351962+00:00",
+  "game_date_new_york": "2026_11_16",
+  "generated_at_utc": "2026-11-16T20:22:57.793633+00:00",
   "paths": {
     "games": [
-      "docs/win/hockey/nhl/00_intake/games/2026_11_15_nhl_games.csv"
+      "docs\\win\\hockey\\nhl\\00_intake\\games\\2026_11_16_nhl_games.csv"
     ],
     "graded": [],
     "merged": [
-      "docs/win/hockey/nhl/01_merge/01_merguiced/2026_11_15_NHL_moneyline.csv",
-      "docs/win/hockey/nhl/01_merge/01_merguiced/2026_11_15_NHL_puck_line.csv",
-      "docs/win/hockey/nhl/01_merge/01_merguiced/2026_11_15_NHL_total.csv",
-      "docs/win/hockey/nhl/01_merge/2026_11_15_NHL_merged.csv",
-      "docs/win/hockey/nhl/01_merge/audit/2026_11_15_NHL_merge_audit.csv",
-      "docs/win/hockey/nhl/01_merge/audit/2026_11_15_NHL_rejected_predictions.csv",
-      "docs/win/hockey/nhl/01_merge/audit/2026_11_15_NHL_rejected_sportsbook.csv"
+      "docs\\win\\hockey\\nhl\\01_merge\\01_merguiced\\2026_11_16_NHL_moneyline.csv",
+      "docs\\win\\hockey\\nhl\\01_merge\\01_merguiced\\2026_11_16_NHL_puck_line.csv",
+      "docs\\win\\hockey\\nhl\\01_merge\\01_merguiced\\2026_11_16_NHL_total.csv",
+      "docs\\win\\hockey\\nhl\\01_merge\\2026_11_16_NHL_merged.csv",
+      "docs\\win\\hockey\\nhl\\01_merge\\audit\\2026_11_16_NHL_merge_audit.csv",
+      "docs\\win\\hockey\\nhl\\01_merge\\audit\\2026_11_16_NHL_rejected_predictions.csv",
+      "docs\\win\\hockey\\nhl\\01_merge\\audit\\2026_11_16_NHL_rejected_sportsbook.csv"
     ],
     "predictions": [
-      "docs/win/hockey/nhl/00_intake/predictions/hockey_2026_11_15.csv",
-      "docs/win/hockey/nhl/00_intake/predictions/scraper/2026_11_15_nhl_predictions.csv"
+      "docs\\win\\hockey\\nhl\\00_intake\\predictions\\hockey_2026_11_16.csv",
+      "docs\\win\\hockey\\nhl\\00_intake\\predictions\\scraper\\2026_11_16_nhl_predictions.csv"
     ],
     "schedule": [
-      "docs/win/hockey/nhl/00_intake/nhl_schedule/NHL_2026_11_15.csv"
+      "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_16.csv"
     ],
     "selected": [
-      "docs/win/hockey/nhl/04_select/2026_11_15_NHL.csv"
+      "docs\\win\\hockey\\nhl\\04_select\\2026_11_16_NHL.csv"
     ],
     "sportsbook": [
-      "docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_15.csv"
+      "docs\\win\\hockey\\nhl\\00_intake\\sportsbook\\NHL_2026_11_16.csv"
     ]
   },
-  "report_date": "2026_11_15",
+  "report_date": "2026_11_16",
   "schema_version": 1,
   "sport": "nhl",
   "stage_status": [
     {
       "exists": true,
       "name": "Pipeline Tests",
-      "path": "docs/win/hockey/nhl/errors/nhl_pipeline_tests.txt",
+      "path": "docs\\win\\hockey\\nhl\\errors\\nhl_pipeline_tests.txt",
       "status": "STATUS: LOG PRESENT"
     },
     {
       "exists": true,
       "name": "Transform Final Scores",
-      "path": "docs/win/hockey/nhl/errors/05_final_scores/transform_final_scores.txt",
-      "status": "2026-11-15T08:11:24.851622+00:00 | WROTE OFFICIAL NHL GAME STATUS: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv | rows=606"
+      "path": "docs\\win\\hockey\\nhl\\errors\\05_final_scores\\transform_final_scores.txt",
+      "status": "2026-11-16T20:22:38.288389+00:00 | WROTE OFFICIAL NHL GAME STATUS: G:\\hockey\\docs\\win\\hockey\\nhl\\05_final_scores\\intermediate\\nhl_game_status.csv | rows=608"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/00_intake/nhl_schedule/NHL_2026_11_15.csv"
+        "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_16.csv"
       ],
       "name": "Official Schedule",
-      "path": "docs/win/hockey/nhl/00_intake/nhl_schedule/NHL_2026_11_15.csv",
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_16.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/00_intake/predictions/hockey_2026_11_15.csv",
-        "docs/win/hockey/nhl/00_intake/predictions/scraper/2026_11_15_nhl_predictions.csv"
+        "docs\\win\\hockey\\nhl\\00_intake\\predictions\\hockey_2026_11_16.csv",
+        "docs\\win\\hockey\\nhl\\00_intake\\predictions\\scraper\\2026_11_16_nhl_predictions.csv"
       ],
       "name": "Predictions",
-      "path": "docs/win/hockey/nhl/00_intake/predictions/**/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\predictions\\**\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/00_intake/sportsbook/NHL_2026_11_15.csv"
+        "docs\\win\\hockey\\nhl\\00_intake\\sportsbook\\NHL_2026_11_16.csv"
       ],
       "name": "Sportsbook",
-      "path": "docs/win/hockey/nhl/00_intake/sportsbook/**/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\sportsbook\\**\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/00_intake/games/2026_11_15_nhl_games.csv"
+        "docs\\win\\hockey\\nhl\\00_intake\\games\\2026_11_16_nhl_games.csv"
       ],
       "name": "Games",
-      "path": "docs/win/hockey/nhl/00_intake/games/**/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\games\\**\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/01_merge/01_merguiced/2026_11_15_NHL_moneyline.csv",
-        "docs/win/hockey/nhl/01_merge/01_merguiced/2026_11_15_NHL_puck_line.csv",
-        "docs/win/hockey/nhl/01_merge/01_merguiced/2026_11_15_NHL_total.csv",
-        "docs/win/hockey/nhl/01_merge/2026_11_15_NHL_merged.csv",
-        "docs/win/hockey/nhl/01_merge/audit/2026_11_15_NHL_merge_audit.csv",
-        "docs/win/hockey/nhl/01_merge/audit/2026_11_15_NHL_rejected_predictions.csv",
-        "docs/win/hockey/nhl/01_merge/audit/2026_11_15_NHL_rejected_sportsbook.csv"
+        "docs\\win\\hockey\\nhl\\01_merge\\01_merguiced\\2026_11_16_NHL_moneyline.csv",
+        "docs\\win\\hockey\\nhl\\01_merge\\01_merguiced\\2026_11_16_NHL_puck_line.csv",
+        "docs\\win\\hockey\\nhl\\01_merge\\01_merguiced\\2026_11_16_NHL_total.csv",
+        "docs\\win\\hockey\\nhl\\01_merge\\2026_11_16_NHL_merged.csv",
+        "docs\\win\\hockey\\nhl\\01_merge\\audit\\2026_11_16_NHL_merge_audit.csv",
+        "docs\\win\\hockey\\nhl\\01_merge\\audit\\2026_11_16_NHL_rejected_predictions.csv",
+        "docs\\win\\hockey\\nhl\\01_merge\\audit\\2026_11_16_NHL_rejected_sportsbook.csv"
       ],
       "name": "Merge",
-      "path": "docs/win/hockey/nhl/01_merge/**/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\01_merge\\**\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/02_juice/2026_11_15_NHL_moneyline.csv",
-        "docs/win/hockey/nhl/02_juice/2026_11_15_NHL_puck_line.csv",
-        "docs/win/hockey/nhl/02_juice/2026_11_15_NHL_total.csv"
+        "docs\\win\\hockey\\nhl\\02_juice\\2026_11_16_NHL_moneyline.csv",
+        "docs\\win\\hockey\\nhl\\02_juice\\2026_11_16_NHL_puck_line.csv",
+        "docs\\win\\hockey\\nhl\\02_juice\\2026_11_16_NHL_total.csv"
       ],
       "name": "Juice",
-      "path": "docs/win/hockey/nhl/02_juice/**/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\02_juice\\**\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/03_edges/ev_kelly/2026_11_15_NHL_moneyline.csv",
-        "docs/win/hockey/nhl/03_edges/ev_kelly/2026_11_15_NHL_puck_line.csv",
-        "docs/win/hockey/nhl/03_edges/ev_kelly/2026_11_15_NHL_total.csv"
+        "docs\\win\\hockey\\nhl\\03_edges\\ev_kelly\\2026_11_16_NHL_moneyline.csv",
+        "docs\\win\\hockey\\nhl\\03_edges\\ev_kelly\\2026_11_16_NHL_puck_line.csv",
+        "docs\\win\\hockey\\nhl\\03_edges\\ev_kelly\\2026_11_16_NHL_total.csv"
       ],
       "name": "EV Kelly",
-      "path": "docs/win/hockey/nhl/03_edges/ev_kelly/**/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\03_edges\\ev_kelly\\**\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/03_edges/secondary_signals/2026_11_15_NHL_moneyline.csv",
-        "docs/win/hockey/nhl/03_edges/secondary_signals/2026_11_15_NHL_puck_line.csv",
-        "docs/win/hockey/nhl/03_edges/secondary_signals/2026_11_15_NHL_total.csv"
+        "docs\\win\\hockey\\nhl\\03_edges\\secondary_signals\\2026_11_16_NHL_moneyline.csv",
+        "docs\\win\\hockey\\nhl\\03_edges\\secondary_signals\\2026_11_16_NHL_puck_line.csv",
+        "docs\\win\\hockey\\nhl\\03_edges\\secondary_signals\\2026_11_16_NHL_total.csv"
       ],
       "name": "Secondary Signals",
-      "path": "docs/win/hockey/nhl/03_edges/secondary_signals/**/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\03_edges\\secondary_signals\\**\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": true,
       "matched_files": [
-        "docs/win/hockey/nhl/04_select/2026_11_15_NHL.csv"
+        "docs\\win\\hockey\\nhl\\04_select\\2026_11_16_NHL.csv"
       ],
       "name": "Select",
-      "path": "docs/win/hockey/nhl/04_select/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\04_select\\*2026_11_16*.csv",
       "status": "STATUS: OUTPUT PRESENT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Final Scores",
-      "path": "docs/win/hockey/nhl/05_final_scores/final_scores/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\05_final_scores\\final_scores\\*2026_11_16*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Graded",
-      "path": "docs/win/hockey/nhl/05_final_scores/graded/*2026_11_15*.csv",
+      "path": "docs\\win\\hockey\\nhl\\05_final_scores\\graded\\*2026_11_16*.csv",
       "status": "STATUS: NO OUTPUT"
     }
   ],
@@ -169,9 +169,9 @@
   "workflow": {
     "name": "NHL Pipeline",
     "ref_name": "main",
-    "run_attempt": "1",
-    "run_id": "43692519949",
-    "sha": "daa0c703734243eea85e4f06de2a7abf41a02548",
+    "run_attempt": "",
+    "run_id": "",
+    "sha": "35d5498a5586adbc2c69fa75c455d3a619a39aea",
     "status": "success"
   }
 }

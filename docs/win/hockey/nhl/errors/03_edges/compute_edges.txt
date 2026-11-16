@@ -1,306 +1,312 @@
-=== compute_edges RUN 2026-11-15T08:11:05.827460+00:00 ===
-2026-11-15T08:11:05.827555+00:00 | INFO  | INPUT_DIR : /home/runner/work/hockey/hockey/docs/win/hockey/nhl/02_juice
-2026-11-15T08:11:05.827593+00:00 | INFO  | OUTPUT_DIR: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges
-2026-11-15T08:11:05.827619+00:00 | INFO  | QUARANTINE_DIR: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/errors/03_edges
-2026-11-15T08:11:05.840283+00:00 | INFO  | --- FILE: 2026_09_29_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:05.867150+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_09_29_NHL_moneyline.csv (5 accepted rows)
-2026-11-15T08:11:05.867198+00:00 | INFO  | --- FILE: 2026_09_30_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:05.886339+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_09_30_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:05.886385+00:00 | INFO  | --- FILE: 2026_10_01_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:05.905518+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_01_NHL_moneyline.csv (8 accepted rows)
-2026-11-15T08:11:05.905562+00:00 | INFO  | --- FILE: 2026_10_02_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:05.929914+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_02_NHL_moneyline.csv (5 accepted rows)
-2026-11-15T08:11:05.929958+00:00 | INFO  | --- FILE: 2026_10_03_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:05.951974+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_03_NHL_moneyline.csv (13 accepted rows)
-2026-11-15T08:11:05.952015+00:00 | INFO  | --- FILE: 2026_10_04_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:05.970027+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_04_NHL_moneyline.csv (5 accepted rows)
-2026-11-15T08:11:05.970067+00:00 | INFO  | --- FILE: 2026_10_05_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:05.987556+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_05_NHL_moneyline.csv (4 accepted rows)
-2026-11-15T08:11:05.987598+00:00 | INFO  | --- FILE: 2026_10_06_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.005727+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_06_NHL_moneyline.csv (9 accepted rows)
-2026-11-15T08:11:06.005766+00:00 | INFO  | --- FILE: 2026_10_07_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.023164+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_07_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:06.023204+00:00 | INFO  | --- FILE: 2026_10_08_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.041395+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_08_NHL_moneyline.csv (10 accepted rows)
-2026-11-15T08:11:06.041433+00:00 | INFO  | --- FILE: 2026_10_09_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.058985+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_09_NHL_moneyline.csv (4 accepted rows)
-2026-11-15T08:11:06.059024+00:00 | INFO  | --- FILE: 2026_10_10_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.077390+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_10_NHL_moneyline.csv (14 accepted rows)
-2026-11-15T08:11:06.077429+00:00 | INFO  | --- FILE: 2026_10_11_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.094775+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_11_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:06.094856+00:00 | INFO  | --- FILE: 2026_10_12_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.112010+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_12_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:06.112049+00:00 | INFO  | --- FILE: 2026_10_13_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.130657+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_13_NHL_moneyline.csv (16 accepted rows)
-2026-11-15T08:11:06.130698+00:00 | INFO  | --- FILE: 2026_10_14_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.147774+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_14_NHL_moneyline.csv (2 accepted rows)
-2026-11-15T08:11:06.147852+00:00 | INFO  | --- FILE: 2026_10_15_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.165938+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_15_NHL_moneyline.csv (11 accepted rows)
-2026-11-15T08:11:06.165974+00:00 | INFO  | --- FILE: 2026_10_16_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.183162+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_16_NHL_moneyline.csv (2 accepted rows)
-2026-11-15T08:11:06.183198+00:00 | INFO  | --- FILE: 2026_10_17_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.201449+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_17_NHL_moneyline.csv (14 accepted rows)
-2026-11-15T08:11:06.201486+00:00 | INFO  | --- FILE: 2026_10_18_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.218783+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_18_NHL_moneyline.csv (2 accepted rows)
-2026-11-15T08:11:06.218864+00:00 | INFO  | --- FILE: 2026_10_19_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.236336+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_19_NHL_moneyline.csv (4 accepted rows)
-2026-11-15T08:11:06.236372+00:00 | INFO  | --- FILE: 2026_10_20_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.254684+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_20_NHL_moneyline.csv (11 accepted rows)
-2026-11-15T08:11:06.254721+00:00 | INFO  | --- FILE: 2026_10_21_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.271864+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_21_NHL_moneyline.csv (2 accepted rows)
-2026-11-15T08:11:06.271901+00:00 | INFO  | --- FILE: 2026_10_22_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.290074+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_22_NHL_moneyline.csv (12 accepted rows)
-2026-11-15T08:11:06.290111+00:00 | INFO  | --- FILE: 2026_10_23_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.307385+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_23_NHL_moneyline.csv (2 accepted rows)
-2026-11-15T08:11:06.307422+00:00 | INFO  | --- FILE: 2026_10_24_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.325769+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_24_NHL_moneyline.csv (12 accepted rows)
-2026-11-15T08:11:06.325844+00:00 | INFO  | --- FILE: 2026_10_25_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.343472+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_25_NHL_moneyline.csv (5 accepted rows)
-2026-11-15T08:11:06.343508+00:00 | INFO  | --- FILE: 2026_10_26_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.360875+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_26_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:06.360913+00:00 | INFO  | --- FILE: 2026_10_27_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.379047+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_27_NHL_moneyline.csv (11 accepted rows)
-2026-11-15T08:11:06.379084+00:00 | INFO  | --- FILE: 2026_10_28_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.396979+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_28_NHL_moneyline.csv (4 accepted rows)
-2026-11-15T08:11:06.397018+00:00 | INFO  | --- FILE: 2026_10_29_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.415178+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_29_NHL_moneyline.csv (11 accepted rows)
-2026-11-15T08:11:06.415214+00:00 | INFO  | --- FILE: 2026_10_30_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.432490+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_30_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:06.432527+00:00 | INFO  | --- FILE: 2026_10_31_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.450475+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_31_NHL_moneyline.csv (10 accepted rows)
-2026-11-15T08:11:06.450512+00:00 | INFO  | --- FILE: 2026_11_01_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.479082+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_01_NHL_moneyline.csv (5 accepted rows)
-2026-11-15T08:11:06.479121+00:00 | INFO  | --- FILE: 2026_11_02_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.497028+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_02_NHL_moneyline.csv (4 accepted rows)
-2026-11-15T08:11:06.497066+00:00 | INFO  | --- FILE: 2026_11_03_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.515260+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_03_NHL_moneyline.csv (11 accepted rows)
-2026-11-15T08:11:06.515297+00:00 | INFO  | --- FILE: 2026_11_04_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.532658+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_04_NHL_moneyline.csv (4 accepted rows)
-2026-11-15T08:11:06.532695+00:00 | INFO  | --- FILE: 2026_11_05_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.551030+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_05_NHL_moneyline.csv (11 accepted rows)
-2026-11-15T08:11:06.551068+00:00 | INFO  | --- FILE: 2026_11_06_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.568384+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_06_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:06.568420+00:00 | INFO  | --- FILE: 2026_11_07_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.586589+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_07_NHL_moneyline.csv (12 accepted rows)
-2026-11-15T08:11:06.586625+00:00 | INFO  | --- FILE: 2026_11_08_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.604360+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_08_NHL_moneyline.csv (6 accepted rows)
-2026-11-15T08:11:06.604396+00:00 | INFO  | --- FILE: 2026_11_09_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.621783+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_09_NHL_moneyline.csv (3 accepted rows)
-2026-11-15T08:11:06.621865+00:00 | INFO  | --- FILE: 2026_11_10_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.639597+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_10_NHL_moneyline.csv (7 accepted rows)
-2026-11-15T08:11:06.639634+00:00 | INFO  | --- FILE: 2026_11_11_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.657378+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_11_NHL_moneyline.csv (6 accepted rows)
-2026-11-15T08:11:06.657414+00:00 | INFO  | --- FILE: 2026_11_12_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.675567+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_12_NHL_moneyline.csv (11 accepted rows)
-2026-11-15T08:11:06.675604+00:00 | INFO  | --- FILE: 2026_11_13_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.692896+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_13_NHL_moneyline.csv (2 accepted rows)
-2026-11-15T08:11:06.692934+00:00 | INFO  | --- FILE: 2026_11_14_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.711432+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_14_NHL_moneyline.csv (14 accepted rows)
-2026-11-15T08:11:06.711469+00:00 | INFO  | --- FILE: 2026_11_15_NHL_moneyline.csv market=moneyline
-2026-11-15T08:11:06.729298+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_15_NHL_moneyline.csv (5 accepted rows)
-2026-11-15T08:11:06.729936+00:00 | INFO  | --- FILE: 2026_09_29_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.747322+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_09_29_NHL_puck_line.csv (5 accepted rows)
-2026-11-15T08:11:06.747359+00:00 | INFO  | --- FILE: 2026_09_30_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.764753+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_09_30_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:06.764790+00:00 | INFO  | --- FILE: 2026_10_01_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.782884+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_01_NHL_puck_line.csv (8 accepted rows)
-2026-11-15T08:11:06.782921+00:00 | INFO  | --- FILE: 2026_10_02_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.800263+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_02_NHL_puck_line.csv (5 accepted rows)
-2026-11-15T08:11:06.800300+00:00 | INFO  | --- FILE: 2026_10_03_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.819042+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_03_NHL_puck_line.csv (13 accepted rows)
-2026-11-15T08:11:06.819091+00:00 | INFO  | --- FILE: 2026_10_04_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.836864+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_04_NHL_puck_line.csv (5 accepted rows)
-2026-11-15T08:11:06.836907+00:00 | INFO  | --- FILE: 2026_10_05_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.854619+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_05_NHL_puck_line.csv (4 accepted rows)
-2026-11-15T08:11:06.854657+00:00 | INFO  | --- FILE: 2026_10_06_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.872853+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_06_NHL_puck_line.csv (9 accepted rows)
-2026-11-15T08:11:06.872895+00:00 | INFO  | --- FILE: 2026_10_07_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.890459+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_07_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:06.890496+00:00 | INFO  | --- FILE: 2026_10_08_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.908885+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_08_NHL_puck_line.csv (10 accepted rows)
-2026-11-15T08:11:06.908922+00:00 | INFO  | --- FILE: 2026_10_09_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.926350+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_09_NHL_puck_line.csv (4 accepted rows)
-2026-11-15T08:11:06.926388+00:00 | INFO  | --- FILE: 2026_10_10_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.944929+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_10_NHL_puck_line.csv (14 accepted rows)
-2026-11-15T08:11:06.944967+00:00 | INFO  | --- FILE: 2026_10_11_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.962517+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_11_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:06.962554+00:00 | INFO  | --- FILE: 2026_10_12_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.980104+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_12_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:06.980142+00:00 | INFO  | --- FILE: 2026_10_13_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:06.999019+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_13_NHL_puck_line.csv (16 accepted rows)
-2026-11-15T08:11:06.999055+00:00 | INFO  | --- FILE: 2026_10_14_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.016342+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_14_NHL_puck_line.csv (2 accepted rows)
-2026-11-15T08:11:07.016379+00:00 | INFO  | --- FILE: 2026_10_15_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.034620+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_15_NHL_puck_line.csv (11 accepted rows)
-2026-11-15T08:11:07.034657+00:00 | INFO  | --- FILE: 2026_10_16_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.052102+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_16_NHL_puck_line.csv (2 accepted rows)
-2026-11-15T08:11:07.052139+00:00 | INFO  | --- FILE: 2026_10_17_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.070668+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_17_NHL_puck_line.csv (14 accepted rows)
-2026-11-15T08:11:07.070706+00:00 | INFO  | --- FILE: 2026_10_18_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.088091+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_18_NHL_puck_line.csv (2 accepted rows)
-2026-11-15T08:11:07.088128+00:00 | INFO  | --- FILE: 2026_10_19_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.105878+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_19_NHL_puck_line.csv (4 accepted rows)
-2026-11-15T08:11:07.105916+00:00 | INFO  | --- FILE: 2026_10_20_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.124209+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_20_NHL_puck_line.csv (11 accepted rows)
-2026-11-15T08:11:07.124246+00:00 | INFO  | --- FILE: 2026_10_21_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.141470+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_21_NHL_puck_line.csv (2 accepted rows)
-2026-11-15T08:11:07.141507+00:00 | INFO  | --- FILE: 2026_10_22_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.159722+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_22_NHL_puck_line.csv (12 accepted rows)
-2026-11-15T08:11:07.159758+00:00 | INFO  | --- FILE: 2026_10_23_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.177115+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_23_NHL_puck_line.csv (2 accepted rows)
-2026-11-15T08:11:07.177151+00:00 | INFO  | --- FILE: 2026_10_24_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.195500+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_24_NHL_puck_line.csv (12 accepted rows)
-2026-11-15T08:11:07.195537+00:00 | INFO  | --- FILE: 2026_10_25_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.213428+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_25_NHL_puck_line.csv (5 accepted rows)
-2026-11-15T08:11:07.213465+00:00 | INFO  | --- FILE: 2026_10_26_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.231007+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_26_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:07.231044+00:00 | INFO  | --- FILE: 2026_10_27_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.250667+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_27_NHL_puck_line.csv (11 accepted rows)
-2026-11-15T08:11:07.250719+00:00 | INFO  | --- FILE: 2026_10_28_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.280240+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_28_NHL_puck_line.csv (4 accepted rows)
-2026-11-15T08:11:07.280286+00:00 | INFO  | --- FILE: 2026_10_29_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.298552+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_29_NHL_puck_line.csv (11 accepted rows)
-2026-11-15T08:11:07.298588+00:00 | INFO  | --- FILE: 2026_10_30_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.316064+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_30_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:07.316101+00:00 | INFO  | --- FILE: 2026_10_31_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.334361+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_31_NHL_puck_line.csv (10 accepted rows)
-2026-11-15T08:11:07.334397+00:00 | INFO  | --- FILE: 2026_11_01_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.352227+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_01_NHL_puck_line.csv (5 accepted rows)
-2026-11-15T08:11:07.352263+00:00 | INFO  | --- FILE: 2026_11_02_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.369845+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_02_NHL_puck_line.csv (4 accepted rows)
-2026-11-15T08:11:07.369885+00:00 | INFO  | --- FILE: 2026_11_03_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.388011+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_03_NHL_puck_line.csv (11 accepted rows)
-2026-11-15T08:11:07.388048+00:00 | INFO  | --- FILE: 2026_11_04_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.406974+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_04_NHL_puck_line.csv (4 accepted rows)
-2026-11-15T08:11:07.407017+00:00 | INFO  | --- FILE: 2026_11_05_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.425377+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_05_NHL_puck_line.csv (11 accepted rows)
-2026-11-15T08:11:07.425414+00:00 | INFO  | --- FILE: 2026_11_06_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.442772+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_06_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:07.442838+00:00 | INFO  | --- FILE: 2026_11_07_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.460978+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_07_NHL_puck_line.csv (12 accepted rows)
-2026-11-15T08:11:07.461015+00:00 | INFO  | --- FILE: 2026_11_08_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.478715+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_08_NHL_puck_line.csv (6 accepted rows)
-2026-11-15T08:11:07.478752+00:00 | INFO  | --- FILE: 2026_11_09_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.496570+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_09_NHL_puck_line.csv (3 accepted rows)
-2026-11-15T08:11:07.496607+00:00 | INFO  | --- FILE: 2026_11_10_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.514501+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_10_NHL_puck_line.csv (7 accepted rows)
-2026-11-15T08:11:07.514537+00:00 | INFO  | --- FILE: 2026_11_11_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.532321+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_11_NHL_puck_line.csv (6 accepted rows)
-2026-11-15T08:11:07.532358+00:00 | INFO  | --- FILE: 2026_11_12_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.550782+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_12_NHL_puck_line.csv (11 accepted rows)
-2026-11-15T08:11:07.550848+00:00 | INFO  | --- FILE: 2026_11_13_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.568258+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_13_NHL_puck_line.csv (2 accepted rows)
-2026-11-15T08:11:07.568300+00:00 | INFO  | --- FILE: 2026_11_14_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.586780+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_14_NHL_puck_line.csv (14 accepted rows)
-2026-11-15T08:11:07.586846+00:00 | INFO  | --- FILE: 2026_11_15_NHL_puck_line.csv market=puck_line
-2026-11-15T08:11:07.604556+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_15_NHL_puck_line.csv (5 accepted rows)
-2026-11-15T08:11:07.605159+00:00 | INFO  | --- FILE: 2026_09_29_NHL_total.csv market=total
-2026-11-15T08:11:07.622585+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_09_29_NHL_total.csv (5 accepted rows)
-2026-11-15T08:11:07.622624+00:00 | INFO  | --- FILE: 2026_09_30_NHL_total.csv market=total
-2026-11-15T08:11:07.640157+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_09_30_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:07.640195+00:00 | INFO  | --- FILE: 2026_10_01_NHL_total.csv market=total
-2026-11-15T08:11:07.658087+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_01_NHL_total.csv (8 accepted rows)
-2026-11-15T08:11:07.658125+00:00 | INFO  | --- FILE: 2026_10_02_NHL_total.csv market=total
-2026-11-15T08:11:07.675779+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_02_NHL_total.csv (5 accepted rows)
-2026-11-15T08:11:07.675845+00:00 | INFO  | --- FILE: 2026_10_03_NHL_total.csv market=total
-2026-11-15T08:11:07.694322+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_03_NHL_total.csv (13 accepted rows)
-2026-11-15T08:11:07.694358+00:00 | INFO  | --- FILE: 2026_10_04_NHL_total.csv market=total
-2026-11-15T08:11:07.712306+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_04_NHL_total.csv (5 accepted rows)
-2026-11-15T08:11:07.712343+00:00 | INFO  | --- FILE: 2026_10_05_NHL_total.csv market=total
-2026-11-15T08:11:07.730116+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_05_NHL_total.csv (4 accepted rows)
-2026-11-15T08:11:07.730153+00:00 | INFO  | --- FILE: 2026_10_06_NHL_total.csv market=total
-2026-11-15T08:11:07.748285+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_06_NHL_total.csv (9 accepted rows)
-2026-11-15T08:11:07.748321+00:00 | INFO  | --- FILE: 2026_10_07_NHL_total.csv market=total
-2026-11-15T08:11:07.765692+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_07_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:07.765729+00:00 | INFO  | --- FILE: 2026_10_08_NHL_total.csv market=total
-2026-11-15T08:11:07.783986+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_08_NHL_total.csv (10 accepted rows)
-2026-11-15T08:11:07.784023+00:00 | INFO  | --- FILE: 2026_10_09_NHL_total.csv market=total
-2026-11-15T08:11:07.801578+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_09_NHL_total.csv (4 accepted rows)
-2026-11-15T08:11:07.801615+00:00 | INFO  | --- FILE: 2026_10_10_NHL_total.csv market=total
-2026-11-15T08:11:07.820458+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_10_NHL_total.csv (14 accepted rows)
-2026-11-15T08:11:07.820495+00:00 | INFO  | --- FILE: 2026_10_11_NHL_total.csv market=total
-2026-11-15T08:11:07.838080+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_11_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:07.838118+00:00 | INFO  | --- FILE: 2026_10_12_NHL_total.csv market=total
-2026-11-15T08:11:07.855729+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_12_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:07.855766+00:00 | INFO  | --- FILE: 2026_10_13_NHL_total.csv market=total
-2026-11-15T08:11:07.874591+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_13_NHL_total.csv (16 accepted rows)
-2026-11-15T08:11:07.874634+00:00 | INFO  | --- FILE: 2026_10_14_NHL_total.csv market=total
-2026-11-15T08:11:07.891919+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_14_NHL_total.csv (2 accepted rows)
-2026-11-15T08:11:07.891956+00:00 | INFO  | --- FILE: 2026_10_15_NHL_total.csv market=total
-2026-11-15T08:11:07.910399+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_15_NHL_total.csv (11 accepted rows)
-2026-11-15T08:11:07.910435+00:00 | INFO  | --- FILE: 2026_10_16_NHL_total.csv market=total
-2026-11-15T08:11:07.927871+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_16_NHL_total.csv (2 accepted rows)
-2026-11-15T08:11:07.927908+00:00 | INFO  | --- FILE: 2026_10_17_NHL_total.csv market=total
-2026-11-15T08:11:07.946315+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_17_NHL_total.csv (14 accepted rows)
-2026-11-15T08:11:07.946351+00:00 | INFO  | --- FILE: 2026_10_18_NHL_total.csv market=total
-2026-11-15T08:11:07.963674+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_18_NHL_total.csv (2 accepted rows)
-2026-11-15T08:11:07.963711+00:00 | INFO  | --- FILE: 2026_10_19_NHL_total.csv market=total
-2026-11-15T08:11:07.981407+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_19_NHL_total.csv (4 accepted rows)
-2026-11-15T08:11:07.981444+00:00 | INFO  | --- FILE: 2026_10_20_NHL_total.csv market=total
-2026-11-15T08:11:07.999770+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_20_NHL_total.csv (11 accepted rows)
-2026-11-15T08:11:07.999834+00:00 | INFO  | --- FILE: 2026_10_21_NHL_total.csv market=total
-2026-11-15T08:11:08.017055+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_21_NHL_total.csv (2 accepted rows)
-2026-11-15T08:11:08.017091+00:00 | INFO  | --- FILE: 2026_10_22_NHL_total.csv market=total
-2026-11-15T08:11:08.035429+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_22_NHL_total.csv (12 accepted rows)
-2026-11-15T08:11:08.035466+00:00 | INFO  | --- FILE: 2026_10_23_NHL_total.csv market=total
-2026-11-15T08:11:08.052778+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_23_NHL_total.csv (2 accepted rows)
-2026-11-15T08:11:08.052845+00:00 | INFO  | --- FILE: 2026_10_24_NHL_total.csv market=total
-2026-11-15T08:11:08.071390+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_24_NHL_total.csv (12 accepted rows)
-2026-11-15T08:11:08.071428+00:00 | INFO  | --- FILE: 2026_10_25_NHL_total.csv market=total
-2026-11-15T08:11:08.100083+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_25_NHL_total.csv (5 accepted rows)
-2026-11-15T08:11:08.100122+00:00 | INFO  | --- FILE: 2026_10_26_NHL_total.csv market=total
-2026-11-15T08:11:08.117642+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_26_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:08.117679+00:00 | INFO  | --- FILE: 2026_10_27_NHL_total.csv market=total
-2026-11-15T08:11:08.135877+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_27_NHL_total.csv (11 accepted rows)
-2026-11-15T08:11:08.135915+00:00 | INFO  | --- FILE: 2026_10_28_NHL_total.csv market=total
-2026-11-15T08:11:08.153416+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_28_NHL_total.csv (4 accepted rows)
-2026-11-15T08:11:08.153453+00:00 | INFO  | --- FILE: 2026_10_29_NHL_total.csv market=total
-2026-11-15T08:11:08.171777+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_29_NHL_total.csv (11 accepted rows)
-2026-11-15T08:11:08.171843+00:00 | INFO  | --- FILE: 2026_10_30_NHL_total.csv market=total
-2026-11-15T08:11:08.189411+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_30_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:08.189448+00:00 | INFO  | --- FILE: 2026_10_31_NHL_total.csv market=total
-2026-11-15T08:11:08.207733+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_10_31_NHL_total.csv (10 accepted rows)
-2026-11-15T08:11:08.207770+00:00 | INFO  | --- FILE: 2026_11_01_NHL_total.csv market=total
-2026-11-15T08:11:08.226315+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_01_NHL_total.csv (5 accepted rows)
-2026-11-15T08:11:08.226353+00:00 | INFO  | --- FILE: 2026_11_02_NHL_total.csv market=total
-2026-11-15T08:11:08.246890+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_02_NHL_total.csv (4 accepted rows)
-2026-11-15T08:11:08.246941+00:00 | INFO  | --- FILE: 2026_11_03_NHL_total.csv market=total
-2026-11-15T08:11:08.268504+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_03_NHL_total.csv (11 accepted rows)
-2026-11-15T08:11:08.268541+00:00 | INFO  | --- FILE: 2026_11_04_NHL_total.csv market=total
-2026-11-15T08:11:08.286048+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_04_NHL_total.csv (4 accepted rows)
-2026-11-15T08:11:08.286085+00:00 | INFO  | --- FILE: 2026_11_05_NHL_total.csv market=total
-2026-11-15T08:11:08.304208+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_05_NHL_total.csv (11 accepted rows)
-2026-11-15T08:11:08.304244+00:00 | INFO  | --- FILE: 2026_11_06_NHL_total.csv market=total
-2026-11-15T08:11:08.321778+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_06_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:08.321845+00:00 | INFO  | --- FILE: 2026_11_07_NHL_total.csv market=total
-2026-11-15T08:11:08.340226+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_07_NHL_total.csv (12 accepted rows)
-2026-11-15T08:11:08.340263+00:00 | INFO  | --- FILE: 2026_11_08_NHL_total.csv market=total
-2026-11-15T08:11:08.358038+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_08_NHL_total.csv (6 accepted rows)
-2026-11-15T08:11:08.358075+00:00 | INFO  | --- FILE: 2026_11_09_NHL_total.csv market=total
-2026-11-15T08:11:08.375375+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_09_NHL_total.csv (3 accepted rows)
-2026-11-15T08:11:08.375412+00:00 | INFO  | --- FILE: 2026_11_10_NHL_total.csv market=total
-2026-11-15T08:11:08.393450+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_10_NHL_total.csv (7 accepted rows)
-2026-11-15T08:11:08.393486+00:00 | INFO  | --- FILE: 2026_11_11_NHL_total.csv market=total
-2026-11-15T08:11:08.411612+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_11_NHL_total.csv (6 accepted rows)
-2026-11-15T08:11:08.411650+00:00 | INFO  | --- FILE: 2026_11_12_NHL_total.csv market=total
-2026-11-15T08:11:08.429724+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_12_NHL_total.csv (11 accepted rows)
-2026-11-15T08:11:08.429762+00:00 | INFO  | --- FILE: 2026_11_13_NHL_total.csv market=total
-2026-11-15T08:11:08.447041+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_13_NHL_total.csv (2 accepted rows)
-2026-11-15T08:11:08.447079+00:00 | INFO  | --- FILE: 2026_11_14_NHL_total.csv market=total
-2026-11-15T08:11:08.465604+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_14_NHL_total.csv (14 accepted rows)
-2026-11-15T08:11:08.465641+00:00 | INFO  | --- FILE: 2026_11_15_NHL_total.csv market=total
-2026-11-15T08:11:08.483338+00:00 | INFO  | WROTE: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/03_edges/2026_11_15_NHL_total.csv (5 accepted rows)
+=== compute_edges RUN 2026-11-16T20:21:42.956285+00:00 ===
+2026-11-16T20:21:42.956285+00:00 | INFO  | INPUT_DIR : G:\hockey\docs\win\hockey\nhl\02_juice
+2026-11-16T20:21:42.956285+00:00 | INFO  | OUTPUT_DIR: G:\hockey\docs\win\hockey\nhl\03_edges
+2026-11-16T20:21:42.956285+00:00 | INFO  | QUARANTINE_DIR: G:\hockey\docs\win\hockey\nhl\errors\03_edges
+2026-11-16T20:21:43.038828+00:00 | INFO  | --- FILE: 2026_09_29_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.089649+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_09_29_NHL_moneyline.csv (5 accepted rows)
+2026-11-16T20:21:43.089649+00:00 | INFO  | --- FILE: 2026_09_30_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.127048+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_09_30_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:43.127048+00:00 | INFO  | --- FILE: 2026_10_01_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.173959+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_01_NHL_moneyline.csv (8 accepted rows)
+2026-11-16T20:21:43.173959+00:00 | INFO  | --- FILE: 2026_10_02_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.205704+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_02_NHL_moneyline.csv (5 accepted rows)
+2026-11-16T20:21:43.205704+00:00 | INFO  | --- FILE: 2026_10_03_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.247810+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_03_NHL_moneyline.csv (13 accepted rows)
+2026-11-16T20:21:43.247810+00:00 | INFO  | --- FILE: 2026_10_04_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.279770+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_04_NHL_moneyline.csv (5 accepted rows)
+2026-11-16T20:21:43.279770+00:00 | INFO  | --- FILE: 2026_10_05_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.311230+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_05_NHL_moneyline.csv (4 accepted rows)
+2026-11-16T20:21:43.311230+00:00 | INFO  | --- FILE: 2026_10_06_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.360122+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_06_NHL_moneyline.csv (9 accepted rows)
+2026-11-16T20:21:43.360122+00:00 | INFO  | --- FILE: 2026_10_07_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.390312+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_07_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:43.390312+00:00 | INFO  | --- FILE: 2026_10_08_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.423584+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_08_NHL_moneyline.csv (10 accepted rows)
+2026-11-16T20:21:43.423584+00:00 | INFO  | --- FILE: 2026_10_09_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.453227+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_09_NHL_moneyline.csv (4 accepted rows)
+2026-11-16T20:21:43.453227+00:00 | INFO  | --- FILE: 2026_10_10_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.484608+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_10_NHL_moneyline.csv (14 accepted rows)
+2026-11-16T20:21:43.484608+00:00 | INFO  | --- FILE: 2026_10_11_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.524765+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_11_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:43.524765+00:00 | INFO  | --- FILE: 2026_10_12_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.579878+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_12_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:43.579878+00:00 | INFO  | --- FILE: 2026_10_13_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.643258+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_13_NHL_moneyline.csv (16 accepted rows)
+2026-11-16T20:21:43.643258+00:00 | INFO  | --- FILE: 2026_10_14_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.684237+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_14_NHL_moneyline.csv (2 accepted rows)
+2026-11-16T20:21:43.684237+00:00 | INFO  | --- FILE: 2026_10_15_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.727904+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_15_NHL_moneyline.csv (11 accepted rows)
+2026-11-16T20:21:43.727904+00:00 | INFO  | --- FILE: 2026_10_16_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.760478+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_16_NHL_moneyline.csv (2 accepted rows)
+2026-11-16T20:21:43.760478+00:00 | INFO  | --- FILE: 2026_10_17_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.826766+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_17_NHL_moneyline.csv (14 accepted rows)
+2026-11-16T20:21:43.826766+00:00 | INFO  | --- FILE: 2026_10_18_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.862038+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_18_NHL_moneyline.csv (2 accepted rows)
+2026-11-16T20:21:43.862038+00:00 | INFO  | --- FILE: 2026_10_19_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.895260+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_19_NHL_moneyline.csv (4 accepted rows)
+2026-11-16T20:21:43.895260+00:00 | INFO  | --- FILE: 2026_10_20_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.928732+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_20_NHL_moneyline.csv (11 accepted rows)
+2026-11-16T20:21:43.928732+00:00 | INFO  | --- FILE: 2026_10_21_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.960080+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_21_NHL_moneyline.csv (2 accepted rows)
+2026-11-16T20:21:43.960080+00:00 | INFO  | --- FILE: 2026_10_22_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:43.989402+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_22_NHL_moneyline.csv (12 accepted rows)
+2026-11-16T20:21:43.989402+00:00 | INFO  | --- FILE: 2026_10_23_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.023478+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_23_NHL_moneyline.csv (2 accepted rows)
+2026-11-16T20:21:44.023478+00:00 | INFO  | --- FILE: 2026_10_24_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.057222+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_24_NHL_moneyline.csv (12 accepted rows)
+2026-11-16T20:21:44.057222+00:00 | INFO  | --- FILE: 2026_10_25_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.089341+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_25_NHL_moneyline.csv (5 accepted rows)
+2026-11-16T20:21:44.089341+00:00 | INFO  | --- FILE: 2026_10_26_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.121245+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_26_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:44.121245+00:00 | INFO  | --- FILE: 2026_10_27_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.152367+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_27_NHL_moneyline.csv (11 accepted rows)
+2026-11-16T20:21:44.152367+00:00 | INFO  | --- FILE: 2026_10_28_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.185082+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_28_NHL_moneyline.csv (4 accepted rows)
+2026-11-16T20:21:44.185082+00:00 | INFO  | --- FILE: 2026_10_29_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.210758+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_29_NHL_moneyline.csv (11 accepted rows)
+2026-11-16T20:21:44.210758+00:00 | INFO  | --- FILE: 2026_10_30_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.260342+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_30_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:44.260342+00:00 | INFO  | --- FILE: 2026_10_31_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.289902+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_31_NHL_moneyline.csv (10 accepted rows)
+2026-11-16T20:21:44.289902+00:00 | INFO  | --- FILE: 2026_11_01_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.337055+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_01_NHL_moneyline.csv (5 accepted rows)
+2026-11-16T20:21:44.337055+00:00 | INFO  | --- FILE: 2026_11_02_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.369065+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_02_NHL_moneyline.csv (4 accepted rows)
+2026-11-16T20:21:44.369065+00:00 | INFO  | --- FILE: 2026_11_03_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.412991+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_03_NHL_moneyline.csv (11 accepted rows)
+2026-11-16T20:21:44.412991+00:00 | INFO  | --- FILE: 2026_11_04_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.473764+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_04_NHL_moneyline.csv (4 accepted rows)
+2026-11-16T20:21:44.473764+00:00 | INFO  | --- FILE: 2026_11_05_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.526591+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_05_NHL_moneyline.csv (11 accepted rows)
+2026-11-16T20:21:44.526591+00:00 | INFO  | --- FILE: 2026_11_06_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.565466+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_06_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:44.565466+00:00 | INFO  | --- FILE: 2026_11_07_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.601535+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_07_NHL_moneyline.csv (12 accepted rows)
+2026-11-16T20:21:44.601535+00:00 | INFO  | --- FILE: 2026_11_08_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.635785+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_08_NHL_moneyline.csv (6 accepted rows)
+2026-11-16T20:21:44.635785+00:00 | INFO  | --- FILE: 2026_11_09_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.660698+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_09_NHL_moneyline.csv (3 accepted rows)
+2026-11-16T20:21:44.671842+00:00 | INFO  | --- FILE: 2026_11_10_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.699410+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_10_NHL_moneyline.csv (7 accepted rows)
+2026-11-16T20:21:44.699410+00:00 | INFO  | --- FILE: 2026_11_11_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.740374+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_11_NHL_moneyline.csv (6 accepted rows)
+2026-11-16T20:21:44.740374+00:00 | INFO  | --- FILE: 2026_11_12_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.771637+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_12_NHL_moneyline.csv (11 accepted rows)
+2026-11-16T20:21:44.771637+00:00 | INFO  | --- FILE: 2026_11_13_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.808464+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_13_NHL_moneyline.csv (2 accepted rows)
+2026-11-16T20:21:44.808464+00:00 | INFO  | --- FILE: 2026_11_14_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.844347+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_14_NHL_moneyline.csv (14 accepted rows)
+2026-11-16T20:21:44.844347+00:00 | INFO  | --- FILE: 2026_11_15_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.882241+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_15_NHL_moneyline.csv (5 accepted rows)
+2026-11-16T20:21:44.882241+00:00 | INFO  | --- FILE: 2026_11_16_NHL_moneyline.csv market=moneyline
+2026-11-16T20:21:44.919647+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_16_NHL_moneyline.csv (2 accepted rows)
+2026-11-16T20:21:44.920647+00:00 | INFO  | --- FILE: 2026_09_29_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:44.945260+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_09_29_NHL_puck_line.csv (5 accepted rows)
+2026-11-16T20:21:44.945260+00:00 | INFO  | --- FILE: 2026_09_30_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:44.992521+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_09_30_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:44.992521+00:00 | INFO  | --- FILE: 2026_10_01_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.023915+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_01_NHL_puck_line.csv (8 accepted rows)
+2026-11-16T20:21:45.023915+00:00 | INFO  | --- FILE: 2026_10_02_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.060950+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_02_NHL_puck_line.csv (5 accepted rows)
+2026-11-16T20:21:45.060950+00:00 | INFO  | --- FILE: 2026_10_03_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.086820+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_03_NHL_puck_line.csv (13 accepted rows)
+2026-11-16T20:21:45.086820+00:00 | INFO  | --- FILE: 2026_10_04_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.128848+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_04_NHL_puck_line.csv (5 accepted rows)
+2026-11-16T20:21:45.128848+00:00 | INFO  | --- FILE: 2026_10_05_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.166122+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_05_NHL_puck_line.csv (4 accepted rows)
+2026-11-16T20:21:45.166122+00:00 | INFO  | --- FILE: 2026_10_06_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.197698+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_06_NHL_puck_line.csv (9 accepted rows)
+2026-11-16T20:21:45.197698+00:00 | INFO  | --- FILE: 2026_10_07_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.237626+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_07_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:45.237626+00:00 | INFO  | --- FILE: 2026_10_08_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.263955+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_08_NHL_puck_line.csv (10 accepted rows)
+2026-11-16T20:21:45.263955+00:00 | INFO  | --- FILE: 2026_10_09_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.292295+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_09_NHL_puck_line.csv (4 accepted rows)
+2026-11-16T20:21:45.292295+00:00 | INFO  | --- FILE: 2026_10_10_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.339394+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_10_NHL_puck_line.csv (14 accepted rows)
+2026-11-16T20:21:45.339394+00:00 | INFO  | --- FILE: 2026_10_11_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.370979+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_11_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:45.370979+00:00 | INFO  | --- FILE: 2026_10_12_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.409903+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_12_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:45.409903+00:00 | INFO  | --- FILE: 2026_10_13_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.434429+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_13_NHL_puck_line.csv (16 accepted rows)
+2026-11-16T20:21:45.434429+00:00 | INFO  | --- FILE: 2026_10_14_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.478571+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_14_NHL_puck_line.csv (2 accepted rows)
+2026-11-16T20:21:45.478571+00:00 | INFO  | --- FILE: 2026_10_15_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.509887+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_15_NHL_puck_line.csv (11 accepted rows)
+2026-11-16T20:21:45.509887+00:00 | INFO  | --- FILE: 2026_10_16_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.541417+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_16_NHL_puck_line.csv (2 accepted rows)
+2026-11-16T20:21:45.541417+00:00 | INFO  | --- FILE: 2026_10_17_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.573223+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_17_NHL_puck_line.csv (14 accepted rows)
+2026-11-16T20:21:45.573223+00:00 | INFO  | --- FILE: 2026_10_18_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.604204+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_18_NHL_puck_line.csv (2 accepted rows)
+2026-11-16T20:21:45.604204+00:00 | INFO  | --- FILE: 2026_10_19_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.661076+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_19_NHL_puck_line.csv (4 accepted rows)
+2026-11-16T20:21:45.661076+00:00 | INFO  | --- FILE: 2026_10_20_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.701435+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_20_NHL_puck_line.csv (11 accepted rows)
+2026-11-16T20:21:45.701435+00:00 | INFO  | --- FILE: 2026_10_21_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.746958+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_21_NHL_puck_line.csv (2 accepted rows)
+2026-11-16T20:21:45.746958+00:00 | INFO  | --- FILE: 2026_10_22_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.779166+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_22_NHL_puck_line.csv (12 accepted rows)
+2026-11-16T20:21:45.779166+00:00 | INFO  | --- FILE: 2026_10_23_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.810551+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_23_NHL_puck_line.csv (2 accepted rows)
+2026-11-16T20:21:45.810551+00:00 | INFO  | --- FILE: 2026_10_24_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.842271+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_24_NHL_puck_line.csv (12 accepted rows)
+2026-11-16T20:21:45.842271+00:00 | INFO  | --- FILE: 2026_10_25_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.880584+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_25_NHL_puck_line.csv (5 accepted rows)
+2026-11-16T20:21:45.880584+00:00 | INFO  | --- FILE: 2026_10_26_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.919009+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_26_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:45.919009+00:00 | INFO  | --- FILE: 2026_10_27_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:45.974937+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_27_NHL_puck_line.csv (11 accepted rows)
+2026-11-16T20:21:45.974937+00:00 | INFO  | --- FILE: 2026_10_28_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.006255+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_28_NHL_puck_line.csv (4 accepted rows)
+2026-11-16T20:21:46.006255+00:00 | INFO  | --- FILE: 2026_10_29_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.047077+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_29_NHL_puck_line.csv (11 accepted rows)
+2026-11-16T20:21:46.047077+00:00 | INFO  | --- FILE: 2026_10_30_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.078872+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_30_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:46.078872+00:00 | INFO  | --- FILE: 2026_10_31_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.110582+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_31_NHL_puck_line.csv (10 accepted rows)
+2026-11-16T20:21:46.110582+00:00 | INFO  | --- FILE: 2026_11_01_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.161405+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_01_NHL_puck_line.csv (5 accepted rows)
+2026-11-16T20:21:46.161405+00:00 | INFO  | --- FILE: 2026_11_02_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.191596+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_02_NHL_puck_line.csv (4 accepted rows)
+2026-11-16T20:21:46.191596+00:00 | INFO  | --- FILE: 2026_11_03_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.235555+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_03_NHL_puck_line.csv (11 accepted rows)
+2026-11-16T20:21:46.235555+00:00 | INFO  | --- FILE: 2026_11_04_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.268658+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_04_NHL_puck_line.csv (4 accepted rows)
+2026-11-16T20:21:46.268658+00:00 | INFO  | --- FILE: 2026_11_05_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.300281+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_05_NHL_puck_line.csv (11 accepted rows)
+2026-11-16T20:21:46.300281+00:00 | INFO  | --- FILE: 2026_11_06_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.331862+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_06_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:46.331862+00:00 | INFO  | --- FILE: 2026_11_07_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.365465+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_07_NHL_puck_line.csv (12 accepted rows)
+2026-11-16T20:21:46.365465+00:00 | INFO  | --- FILE: 2026_11_08_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.426209+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_08_NHL_puck_line.csv (6 accepted rows)
+2026-11-16T20:21:46.426209+00:00 | INFO  | --- FILE: 2026_11_09_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.461607+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_09_NHL_puck_line.csv (3 accepted rows)
+2026-11-16T20:21:46.461607+00:00 | INFO  | --- FILE: 2026_11_10_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.495918+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_10_NHL_puck_line.csv (7 accepted rows)
+2026-11-16T20:21:46.495918+00:00 | INFO  | --- FILE: 2026_11_11_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.541240+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_11_NHL_puck_line.csv (6 accepted rows)
+2026-11-16T20:21:46.541240+00:00 | INFO  | --- FILE: 2026_11_12_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.587364+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_12_NHL_puck_line.csv (11 accepted rows)
+2026-11-16T20:21:46.587364+00:00 | INFO  | --- FILE: 2026_11_13_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.616307+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_13_NHL_puck_line.csv (2 accepted rows)
+2026-11-16T20:21:46.616307+00:00 | INFO  | --- FILE: 2026_11_14_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.655713+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_14_NHL_puck_line.csv (14 accepted rows)
+2026-11-16T20:21:46.655713+00:00 | INFO  | --- FILE: 2026_11_15_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.719479+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_15_NHL_puck_line.csv (5 accepted rows)
+2026-11-16T20:21:46.719479+00:00 | INFO  | --- FILE: 2026_11_16_NHL_puck_line.csv market=puck_line
+2026-11-16T20:21:46.751610+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_16_NHL_puck_line.csv (2 accepted rows)
+2026-11-16T20:21:46.751610+00:00 | INFO  | --- FILE: 2026_09_29_NHL_total.csv market=total
+2026-11-16T20:21:46.783440+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_09_29_NHL_total.csv (5 accepted rows)
+2026-11-16T20:21:46.783440+00:00 | INFO  | --- FILE: 2026_09_30_NHL_total.csv market=total
+2026-11-16T20:21:46.830619+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_09_30_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:46.830619+00:00 | INFO  | --- FILE: 2026_10_01_NHL_total.csv market=total
+2026-11-16T20:21:46.877828+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_01_NHL_total.csv (8 accepted rows)
+2026-11-16T20:21:46.877828+00:00 | INFO  | --- FILE: 2026_10_02_NHL_total.csv market=total
+2026-11-16T20:21:46.908704+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_02_NHL_total.csv (5 accepted rows)
+2026-11-16T20:21:46.908704+00:00 | INFO  | --- FILE: 2026_10_03_NHL_total.csv market=total
+2026-11-16T20:21:46.940183+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_03_NHL_total.csv (13 accepted rows)
+2026-11-16T20:21:46.940183+00:00 | INFO  | --- FILE: 2026_10_04_NHL_total.csv market=total
+2026-11-16T20:21:46.981788+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_04_NHL_total.csv (5 accepted rows)
+2026-11-16T20:21:46.981788+00:00 | INFO  | --- FILE: 2026_10_05_NHL_total.csv market=total
+2026-11-16T20:21:47.004751+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_05_NHL_total.csv (4 accepted rows)
+2026-11-16T20:21:47.004751+00:00 | INFO  | --- FILE: 2026_10_06_NHL_total.csv market=total
+2026-11-16T20:21:47.052142+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_06_NHL_total.csv (9 accepted rows)
+2026-11-16T20:21:47.052142+00:00 | INFO  | --- FILE: 2026_10_07_NHL_total.csv market=total
+2026-11-16T20:21:47.082676+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_07_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:47.082676+00:00 | INFO  | --- FILE: 2026_10_08_NHL_total.csv market=total
+2026-11-16T20:21:47.114422+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_08_NHL_total.csv (10 accepted rows)
+2026-11-16T20:21:47.114422+00:00 | INFO  | --- FILE: 2026_10_09_NHL_total.csv market=total
+2026-11-16T20:21:47.146124+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_09_NHL_total.csv (4 accepted rows)
+2026-11-16T20:21:47.146124+00:00 | INFO  | --- FILE: 2026_10_10_NHL_total.csv market=total
+2026-11-16T20:21:47.177473+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_10_NHL_total.csv (14 accepted rows)
+2026-11-16T20:21:47.177473+00:00 | INFO  | --- FILE: 2026_10_11_NHL_total.csv market=total
+2026-11-16T20:21:47.218179+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_11_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:47.218179+00:00 | INFO  | --- FILE: 2026_10_12_NHL_total.csv market=total
+2026-11-16T20:21:47.247593+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_12_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:47.247593+00:00 | INFO  | --- FILE: 2026_10_13_NHL_total.csv market=total
+2026-11-16T20:21:47.289078+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_13_NHL_total.csv (16 accepted rows)
+2026-11-16T20:21:47.289078+00:00 | INFO  | --- FILE: 2026_10_14_NHL_total.csv market=total
+2026-11-16T20:21:47.320997+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_14_NHL_total.csv (2 accepted rows)
+2026-11-16T20:21:47.320997+00:00 | INFO  | --- FILE: 2026_10_15_NHL_total.csv market=total
+2026-11-16T20:21:47.383845+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_15_NHL_total.csv (11 accepted rows)
+2026-11-16T20:21:47.383845+00:00 | INFO  | --- FILE: 2026_10_16_NHL_total.csv market=total
+2026-11-16T20:21:47.415384+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_16_NHL_total.csv (2 accepted rows)
+2026-11-16T20:21:47.415384+00:00 | INFO  | --- FILE: 2026_10_17_NHL_total.csv market=total
+2026-11-16T20:21:47.446788+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_17_NHL_total.csv (14 accepted rows)
+2026-11-16T20:21:47.446788+00:00 | INFO  | --- FILE: 2026_10_18_NHL_total.csv market=total
+2026-11-16T20:21:47.477815+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_18_NHL_total.csv (2 accepted rows)
+2026-11-16T20:21:47.477815+00:00 | INFO  | --- FILE: 2026_10_19_NHL_total.csv market=total
+2026-11-16T20:21:47.509643+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_19_NHL_total.csv (4 accepted rows)
+2026-11-16T20:21:47.509643+00:00 | INFO  | --- FILE: 2026_10_20_NHL_total.csv market=total
+2026-11-16T20:21:47.557370+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_20_NHL_total.csv (11 accepted rows)
+2026-11-16T20:21:47.557370+00:00 | INFO  | --- FILE: 2026_10_21_NHL_total.csv market=total
+2026-11-16T20:21:47.591325+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_21_NHL_total.csv (2 accepted rows)
+2026-11-16T20:21:47.591325+00:00 | INFO  | --- FILE: 2026_10_22_NHL_total.csv market=total
+2026-11-16T20:21:47.627554+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_22_NHL_total.csv (12 accepted rows)
+2026-11-16T20:21:47.627554+00:00 | INFO  | --- FILE: 2026_10_23_NHL_total.csv market=total
+2026-11-16T20:21:47.662185+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_23_NHL_total.csv (2 accepted rows)
+2026-11-16T20:21:47.662185+00:00 | INFO  | --- FILE: 2026_10_24_NHL_total.csv market=total
+2026-11-16T20:21:47.714350+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_24_NHL_total.csv (12 accepted rows)
+2026-11-16T20:21:47.714350+00:00 | INFO  | --- FILE: 2026_10_25_NHL_total.csv market=total
+2026-11-16T20:21:47.764942+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_25_NHL_total.csv (5 accepted rows)
+2026-11-16T20:21:47.764942+00:00 | INFO  | --- FILE: 2026_10_26_NHL_total.csv market=total
+2026-11-16T20:21:47.810187+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_26_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:47.810187+00:00 | INFO  | --- FILE: 2026_10_27_NHL_total.csv market=total
+2026-11-16T20:21:47.847431+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_27_NHL_total.csv (11 accepted rows)
+2026-11-16T20:21:47.847431+00:00 | INFO  | --- FILE: 2026_10_28_NHL_total.csv market=total
+2026-11-16T20:21:47.862000+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_28_NHL_total.csv (4 accepted rows)
+2026-11-16T20:21:47.862000+00:00 | INFO  | --- FILE: 2026_10_29_NHL_total.csv market=total
+2026-11-16T20:21:47.909415+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_29_NHL_total.csv (11 accepted rows)
+2026-11-16T20:21:47.909415+00:00 | INFO  | --- FILE: 2026_10_30_NHL_total.csv market=total
+2026-11-16T20:21:47.925911+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_30_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:47.925911+00:00 | INFO  | --- FILE: 2026_10_31_NHL_total.csv market=total
+2026-11-16T20:21:47.979756+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_10_31_NHL_total.csv (10 accepted rows)
+2026-11-16T20:21:47.979756+00:00 | INFO  | --- FILE: 2026_11_01_NHL_total.csv market=total
+2026-11-16T20:21:48.004587+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_01_NHL_total.csv (5 accepted rows)
+2026-11-16T20:21:48.004587+00:00 | INFO  | --- FILE: 2026_11_02_NHL_total.csv market=total
+2026-11-16T20:21:48.036467+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_02_NHL_total.csv (4 accepted rows)
+2026-11-16T20:21:48.036467+00:00 | INFO  | --- FILE: 2026_11_03_NHL_total.csv market=total
+2026-11-16T20:21:48.067903+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_03_NHL_total.csv (11 accepted rows)
+2026-11-16T20:21:48.067903+00:00 | INFO  | --- FILE: 2026_11_04_NHL_total.csv market=total
+2026-11-16T20:21:48.108255+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_04_NHL_total.csv (4 accepted rows)
+2026-11-16T20:21:48.108255+00:00 | INFO  | --- FILE: 2026_11_05_NHL_total.csv market=total
+2026-11-16T20:21:48.137249+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_05_NHL_total.csv (11 accepted rows)
+2026-11-16T20:21:48.137249+00:00 | INFO  | --- FILE: 2026_11_06_NHL_total.csv market=total
+2026-11-16T20:21:48.180157+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_06_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:48.180157+00:00 | INFO  | --- FILE: 2026_11_07_NHL_total.csv market=total
+2026-11-16T20:21:48.211527+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_07_NHL_total.csv (12 accepted rows)
+2026-11-16T20:21:48.211527+00:00 | INFO  | --- FILE: 2026_11_08_NHL_total.csv market=total
+2026-11-16T20:21:48.243154+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_08_NHL_total.csv (6 accepted rows)
+2026-11-16T20:21:48.243154+00:00 | INFO  | --- FILE: 2026_11_09_NHL_total.csv market=total
+2026-11-16T20:21:48.274765+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_09_NHL_total.csv (3 accepted rows)
+2026-11-16T20:21:48.274765+00:00 | INFO  | --- FILE: 2026_11_10_NHL_total.csv market=total
+2026-11-16T20:21:48.307978+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_10_NHL_total.csv (7 accepted rows)
+2026-11-16T20:21:48.307978+00:00 | INFO  | --- FILE: 2026_11_11_NHL_total.csv market=total
+2026-11-16T20:21:48.338062+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_11_NHL_total.csv (6 accepted rows)
+2026-11-16T20:21:48.338062+00:00 | INFO  | --- FILE: 2026_11_12_NHL_total.csv market=total
+2026-11-16T20:21:48.369462+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_12_NHL_total.csv (11 accepted rows)
+2026-11-16T20:21:48.369462+00:00 | INFO  | --- FILE: 2026_11_13_NHL_total.csv market=total
+2026-11-16T20:21:48.400468+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_13_NHL_total.csv (2 accepted rows)
+2026-11-16T20:21:48.400468+00:00 | INFO  | --- FILE: 2026_11_14_NHL_total.csv market=total
+2026-11-16T20:21:48.510903+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_14_NHL_total.csv (14 accepted rows)
+2026-11-16T20:21:48.510903+00:00 | INFO  | --- FILE: 2026_11_15_NHL_total.csv market=total
+2026-11-16T20:21:48.542318+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_15_NHL_total.csv (5 accepted rows)
+2026-11-16T20:21:48.542318+00:00 | INFO  | --- FILE: 2026_11_16_NHL_total.csv market=total
+2026-11-16T20:21:48.573964+00:00 | INFO  | WROTE: G:\hockey\docs\win\hockey\nhl\03_edges\2026_11_16_NHL_total.csv (2 accepted rows)
 
 ========================================================================
-SUMMARY  2026-11-15T08:11:08.483464+00:00
+SUMMARY  2026-11-16T20:21:48.573964+00:00
 ========================================================================
-  files_processed  : 144
-  rows_processed   : 990
-  rows_accepted    : 990
+  files_processed  : 147
+  rows_processed   : 996
+  rows_accepted    : 996
   rows_quarantined : 0
-  moneyline_files  : 48
-  puck_line_files  : 48
-  total_files      : 48
+  moneyline_files  : 49
+  puck_line_files  : 49
+  total_files      : 49
   skipped          : 0
   null_edges       : 0
   schema_errors    : 0
@@ -355,6 +361,7 @@ SUMMARY  2026-11-15T08:11:08.483464+00:00
   2026_11_13_NHL_moneyline.csv               moneyline        2        2          0          0           ok
   2026_11_14_NHL_moneyline.csv               moneyline       14       14          0          0           ok
   2026_11_15_NHL_moneyline.csv               moneyline        5        5          0          0           ok
+  2026_11_16_NHL_moneyline.csv               moneyline        2        2          0          0           ok
   2026_09_29_NHL_puck_line.csv               puck_line        5        5          0          0           ok
   2026_09_30_NHL_puck_line.csv               puck_line        3        3          0          0           ok
   2026_10_01_NHL_puck_line.csv               puck_line        8        8          0          0           ok
@@ -403,6 +410,7 @@ SUMMARY  2026-11-15T08:11:08.483464+00:00
   2026_11_13_NHL_puck_line.csv               puck_line        2        2          0          0           ok
   2026_11_14_NHL_puck_line.csv               puck_line       14       14          0          0           ok
   2026_11_15_NHL_puck_line.csv               puck_line        5        5          0          0           ok
+  2026_11_16_NHL_puck_line.csv               puck_line        2        2          0          0           ok
   2026_09_29_NHL_total.csv                   total            5        5          0          0           ok
   2026_09_30_NHL_total.csv                   total            3        3          0          0           ok
   2026_10_01_NHL_total.csv                   total            8        8          0          0           ok
@@ -451,20 +459,21 @@ SUMMARY  2026-11-15T08:11:08.483464+00:00
   2026_11_13_NHL_total.csv                   total            2        2          0          0           ok
   2026_11_14_NHL_total.csv                   total           14       14          0          0           ok
   2026_11_15_NHL_total.csv                   total            5        5          0          0           ok
+  2026_11_16_NHL_total.csv                   total            2        2          0          0           ok
 
 STATUS: SUCCESS
 ========================================================================
 
 ========================================================================
-SUMMARY  2026-11-15T08:11:08.483768+00:00
+SUMMARY  2026-11-16T20:21:48.573964+00:00
 ========================================================================
-  files_processed  : 144
-  rows_processed   : 990
-  rows_accepted    : 990
+  files_processed  : 147
+  rows_processed   : 996
+  rows_accepted    : 996
   rows_quarantined : 0
-  moneyline_files  : 48
-  puck_line_files  : 48
-  total_files      : 48
+  moneyline_files  : 49
+  puck_line_files  : 49
+  total_files      : 49
   skipped          : 0
   null_edges       : 0
   schema_errors    : 0
@@ -519,6 +528,7 @@ SUMMARY  2026-11-15T08:11:08.483768+00:00
   2026_11_13_NHL_moneyline.csv               moneyline        2        2          0          0           ok
   2026_11_14_NHL_moneyline.csv               moneyline       14       14          0          0           ok
   2026_11_15_NHL_moneyline.csv               moneyline        5        5          0          0           ok
+  2026_11_16_NHL_moneyline.csv               moneyline        2        2          0          0           ok
   2026_09_29_NHL_puck_line.csv               puck_line        5        5          0          0           ok
   2026_09_30_NHL_puck_line.csv               puck_line        3        3          0          0           ok
   2026_10_01_NHL_puck_line.csv               puck_line        8        8          0          0           ok
@@ -567,6 +577,7 @@ SUMMARY  2026-11-15T08:11:08.483768+00:00
   2026_11_13_NHL_puck_line.csv               puck_line        2        2          0          0           ok
   2026_11_14_NHL_puck_line.csv               puck_line       14       14          0          0           ok
   2026_11_15_NHL_puck_line.csv               puck_line        5        5          0          0           ok
+  2026_11_16_NHL_puck_line.csv               puck_line        2        2          0          0           ok
   2026_09_29_NHL_total.csv                   total            5        5          0          0           ok
   2026_09_30_NHL_total.csv                   total            3        3          0          0           ok
   2026_10_01_NHL_total.csv                   total            8        8          0          0           ok
@@ -615,6 +626,7 @@ SUMMARY  2026-11-15T08:11:08.483768+00:00
   2026_11_13_NHL_total.csv                   total            2        2          0          0           ok
   2026_11_14_NHL_total.csv                   total           14       14          0          0           ok
   2026_11_15_NHL_total.csv                   total            5        5          0          0           ok
+  2026_11_16_NHL_total.csv                   total            2        2          0          0           ok
 
 STATUS: SUCCESS
 ========================================================================

@@ -1,11 +1,21 @@
-=== hockey_drat_scraper RUN 2026-11-16T13:03:26.767281-05:00 ===
-2026-11-16T13:03:26.767281-05:00 | FATAL ERROR: Missing official NHL schedule for intake date: docs\win\hockey\nhl\00_intake\nhl_schedule\NHL_2026_11_16.csv
-Traceback (most recent call last):
-  File "G:\hockey\docs\win\hockey\nhl\scripts\00_intake\hockey_drat_scraper.py", line 553, in main
-    expected_schedule = load_expected_schedule(date, team_map)
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "G:\hockey\docs\win\hockey\nhl\scripts\00_intake\hockey_drat_scraper.py", line 229, in load_expected_schedule
-    raise FileNotFoundError(
-FileNotFoundError: Missing official NHL schedule for intake date: docs\win\hockey\nhl\00_intake\nhl_schedule\NHL_2026_11_16.csv
-
-2026-11-16T13:03:26.767281-05:00 | STATUS: FAILED
+=== hockey_drat_scraper RUN 2026-11-16T15:16:41.992536-05:00 ===
+2026-11-16T15:16:41.992536-05:00 | Official NHL schedule gate loaded: date=2026_11_16 regular_or_playoff_games=2
+2026-11-16T15:16:41.992536-05:00 | D-Ratings date_time is interpreted as UTC and converted to ET.
+2026-11-16T15:16:47.601295-05:00 | Column count distribution: {11: 34, 8: 16, 6: 3}
+2026-11-16T15:16:47.604333-05:00 | Ignored D-Ratings games outside intake date | date=2026_11_16 ignored_games=16
+2026-11-16T15:16:47.604333-05:00 | INTAKE GATE PASSED | date=2026_11_16 expected_games=2 dratings_games=2 upcoming_predictions=2
+2026-11-16T15:16:47.604333-05:00 | Upcoming games after intake gates: 2
+2026-11-16T15:16:47.604333-05:00 | Completed games retained in raw JSON only: 16
+2026-11-16T15:16:47.900189-05:00 | WROTE validated upcoming scraper copy -> docs\win\hockey\nhl\00_intake\predictions\scraper\2026_11_16_nhl_predictions.csv (2 rows)
+2026-11-16T15:16:48.001557-05:00 | --- SUMMARY ---
+2026-11-16T15:16:48.001557-05:00 | Raw rows scraped: 53
+2026-11-16T15:16:48.001557-05:00 | Games parsed: 18
+2026-11-16T15:16:48.001557-05:00 | Parse errors: 0
+2026-11-16T15:16:48.001557-05:00 | Expected regular-season/playoff NHL games: 2
+2026-11-16T15:16:48.015959-05:00 | Validated upcoming predictions: 2
+2026-11-16T15:16:48.015959-05:00 | Completed retained in raw JSON only: 16
+2026-11-16T15:16:48.015959-05:00 | Files written: 3
+2026-11-16T15:16:48.015959-05:00 |   FILE: docs\win\hockey\nhl\00_intake\drat_raw\rows\2026_11_16_nhl_raw_rows.json (53 rows)
+2026-11-16T15:16:48.015959-05:00 |   FILE: docs\win\hockey\nhl\00_intake\drat_raw\2026_11_16_nhl_raw.json (18 rows)
+2026-11-16T15:16:48.015959-05:00 |   FILE: docs\win\hockey\nhl\00_intake\predictions\scraper\2026_11_16_nhl_predictions.csv (2 rows)
+2026-11-16T15:16:48.015959-05:00 | STATUS: SUCCESS

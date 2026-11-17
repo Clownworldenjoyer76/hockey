@@ -2,15 +2,6 @@ name: NHL 01 Pipeline
 
 on:
   workflow_dispatch:
-    inputs:
-      dratings_mode:
-        description: "Use live DRatings scraper or previously validated manual prediction files"
-        type: choice
-        required: true
-        default: scraper
-        options:
-          - scraper
-          - manual
 
 permissions:
   contents: write
@@ -103,7 +94,6 @@ jobs:
           python-version: "3.11"
 
       - name: Cache Playwright browsers
-        if: ${{ inputs.dratings_mode != 'manual' }}
         uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
@@ -124,11 +114,9 @@ jobs:
             nhl-sdv-season-v2-
 
       - name: Install Playwright system dependencies
-        if: ${{ inputs.dratings_mode != 'manual' }}
         run: python -m playwright install-deps chromium
 
       - name: Install Playwright Chromium
-        if: ${{ inputs.dratings_mode != 'manual' }}
         run: python -m playwright install chromium
 
       - name: Create required NHL directories
@@ -175,8 +163,6 @@ jobs:
           python -m py_compile docs/win/hockey/nhl/scripts/00_intake/nhl_odds_pull.py
           python -m py_compile docs/win/hockey/nhl/scripts/00_intake/transform_hockey_odds.py
           python -m py_compile docs/win/hockey/nhl/scripts/00_intake/transform_hockey.py
-          python -m py_compile docs/win/hockey/nhl/scripts/00_intake/hockey_manual_predictions.py
-          python -m py_compile docs/win/hockey/nhl/scripts/00_intake/hockey_manual_final_scores.py
           python -m py_compile docs/win/hockey/nhl/scripts/00_intake/pull_nhl_schedule.py
           python -m py_compile docs/win/hockey/nhl/scripts/00_intake/reconcile_game_ids.py
           python -m py_compile docs/win/hockey/nhl/scripts/00_intake/build_games.py
@@ -231,12 +217,8 @@ jobs:
           fi
 
       - name: Run NHL D-Ratings scraper
-        if: ${{ steps.current_slate.outputs.has_games == 'true' && inputs.dratings_mode != 'manual' }}
+        if: steps.current_slate.outputs.has_games == 'true'
         run: python docs/win/hockey/nhl/scripts/00_intake/hockey_drat_scraper.py
-
-      - name: Validate committed manual NHL prediction files
-        if: ${{ steps.current_slate.outputs.has_games == 'true' && inputs.dratings_mode == 'manual' }}
-        run: python docs/win/hockey/nhl/scripts/00_intake/hockey_manual_predictions.py --validate-existing --date "$DATE"
 
       - name: Transform NHL predictions
         if: steps.current_slate.outputs.has_games == 'true'

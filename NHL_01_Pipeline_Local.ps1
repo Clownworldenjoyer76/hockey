@@ -106,7 +106,10 @@ function Invoke-Checked {
         # Native tools sometimes write harmless progress to stderr on Windows.
         # Display all output without returning it as a PowerShell function value.
         $ErrorActionPreference = 'Continue'
-        & $Executable @Arguments 2>&1 | Out-Host
+        # Keep native stderr on the console. In Windows PowerShell 5.1,
+        # redirecting native stderr with 2>&1 turns harmless Git progress
+        # into NativeCommandError records.
+        & $Executable @Arguments | Out-Host
         $exitCode = $LASTEXITCODE
     }
     finally { $ErrorActionPreference = $previous }

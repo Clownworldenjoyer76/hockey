@@ -34,6 +34,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from collections import defaultdict
 import json
+import math
 import shutil
 import sys
 import time
@@ -4230,11 +4231,6 @@ def compute_lineup_team_metrics(
     # unrecognized club labels otherwise drop player shifts.
     prior_shifts = normalize_historical_shift_team_names(prior_shifts, prior_pbp)
 
-    rapm = nhl.nhl_skater_rapm(
-        prior_pbp,
-        prior_shifts,
-    )
-
     # Independently rebuilt 5v5 WAR + official NHL PP/PK, penalty and faceoff
     # contributions. Uses current season source PBP/shifts and official NHL
     # game reports, not a CSV or archive in Downloads.
@@ -4242,6 +4238,14 @@ def compute_lineup_team_metrics(
     verified_team_war, war_audit = compute_all_32_war(prior_pbp, prior_shifts)
     if war_audit["teams"] != 32:
         raise RuntimeError("Verified NHL WAR must contain all 32 teams")
+    # The independent WAR calculation returns exactly the per-team, verified
+    # 5v5 skater RAPM on the same corrected model/ridge and its accepted stints.
+    # This replaces nhl.nhl_skater_rapm(), which used invalid 5v5 lineups.
+    verified_team_rapm = war_audit.get("verified_team_rapm")
+    if not isinstance(verified_team_rapm, dict) or set(verified_team_rapm) != set(verified_team_war):
+        raise RuntimeError("Verified NHL 5v5 RAPM must cover the same 32 teams as WAR")
+    if any(not math.isfinite(float(v)) for v in verified_team_rapm.values()):
+        raise RuntimeError("Verified NHL 5v5 RAPM has invalid team scores")
 
     special = nhl.nhl_special_teams_value(
         prior_pbp,
@@ -4265,15 +4269,7 @@ def compute_lineup_team_metrics(
     player_team = _shift_player_team_weights(prior_shifts)
 
     metric_maps = {
-        "skater_rapm": (
-            _player_metric_by_team(
-                rapm,
-                player_team,
-                value_col="xg_rapm",
-                mode="weighted_mean",
-                weight_col="toi_minutes",
-            )
-        ),
+        "skater_rapm": verified_team_rapm,
         "skater_war": verified_team_war,
         "pp_value": (
             _player_metric_by_team(

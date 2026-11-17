@@ -835,6 +835,45 @@ def _model_and_player_times(records):
     return model,rates,residual
 
 
+
+def team_rapm_from_verified_5v5(model, rates, game_teams):
+    """Team TOI-weighted adjusted net xG/60 from *only* verified 5v5 stints.
+
+    Rates are (offensive xGF/60 coefficient, defensive xGA suppression/60)
+    from the independent WAR ridge model. Weight each player's net rate by
+    exactly the verified seconds he played for the corresponding game/team;
+    this prevents traded skaters from being attributed to the wrong club.
+    """
+    duration_by_team = collections.defaultdict(list)
+    weighted_by_team = collections.defaultdict(list)
+    for (game_id, player_id, side), raw_seconds in model['game_toi'].items():
+        game_id, player_id = int(game_id), int(player_id)
+        require(game_id in game_teams,
+                f'RAPM game absent from verified source {game_id}')
+        home, away = game_teams[game_id]
+        require(side in ('home', 'away'), f'Invalid RAPM side {game_id}/{side}')
+        club = home if side == 'home' else away
+        require(player_id in rates, f'RAPM missing model player {game_id}/{player_id}')
+        seconds = number(raw_seconds)
+        require(seconds > 0, f'Invalid verified RAPM exposure {game_id}/{player_id}: {seconds}')
+        offense, defense = map(number, rates[player_id])
+        duration_by_team[club].append(seconds)
+        weighted_by_team[club].append((offense + defense) * seconds)
+    require(set(duration_by_team) == set(sum(([h, a] for h, a in game_teams.values()), [])),
+            'RAPM validated 5v5 exposure does not cover every club')
+    result = {}
+    for club in sorted(duration_by_team):
+        seconds = math.fsum(duration_by_team[club])
+        require(seconds > 0, f'No verified 5v5 RAPM seconds for {club}')
+        value = math.fsum(weighted_by_team[club]) / seconds
+        require(math.isfinite(value), f'Non-finite verified 5v5 RAPM for {club}')
+        result[club] = value
+    print(f'WAR VERIFIED TEAM RAPM | clubs={len(result)} '
+          f'verified_skater_seconds={math.fsum(math.fsum(v) for v in duration_by_team.values()):.0f}',
+          flush=True)
+    return result
+
+
 def compute_all_32_war(prior_pbp, prior_shifts):
     """Produce WAR from prior games, independent of all Downloads audit artifacts.
 
@@ -894,6 +933,11 @@ def compute_all_32_war(prior_pbp, prior_shifts):
     five,ev_reject_counts,ev_scored_totals,ev_examples = _build_verified_5v5_ev(prior_shifts,scored,records)
     model,rates,normal_residual=_model_and_player_times(five)
     require(model['game_set']==ids,'Five-on-five source does not cover every historical game')
+    # Use the *same* NHL-confirmed 5v5 design and ridge coefficients for both
+    # WAR and team skater_rapm; never rerun the unvalidated SDV RAPM path.
+    verified_team_rapm=team_rapm_from_verified_5v5(model,rates,source_pair)
+    require(set(verified_team_rapm)==expected_clubs,
+            'WAR verified RAPM does not contain the expected 32 clubs')
     side_toi={}
     for (gid,pid,side),seconds in model['game_toi'].items():
         club=source_pair[gid][0 if side=='home' else 1]
@@ -1029,6 +1073,7 @@ def compute_all_32_war(prior_pbp, prior_shifts):
     for team in sorted(team_war):
         print(f'WAR TEAM | {team} | WAR={team_war[team]:+.8f}',flush=True)
     return team_war, {'teams':len(team_war),'games':len(records),'players':len(player_parts),
+       'verified_team_rapm':verified_team_rapm,
        'player_games':len(output),'verified_special_teams_shots':verified_shots,
        'five_on_five_observations':int(model['X'].shape[0]),
        'ridge_normal_equation_residual':normal_residual,
@@ -1063,6 +1108,20 @@ def reconstruct_official_shift_timeline(charts, plays):
     return out
 
 def selftest():
+    # Test verified shift-time weighting (not raw SDV shift-time weighting),
+    # including a player who changes teams between games.
+    fake_model={'game_toi':{
+        (1,10,'home'):60.,(1,11,'home'):120.,(1,12,'away'):90.,
+        (2,10,'away'):180.,(2,13,'home'):60.,
+    }}
+    fake_rates={10:(0.6,0.2),11:(-0.1,-0.3),12:(0.1,0.0),13:(0.5,-0.1)}
+    fake_teams={1:('AAA','BBB'),2:('BBB','AAA')}
+    fake_result=team_rapm_from_verified_5v5(fake_model,fake_rates,fake_teams)
+    require(set(fake_result)=={'AAA','BBB'},'Verified RAPM incomplete team mapping')
+    require(abs(fake_result['AAA'] - ((0.8*60.-0.4*120.+0.8*180.)/360.))<1e-12,
+            'Verified RAPM traded-skater and TOI weighting')
+    require(abs(fake_result['BBB'] - ((0.1*90.+0.4*60.)/150.))<1e-12,
+            'Verified RAPM team and defensive sign')
     require(_ev_name_abbrev('Utah Mammoth')=='UTA', '2026 Utah Mammoth source team mapping')
     require(_ev_name_abbrev('Utah Hockey Club')=='UTA', '2024 Utah historical source mapping')
     require(_ev_name_abbrev('UTA')=='UTA', 'Utah NHL abbreviation mapping')

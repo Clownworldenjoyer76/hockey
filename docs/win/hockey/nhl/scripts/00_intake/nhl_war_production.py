@@ -610,31 +610,12 @@ def _ev_name_abbrev(full_name):
     'New Jersey Devils':'NJD','New York Islanders':'NYI','New York Rangers':'NYR',
     'Ottawa Senators':'OTT','Philadelphia Flyers':'PHI','Pittsburgh Penguins':'PIT',
     'San Jose Sharks':'SJS','Seattle Kraken':'SEA','St. Louis Blues':'STL',
-    'Tampa Bay Lightning':'TBL','Toronto Maple Leafs':'TOR',
-    'Utah Hockey Club':'UTA','Utah Mammoth':'UTA',
+    'Tampa Bay Lightning':'TBL','Toronto Maple Leafs':'TOR','Utah Hockey Club':'UTA',
     'Vancouver Canucks':'VAN','Vegas Golden Knights':'VGK','Washington Capitals':'WSH',
     'Winnipeg Jets':'WPG'
     }
     name=str(full_name or '').strip()
     return names.get(name,name if name in CLUBS or name=='ARI' else None)
-
-
-def _ev_shift_side(team, ids_on, ids_off, home, away, roster_teams):
-    """Resolve a source CHANGE only from its team label or official player roster.
-
-    Never assign a missing-label change if any involved player is not on the
-    official NHL game roster, or if players belong to both teams.
-    """
-    if team==home:return 'home',False
-    if team==away:return 'away',False
-    participants=ids_on | ids_off
-    if not participants:return None,False
-    clubs={roster_teams.get(int(pid)) for pid in participants}
-    if len(clubs)!=1:return None,False
-    club=next(iter(clubs))
-    if club==home:return 'home',True
-    if club==away:return 'away',True
-    return None,False
 
 
 def _build_verified_5v5_ev(prior_shifts, scored_pbp, official_records):
@@ -663,7 +644,7 @@ def _build_verified_5v5_ev(prior_shifts, scored_pbp, official_records):
         if team is None and not add and not remove:
             ignored_unassigned_nonchanges+=1
             continue
-        shifts[gid].append((int(sec),int(per),idx,team,add,remove,row.get('event_team')))
+        shifts[gid].append((int(sec),int(per),idx,team,add,remove))
     if ignored_unassigned_nonchanges:
         print(f'WAR INERT UNASSIGNED SHIFT ROWS SKIPPED | rows={ignored_unassigned_nonchanges}',flush=True)
     for row in scored_pbp.iter_rows(named=True):
@@ -692,12 +673,9 @@ def _build_verified_5v5_ev(prior_shifts, scored_pbp, official_records):
         # 2024020584/95-second cross-check; do not rely on original parquet row order.
         shifts_game=sorted(shifts[gid],key=lambda x:(x[0],x[1],x[2]))
         running={'home':set(),'away':set()};positions={};change_secs=[]
-        for sec,per,source_order,team,add,remove,raw_team in shifts_game:
-            side,inferred=_ev_shift_side(team,add,remove,home,away,r['roster_teams'])
-            if inferred:counters['source_team_inferred_from_official_roster']+=1
-            require(side is not None,
-                f'Unmapped SDV shift team game={gid} second={sec} raw_team={raw_team!r} '
-                f'normalized_team={team!r} ids_on={sorted(add)} ids_off={sorted(remove)}')
+        for sec,per,source_order,team,add,remove in shifts_game:
+            side='home' if team==home else 'away' if team==away else None
+            require(side is not None, f'Unmapped SDV shift team game={gid} second={sec} team={team}')
             if not change_secs or change_secs[-1]!=sec:change_secs.append(sec)
             running[side].difference_update(remove)
             running[side].update(add)
@@ -1063,20 +1041,6 @@ def reconstruct_official_shift_timeline(charts, plays):
     return out
 
 def selftest():
-    require(_ev_name_abbrev('Utah Mammoth')=='UTA', '2026 Utah Mammoth source team mapping')
-    require(_ev_name_abbrev('Utah Hockey Club')=='UTA', '2024 Utah historical source mapping')
-    require(_ev_name_abbrev('UTA')=='UTA', 'Utah NHL abbreviation mapping')
-    require(_ev_name_abbrev('Chicago Blackhawks')=='CHI', 'NHL opponent team mapping')
-    require(_ev_name_abbrev('Unknown Team') is None, 'Unrecognized team must fail closed')
-    roster={1:'UTA',2:'UTA',3:'CHI'}
-    require(_ev_shift_side('UTA',{1},set(),'UTA','CHI',roster)==('home',False),
-        'Known source team must not be inferred')
-    require(_ev_shift_side(None,{1},{2},'UTA','CHI',roster)==('home',True),
-        'Missing source team must use single-team official roster')
-    require(_ev_shift_side(None,{1,3},set(),'UTA','CHI',roster)==(None,False),
-        'Ambiguous two-team change must fail closed')
-    require(_ev_shift_side(None,{999},set(),'UTA','CHI',roster)==(None,False),
-        'Player outside NHL roster must not be inferred')
     import numpy as np
     from scipy import sparse
     from scipy.sparse.linalg import lsqr

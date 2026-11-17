@@ -630,12 +630,23 @@ def _build_verified_5v5_ev(prior_shifts, scored_pbp, official_records):
     import collections,bisect,math
     events=collections.defaultdict(list)
     shifts=collections.defaultdict(list)
+    ignored_unassigned_nonchanges=0
     for idx,row in enumerate(prior_shifts.iter_rows(named=True)):
         gid=int(row['game_id'])
         sec=row.get('game_seconds');per=row.get('period')
         if sec is None or per is None:continue
         team=_ev_name_abbrev(row.get('event_team'))
-        shifts[gid].append((int(sec),int(per),idx,team,_ev_ids(row.get('ids_on')),_ev_ids(row.get('ids_off'))))
+        add,remove=_ev_ids(row.get('ids_on')),_ev_ids(row.get('ids_off'))
+        # SDV includes non-personnel records with no team, including period
+        # markers. No player enters or leaves: such a row cannot alter a
+        # lineup and must not introduce an artificial stint boundary.
+        # Unknown-team records with actual personnel changes still fail closed.
+        if team is None and not add and not remove:
+            ignored_unassigned_nonchanges+=1
+            continue
+        shifts[gid].append((int(sec),int(per),idx,team,add,remove))
+    if ignored_unassigned_nonchanges:
+        print(f'WAR INERT UNASSIGNED SHIFT ROWS SKIPPED | rows={ignored_unassigned_nonchanges}',flush=True)
     for row in scored_pbp.iter_rows(named=True):
         gid=int(row['game_id']);sec=row.get('game_seconds')
         if sec is not None:events[gid].append((int(sec),row))

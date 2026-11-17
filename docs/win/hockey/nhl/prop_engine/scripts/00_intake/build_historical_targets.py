@@ -1,28 +1,38 @@
 #!/usr/bin/env python3
-"""Build NHL 2009-10 through 2025-26 player-game outcome records.
+"""Build NHL historical player-game outcomes for the future props engine.
 
-INPUT (READ ONLY):
-  G:/hockey/docs/win/hockey/nhl/research/sdv_history/{schedules,player_boxscores}/season_YYYY.parquet
-OUTPUT (WRITES ONLY):
-  C:/Users/Mat/Downloads/nhl_historical_player_game_targets_2009_2025.csv
-  C:/Users/Mat/Downloads/nhl_historical_player_game_targets_2009_2025_summary.csv
-  C:/Users/Mat/Downloads/nhl_historical_player_game_targets_2009_2025_manifest.json
+Repository location:
+    docs/win/hockey/nhl/prop_engine/scripts/00_intake/build_historical_targets.py
 
-- One row per official (game_id, player_id) from SportsDataverse player_boxscores.
-- Only regular season (02/R) and playoffs (03/P); three user-approved game exceptions.
-- Use TOI strictly for played / did-not-play / unknown classification.
-- Zero/unknown TOI: keep identity, blank OUTCOME columns, never treat as a zero.
-- The seventh validated prop fields: five skater + two goalie; plus a distinct
-  power_play_goals field when observed. No power-play assists or points inferred.
-- Does not calculate sportsbook settlement eligibility or pregame features.
-- Schedule game_date is the training date; player-boxscore dates are also kept.
-- Every date difference is reported; >1 day or multiple source dates flags the output for review.
-- No repository modifications, network calls, or package installation.
+Read-only input by default:
+    <NHL root>/research/sdv_history/{schedules,player_boxscores}/season_YYYY.parquet
+
+Outputs by default (no repository writes):
+    <current user's Downloads>/nhl_historical_player_game_targets_START_END.csv
+    <current user's Downloads>/nhl_historical_player_game_targets_START_END_summary.csv
+    <current user's Downloads>/nhl_historical_player_game_targets_START_END_date_discrepancies.csv
+    <current user's Downloads>/nhl_historical_player_game_targets_START_END_manifest.json
+
+--history overrides the source folder. --output-dir (alias --downloads)
+overrides the output folder for deliberate downstream integration.
+--start-season and --end-season use NHL starting years; the verified default
+covers 2009-10 through 2025-26. Newer seasons require actual Parquet inputs.
+
+Each row is an official (game_id, player_id). Only NHL regular-season and
+playoff games are included, with the three explicitly approved exclusions.
+TOI>0 identifies participants. Zero/unknown TOI retains identity with blank
+outcomes and is not eligible as a training target. Each source date difference
+is recorded while the audited schedule supplies the canonical game date.
+
+SportsDataverse power_play_goals is power-play GOALS only. Never infer
+power_play_assists or power_play_points from that field. Official NHL saves
+are preserved exactly; never replace saves with shots_against-goals_against.
+No pregame features, odds settlement decisions, network calls or installs.
 """
 
 from __future__ import annotations
 
-BUILDER_VERSION = "2026-11-17-v4"
+BUILDER_VERSION = "2026-11-17-prop-engine-v5"
 
 import argparse
 import csv
@@ -30,7 +40,6 @@ import hashlib
 import json
 import math
 import os
-import re
 import sys
 import tempfile
 from collections import Counter, defaultdict
@@ -69,14 +78,32 @@ OUTPUT_FIELDS = (
     "training_target_available", "goalie_starter_raw",
     *SKATER_FIELDS, OPTIONAL_FIELD, *GOALIE_FIELDS, *ALL_ADDITIONAL_STATS,
 )
-BASE_NAME = "nhl_historical_player_game_targets_2009_2025"
+DEFAULT_START_SEASON = 2009
+DEFAULT_END_SEASON = 2025
+def discover_history_directory() -> Path | None:
+    """Resolve the repository root from this script's installed location."""
+    script = Path(__file__).resolve()
+    for parent in script.parents:
+        if parent.name.lower() == "nhl" and (parent / "prop_engine").is_dir():
+            return parent / "research" / "sdv_history"
+    return None
+
+
+DEFAULT_HISTORY = discover_history_directory()
+DEFAULT_OUTPUT = Path.home() / "Downloads"
+
+
+def output_base_name(start_season: int, end_season: int) -> str:
+    return f"nhl_historical_player_game_targets_{start_season}_{end_season}"
 DATE_AUDIT_FIELDS = ("season", "game_id", "schedule_game_date", "source_player_game_date", "offset_days", "affected_player_rows", "status")
 REQUIRED_SCHEDULE = ("game_id", "game_date", "game_type", "home_team_abbr", "away_team_abbr")
 REQUIRED_BOXSCORES = (
     "game_id", "player_id", "game_date", "team_id", "team_abbrev", "player_name", "sweater_number",
-    "home_away", "position", "toi", "starter", *SKATER_FIELDS, OPTIONAL_FIELD, *GOALIE_FIELDS,
-    *ALL_ADDITIONAL_STATS,
+    "home_away", "position", "toi", *SKATER_FIELDS, *GOALIE_FIELDS,
 )
+# Source availability can evolve; record missing optional source columns,
+# rather than treating missing power-play-goals as zero or inventing data.
+OPTIONAL_BOXSCORES = ("starter", OPTIONAL_FIELD, *ALL_ADDITIONAL_STATS)
 
 
 def fail(message: str) -> None:
@@ -314,21 +341,36 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def read_parquet_checked(pl, path: Path, required: tuple[str, ...]) -> list[dict]:
+def read_parquet_checked(
+    pl, path: Path, required: tuple[str, ...], optional: tuple[str, ...] = (),
+) -> tuple[list[dict], list[str]]:
     if not path.is_file():
         fail(f"Missing required historical Parquet: {path}")
     df = pl.read_parquet(path)
     absent = sorted(set(required) - set(df.columns))
     if absent:
         fail(f"{path}: required columns missing: {absent}")
-    return df.select(list(required)).to_dicts()
+    optional_absent = sorted(set(optional) - set(df.columns))
+    present = list(required) + [x for x in optional if x in df.columns and x not in required]
+    records = df.select(present).to_dicts()
+    for row in records:
+        for column in optional_absent:
+            row[column] = None
+    return records, optional_absent
 
 
-def build(history: Path, downloads: Path) -> None:
+def build(
+    history: Path, output_dir: Path,
+    start_season: int = DEFAULT_START_SEASON,
+    end_season: int = DEFAULT_END_SEASON,
+) -> str:
+    if start_season < 1900 or end_season < start_season or end_season > 9998:
+        fail(f"Invalid NHL starting-year range: {start_season}..{end_season}")
     if not history.is_dir():
         fail(f"Historical Parquet directory not found: {history}")
-    if not downloads.is_dir():
-        fail(f"Downloads folder does not exist: {downloads}")
+    if not output_dir.is_dir():
+        fail(f"Output folder does not exist: {output_dir}")
+    base_name = output_base_name(start_season, end_season)
     try:
         import polars as pl
     except ImportError as exc:
@@ -336,28 +378,34 @@ def build(history: Path, downloads: Path) -> None:
     print(f"BUILDER | {BUILDER_VERSION} | accepts SportsDataverse R/P/PR/A game types", flush=True)
     summaries: list[dict] = []
     source_files: list[dict] = []
+    optional_absent_by_season: dict[str, list[str]] = {}
     totals = Counter()
-    with tempfile.TemporaryDirectory(prefix="nhl_targets_build_", dir=downloads) as td:
+    with tempfile.TemporaryDirectory(prefix="nhl_targets_build_", dir=output_dir) as td:
         temp = Path(td)
-        data_path = temp / f"{BASE_NAME}.csv"
-        summary_path = temp / f"{BASE_NAME}_summary.csv"
-        manifest_path = temp / f"{BASE_NAME}_manifest.json"
-        dates_path = temp / f"{BASE_NAME}_date_discrepancies.csv"
+        data_path = temp / f"{base_name}.csv"
+        summary_path = temp / f"{base_name}_summary.csv"
+        manifest_path = temp / f"{base_name}_manifest.json"
+        dates_path = temp / f"{base_name}_date_discrepancies.csv"
         date_audit = Counter()
         all_source_dates = defaultdict(set)
         keys_seen: set[tuple[str, str]] = set()
         with data_path.open("w", encoding="utf-8-sig", newline="") as fout:
             writer = csv.DictWriter(fout, fieldnames=OUTPUT_FIELDS)
             writer.writeheader()
-            for year in range(2009, 2026):
+            for year in range(start_season, end_season + 1):
                 sch = history / "schedules" / f"season_{year}.parquet"
                 box = history / "player_boxscores" / f"season_{year}.parquet"
                 print(f"SEASON {year}-{str((year+1)%100).zfill(2)} | reading local historical files", flush=True)
-                schedules = read_parquet_checked(pl, sch, REQUIRED_SCHEDULE)
+                schedules, _ = read_parquet_checked(pl, sch, REQUIRED_SCHEDULE)
                 games = parse_schedule(schedules, year)
-                rows = read_parquet_checked(pl, box, REQUIRED_BOXSCORES)
+                rows, optional_absent = read_parquet_checked(
+                    pl, box, REQUIRED_BOXSCORES, OPTIONAL_BOXSCORES
+                )
+                season_label = f"{year}-{str((year + 1) % 100).zfill(2)}"
+                optional_absent_by_season[season_label] = optional_absent
                 counts = Counter()
                 covered: set[str] = set()
+                team_coverage: dict[str, set[str]] = defaultdict(set)
                 season_keys: set[tuple[str, str]] = set()
                 for ix, row in enumerate(rows, 1):
                     record = make_record(row, year, games, ix)
@@ -378,6 +426,7 @@ def build(history: Path, downloads: Path) -> None:
                     season_keys.add(key)
                     keys_seen.add(key)
                     covered.add(record["game_id"])
+                    team_coverage[record["game_id"]].add(record["home_away"])
                     writer.writerow({k: "" if v is None else v for k, v in record.items()})
                     counts["player_game_rows"] += 1
                     counts["skater_rows" if record["position_group"] == "SKATER" else "goalie_rows"] += 1
@@ -391,6 +440,11 @@ def build(history: Path, downloads: Path) -> None:
                 missing_games = sorted(set(games) - covered)
                 if missing_games:
                     fail(f"season {year}: {len(missing_games)} scheduled regular/playoff games have no player boxscore; first IDs: {missing_games[:15]}")
+                one_sided_games = sorted(
+                    gid for gid in covered if team_coverage[gid] != {"HOME", "AWAY"}
+                )
+                if one_sided_games:
+                    fail(f"season {year}: {len(one_sided_games)} games have player rows from only one team; first IDs: {one_sided_games[:15]}")
                 summary = {
                     "season": f"{year}-{str((year+1)%100).zfill(2)}",
                     "official_scheduled_games": len(games),
@@ -408,6 +462,7 @@ def build(history: Path, downloads: Path) -> None:
                     "skater_played_missing_power_play_goals": counts["skater_played_missing_power_play_goals"],
                     "date_discrepant_rows": counts["date_discrepant_rows"],
                     "large_date_discrepant_rows": counts["large_date_discrepant_rows"],
+                    "optional_source_columns_absent": ";".join(optional_absent),
                 }
                 summaries.append(summary)
                 totals.update({k: v for k, v in counts.items()})
@@ -440,9 +495,20 @@ def build(history: Path, downloads: Path) -> None:
                        "GENERATED_WITH_DATE_OFFSETS_AND_DOCUMENTED_PPP_GAP" if date_audit else
                        "GENERATED_WITH_DOCUMENTED_PPP_GAP"),
             "input_root_read_only": str(history),
-            "output_folder": str(downloads),
+            "output_folder": str(output_dir),
+            "season_start_year": start_season,
+            "season_end_year": end_season,
+            "source_optional_columns_absent_by_season": optional_absent_by_season,
             "seasons": [s["season"] for s in summaries],
-            "source": "SportsDataverse local historical Parquet; audited against official NHL boxscores except three documented exclusions",
+            "source": "SportsDataverse local historical Parquet",
+            "official_nhl_api_checked_during_this_build": False,
+            "historical_verification_note": (
+                "A separate 2009-10 through 2025-26 official NHL comparison was "
+                "completed for the original local Parquet snapshot with three "
+                "approved exclusions. Source files may change; compare the SHA-256 "
+                "fingerprints below to the previously verified manifest before "
+                "assuming the same official verification applies."
+            ),
             "game_types": {"2": "regular season", "3": "playoffs"},
             "excluded_game_ids": EXCLUDED,
             "grain": ["game_id", "player_id"],
@@ -462,13 +528,20 @@ def build(history: Path, downloads: Path) -> None:
             "games_with_multiple_source_dates_count": len(inconsistent_source_dates),
             "games_with_multiple_source_dates": inconsistent_source_dates[:1000],
             "total_counts": dict(totals),
-            "output_files": [f"{BASE_NAME}.csv", f"{BASE_NAME}_summary.csv", f"{BASE_NAME}_date_discrepancies.csv", f"{BASE_NAME}_manifest.json"],
+            "output_files": [f"{base_name}.csv", f"{base_name}_summary.csv", f"{base_name}_date_discrepancies.csv", f"{base_name}_manifest.json"],
             "source_files_sha256": source_files,
         }
+        # These hashes let the future engine verify the exact generated target
+        # files; the manifest itself is deliberately excluded from this mapping.
+        manifest["generated_files_sha256"] = {
+            path.name: sha256(path)
+            for path in (data_path, summary_path, dates_path)
+        }
         manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-        # Publish only after every one of the 17 seasons passes structural checks.
+        # Publish after all selected seasons pass structural checks. Manifest is
+        # published last; downstream readers must check its status.
         for path in (data_path, summary_path, dates_path, manifest_path):
-            dest = downloads / path.name
+            dest = output_dir / path.name
             os.replace(path, dest)
             print(f"REPORT | {dest}", flush=True)
     print(f"STATUS | {manifest['status']} | rows={totals['player_game_rows']} | games={totals['games_with_player_records']}", flush=True)
@@ -476,18 +549,32 @@ def build(history: Path, downloads: Path) -> None:
         print("WARNING: Unknown TOI or missing power-play goals exists; inspect summary and manifest before using these targets.", file=sys.stderr, flush=True)
     if date_review:
         print("WARNING: Date inconsistencies larger than one day, or multiple source dates within one game, require review before training.", file=sys.stderr, flush=True)
+    if incomplete or date_review:
+        return "REQUIRES_REVIEW"
+    return "COMPLETE"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--history", required=True, type=Path, help="Read-only SDV historical Parquet root")
-    parser.add_argument("--downloads", required=True, type=Path, help="Only output folder")
+    parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY,
+                        help="Read-only SDV historical Parquet root; defaults to the NHL repository's research/sdv_history")
+    parser.add_argument("--output-dir", "--downloads", dest="output_dir", type=Path,
+                        default=DEFAULT_OUTPUT, help="Destination for all four output reports; defaults to the current user's Downloads")
+    parser.add_argument("--start-season", type=int, default=DEFAULT_START_SEASON,
+                        help="First NHL season starting year (default 2009)")
+    parser.add_argument("--end-season", type=int, default=DEFAULT_END_SEASON,
+                        help="Last NHL season starting year (default 2025)")
     args = parser.parse_args()
-    try:
-        build(args.history, args.downloads)
-    except Exception as exc:
-        print(f"FAILED | {exc} | No completed output files were published by this run", file=sys.stderr)
+    if args.history is None:
+        print("FAILED | Cannot locate NHL repository from script location; provide --history", file=sys.stderr)
         return 1
+    try:
+        result = build(args.history, args.output_dir, args.start_season, args.end_season)
+    except Exception as exc:
+        print(f"FAILED | {exc} | Completed outputs are not published when source validation fails", file=sys.stderr)
+        return 1
+    if result != "COMPLETE":
+        return 2  # Outputs available, but incomplete source fields or date anomalies need review.
     return 0
 
 

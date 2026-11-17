@@ -238,6 +238,11 @@ def html_shift_intervals(raw, gid, side, jersey, official_player_ids):
                 if pid not in official_player_ids or per=='SO':continue
                 period=4 if per=='OT' else int(per)
                 if not 1<=period<=5:continue
+                # NHL report per-period summary rows have plain time cells,
+                # not the elapsed/remaining pair used by genuine shift rows.
+                # Reject the summaries: they create fictitious player shifts.
+                if '/' not in chunk[2] or '/' not in chunk[3]:
+                    continue
                 start=chunk[2].split('/')[0].strip()
                 end=chunk[3].split('/')[0].strip()
                 try:
@@ -356,7 +361,8 @@ def create_model(stints, valid_games=None):
         home=tuple(int(p) for p in (rec['home_ids'] or []));away=tuple(int(p) for p in (rec['away_ids'] or []))
         require(len(set(home))==len(home) and len(set(away))==len(away),'Repeated player in 5v5 stint')
         require(not (set(home)&set(away)),f'Player assigned both clubs in {gid}')
-        if len(home)!=5 or len(away)!=5:bad_lineups.append({'game_id':gid,'home_count':len(home),'away_count':len(away),'duration_s':sec})
+        require(len(home)==len(away)==5,
+                f'Invalid 5v5 RAPM personnel in {gid}: home={len(home)} away={len(away)}')
         xh=number(rec['xgf_home']);xa=number(rec['xgf_away'])
         require(xh>=0 and xa>=0,f'Negative xG in game {gid}')
         observed_games.add(gid)
@@ -524,6 +530,196 @@ def _official_events(official):
     return count
 
 
+
+"""Conservative, production-score-preserving 5v5 RAPM source reconstruction.
+
+Uses the already downloaded NHL official per-player shifts, official play-by-play
+situation codes, and correctly period-ordered SDV source change events. Any
+unsupported or contradictory exposure is discarded, never guessed.
+"""
+
+def _ev_ids(text):
+    if not text:
+        return set()
+    if isinstance(text,(tuple,list,set)):
+        return {int(p) for p in text if p is not None and str(p).strip().isdigit() and int(p)>0}
+    return {int(p) for item in str(text).split(',') if (p:=item.strip()).isdigit() and int(p)>0}
+
+
+def _ev_official_clock(period, stamp):
+    if stamp is None or period is None:
+        return None
+    parts=str(stamp).split(':')
+    if len(parts)!=2:
+        return None
+    try:
+        minutes,seconds=int(parts[0]),int(parts[1])
+        if not (0<=minutes<=20 and 0<=seconds<60):return None
+        return (int(period)-1)*1200+minutes*60+seconds
+    except (TypeError,ValueError):
+        return None
+
+
+def _ev_verified_timeline(shift_lists):
+    # Official per-player shift intervals (not inferred SDV in/out changes).
+    # Counters preserve overlapping/duplicated rows without falsely ending a
+    # still-live player shift when one of two overlapping copies ends.
+    edges=collections.defaultdict(lambda:[[],[]])
+    for side in ('home','away'):
+        for a,b,pid in shift_lists.get(side,[]):
+            a,b,pid=int(a),int(b),int(pid)
+            if 0<=a<b and b<=6000:
+                edges[a][1].append((side,pid))
+                edges[b][0].append((side,pid))
+    if not edges:return [],[]
+    active={'home':collections.Counter(),'away':collections.Counter()}
+    boundaries=sorted(edges);segments=[]
+    for a,b in zip(boundaries,boundaries[1:]):
+        off,on=edges[a]
+        for side,p in off:active[side][p]-=1
+        for side,p in on:active[side][p]+=1
+        for side in ('home','away'):
+            for p,c in list(active[side].items()):
+                if c<=0:del active[side][p]
+        if a<b:
+            segments.append((a,b,frozenset(active['home']),frozenset(active['away'])))
+    return segments,[s[0] for s in segments]
+
+
+def _ev_official_exact(segments,starts,start,end,home,away):
+    if not segments or not start<end:return False
+    idx=max(0,bisect.bisect_right(starts,start)-1)
+    covered=0
+    while idx<len(segments) and segments[idx][0]<end:
+        a,b,h,v=segments[idx];length=max(0,min(b,end)-max(a,start))
+        if length:
+            if h!=home or v!=away:return False
+            covered+=length
+        idx+=1
+    return covered==end-start
+
+
+def _ev_name_abbrev(full_name):
+    names={
+    'Anaheim Ducks':'ANA','Arizona Coyotes':'ARI','Boston Bruins':'BOS','Buffalo Sabres':'BUF',
+    'Calgary Flames':'CGY','Carolina Hurricanes':'CAR','Chicago Blackhawks':'CHI',
+    'Colorado Avalanche':'COL','Columbus Blue Jackets':'CBJ','Dallas Stars':'DAL',
+    'Detroit Red Wings':'DET','Edmonton Oilers':'EDM','Florida Panthers':'FLA',
+    'Los Angeles Kings':'LAK','Minnesota Wild':'MIN','Montreal Canadiens':'MTL',
+    'Montréal Canadiens':'MTL','MontrÃ©al Canadiens':'MTL','Nashville Predators':'NSH',
+    'New Jersey Devils':'NJD','New York Islanders':'NYI','New York Rangers':'NYR',
+    'Ottawa Senators':'OTT','Philadelphia Flyers':'PHI','Pittsburgh Penguins':'PIT',
+    'San Jose Sharks':'SJS','Seattle Kraken':'SEA','St. Louis Blues':'STL',
+    'Tampa Bay Lightning':'TBL','Toronto Maple Leafs':'TOR','Utah Hockey Club':'UTA',
+    'Vancouver Canucks':'VAN','Vegas Golden Knights':'VGK','Washington Capitals':'WSH',
+    'Winnipeg Jets':'WPG'
+    }
+    name=str(full_name or '').strip()
+    return names.get(name,name if name in CLUBS or name=='ARI' else None)
+
+
+def _build_verified_5v5_ev(prior_shifts, scored_pbp, official_records):
+    """Independently rebuild only NHL-verified 5v5 stints, using scored xG.
+
+    Replaces SDV build_stints *for RAPM exposure only*. PP/PK attribution
+    continues to use the existing separately verified NHL shot-on-ice logic.
+    Accepts Polars inputs but performs source-to-official joins in Python so
+    same-second period order, invalid NHL states and corrupt CHANGE events
+    can be checked exactly. No shift feed is modified.
+    """
+    import collections,bisect,math
+    events=collections.defaultdict(list)
+    shifts=collections.defaultdict(list)
+    for idx,row in enumerate(prior_shifts.iter_rows(named=True)):
+        gid=int(row['game_id'])
+        sec=row.get('game_seconds');per=row.get('period')
+        if sec is None or per is None:continue
+        team=_ev_name_abbrev(row.get('event_team'))
+        shifts[gid].append((int(sec),int(per),idx,team,_ev_ids(row.get('ids_on')),_ev_ids(row.get('ids_off'))))
+    for row in scored_pbp.iter_rows(named=True):
+        gid=int(row['game_id']);sec=row.get('game_seconds')
+        if sec is not None:events[gid].append((int(sec),row))
+    require(set(shifts)==set(events)==set(official_records),
+        f'5v5 official game coverage mismatch: shifts={len(shifts)}, PBP={len(events)}, NHL={len(official_records)}')
+    accepted=[];rejected=[];counters=collections.Counter();scores=collections.Counter()
+    for game_idx,gid in enumerate(sorted(official_records),1):
+        if game_idx%100==0:print('VERIFY EV',game_idx,'/',len(official_records),flush=True)
+        r=official_records[gid]
+        home,away=r['home'],r['away']
+        goalie_ids=set(map(int,r['goalies']))
+        roster={side:{int(pid) for pid,t in r['roster_teams'].items() if t==(home if side=='home' else away) and pid not in goalie_ids}
+                for side in ('home','away')}
+        official_segments,official_starts=_ev_verified_timeline(r['shifts'])
+        official_events=[]
+        for entry in r['pbp'].get('plays') or []:
+            descriptor=entry.get('periodDescriptor') or {}
+            if str(descriptor.get('periodType') or '').upper()=='SO':continue
+            sec=_ev_official_clock(descriptor.get('number') or entry.get('period'),entry.get('timeInPeriod'))
+            if sec is not None:official_events.append((sec,str(entry.get('situationCode') or '')))
+        official_events.sort(key=lambda x:x[0]);official_secs=[x[0] for x in official_events]
+        e=sorted(events[gid],key=lambda x:x[0]);evsecs=[row[0] for row in e]
+        # Important: period order *inside tied game_seconds* is verified from
+        # 2024020584/95-second cross-check; do not rely on original parquet row order.
+        shifts_game=sorted(shifts[gid],key=lambda x:(x[0],x[1],x[2]))
+        running={'home':set(),'away':set()};positions={};change_secs=[]
+        for sec,per,source_order,team,add,remove in shifts_game:
+            side='home' if team==home else 'away' if team==away else None
+            require(side is not None, f'Unmapped SDV shift team game={gid} second={sec} team={team}')
+            if not change_secs or change_secs[-1]!=sec:change_secs.append(sec)
+            running[side].difference_update(remove)
+            running[side].update(add)
+            positions[sec]=(frozenset(running['home']-goalie_ids),frozenset(running['away']-goalie_ids))
+        # Exclude the synthetic end-of-regulation +1 second entirely. NHL
+        # regular-season 5v5 does not extend beyond the regulation clock.
+        end=min(3600,max(evsecs,default=0)+1)
+        boundaries=[s for s in change_secs if s<end]
+        if not boundaries:continue
+        if boundaries[-1]!=end:boundaries.append(end)
+        for a,b in zip(boundaries,boundaries[1:]):
+            if b<=a:continue
+            start=bisect.bisect_left(evsecs,a);stop=bisect.bisect_left(evsecs,b)
+            window=[row for sec,row in e[start:stop]]
+            if not window:continue
+            states=[str(x.get('strength_state')) for x in window if x.get('strength_state') is not None]
+            if not states:continue
+            # Match SDV 0.0.75 mode semantics; at a tied maximum choose the
+            # lexicographically first strength, not first encountered event.
+            state_counts=collections.Counter(states)
+            max_state_count=max(state_counts.values())
+            modal_state=min(k for k,n in state_counts.items() if n==max_state_count)
+            if modal_state!='5v5':continue
+            counters['source_modal_5v5_intervals']+=1
+            ids_h,ids_a=positions[a]
+            why=None
+            if len(ids_h)!=5 or len(ids_a)!=5:why='source_wrong_skater_count'
+            elif not ids_h<=roster['home'] or not ids_a<=roster['away']:why='skater_not_official_game_roster'
+            elif any(s!='5v5' for s in states):why='source_mixed_strength'
+            elif not _ev_official_exact(official_segments,official_starts,a,b,ids_h,ids_a):why='official_shift_personnel_disagreement'
+            else:
+                lo=bisect.bisect_left(official_secs,a);hi=bisect.bisect_left(official_secs,b)
+                codes=[code for _,code in official_events[lo:hi] if code]
+                if not codes:why='missing_official_pbp_situation'
+                elif any(code!='1551' for code in codes):why='official_pbp_non5v5_situation'
+            xh=math.fsum(float(x.get('xg') or 0.) for x in window if x.get('event_team_abbr')==home)
+            xa=math.fsum(float(x.get('xg') or 0.) for x in window if x.get('event_team_abbr')==away)
+            require(math.isfinite(xh) and math.isfinite(xa) and xh>=0 and xa>=0,
+                f'Invalid scored PBP xG game {gid} seconds {a}-{b}: {xh}/{xa}')
+            scores['source_5v5_xg']+=xh+xa
+            if why:
+                counters['excluded_'+why]+=1;scores['excluded_scored_xg']+=xh+xa
+                rejected.append({'game_id':gid,'start_s':a,'end_s':b,'home_count':len(ids_h),'away_count':len(ids_a),'cause':why,'scored_xg':xh+xa})
+                continue
+            accepted.append({'game_id':gid,'strength_state':'5v5','start_s':a,'end_s':b,'duration':b-a,
+                'home_ids':sorted(ids_h),'away_ids':sorted(ids_a),'xgf_home':xh,'xgf_away':xa})
+            counters['admitted_verified_5v5_intervals']+=1;scores['admitted_scored_xg']+=xh+xa
+    require(accepted,'No NHL-verified 5v5 RAPM intervals')
+    require(all(len(set(r['home_ids']))==len(set(r['away_ids']))==5 for r in accepted),
+        'NHL-verified 5v5 reconstruction leaked invalid player counts')
+    require({int(r['game_id']) for r in accepted}==set(official_records),
+        'NHL-verified 5v5 reconstruction lost game coverage')
+    print('WAR VERIFIED 5v5 SOURCE | '+str(dict(counters))+' | scores='+str(dict(scores)),flush=True)
+    return accepted,dict(counters),dict(scores),rejected
+
 def _valid_stints_with_goalies_removed(stints,goalies_by_game):
     """Return 5v5+all-state personnel stints; keep source xG unchanged."""
     result=[]
@@ -657,7 +853,12 @@ def compute_all_32_war(prior_pbp, prior_shifts):
     require({'game_id','strength_state','home_ids','away_ids','duration','xgf_home','xgf_away','start_s','end_s'}.issubset(stints.columns),
             'NHL shift-stint source schema differs from audited WAR model')
     original=_valid_stints_with_goalies_removed(stints,goalie_ids)
-    five=[r for r in original if str(r['strength_state'])=='5v5']
+    # NHL official shifts are required to agree with every skater ID for the
+    # full interval. No unverified or physically impossible 5v5 time enters RAPM.
+    # Same-second SDV shift changes are period-ordered in this independent
+    # reconstruction; the upstream SDV build_stints remains used for verified
+    # PP/PK event fallback, not for 5v5 modeling.
+    five,ev_reject_counts,ev_scored_totals,ev_examples = _build_verified_5v5_ev(prior_shifts,scored,records)
     model,rates,normal_residual=_model_and_player_times(five)
     require(model['game_set']==ids,'Five-on-five source does not cover every historical game')
     side_toi={}

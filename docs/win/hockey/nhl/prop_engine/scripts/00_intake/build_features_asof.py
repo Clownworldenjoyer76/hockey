@@ -38,7 +38,7 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-VERSION = "2026-11-17-asof-v2-prop-engine"
+VERSION = "2026-11-17-asof-v2-prop-engine-rolefix1"
 TARGET_BASE = "nhl_historical_player_game_targets_2009_2025"
 STAT_FIELDS = ("shots_on_goal", "points", "assists", "goals", "blocked_shots", "power_play_goals", "saves", "goals_against")
 TEAM_METRICS = ("goals_for", "goals_against", "shots_on_goal", "blocked_shots", "goalie_saves", "goalie_goals_against")
@@ -489,7 +489,7 @@ def candidate_slate(root: Path, slate_date: str, schedule: dict, snapshots: dict
     candidates = {}
     counts = defaultdict(int)
     if path.is_file():
-        for ix, r in enumerate(read_csv(path, ("game_id", "CapturedUTC", "player_id", "team_abbrev", "position", "lineup_updated_utc")), 2):
+        for ix, r in enumerate(read_csv(path, ("game_id", "CapturedUTC", "player_id", "team_abbrev", "lineup_group", "lineup_category", "position", "lineup_updated_utc")), 2):
             gid = canonical_id(r["game_id"], f"{path.name} row {ix} game_id")
             if gid not in schedule:
                 continue
@@ -506,14 +506,33 @@ def candidate_slate(root: Path, slate_date: str, schedule: dict, snapshots: dict
             if team not in (sc["home"],sc["away"]):
                 fail(f"Lineup player {pid} in game {gid} has wrong team {team}")
             side = "HOME" if team == sc["home"] else "AWAY"
-            pos = r["position"].strip().upper()
-            # Positions are sourced from the lineup; goalies are also captured in goalie snapshots.
-            role = "GOALIE" if pos in ("G", "GOALIE") else "SKATER"
+            # The lineup's 'position' is a SLOT, not an NHL position:
+            # goalies are g1/g2 with lineup_group=g, while PP/PK slots
+            # are sk1..sk5 and injury-only rows use category=oi.
+            # Only even-strength lineup participants are valid candidates.
+            group = r["lineup_group"].strip().lower()
+            category = r["lineup_category"].strip().lower()
+            pos = r["position"].strip().lower()
+            if category != "ev":
+                counts["non_ev_lineup_rows_skipped"] += 1
+                continue
+            if group == "g":
+                if not re.fullmatch(r"g\d+", pos):
+                    fail(f"Invalid goalie lineup slot {pos!r} for game {gid} player {pid}")
+                role = "GOALIE"
+            elif re.fullmatch(r"[fd]\d+", group):
+                if pos not in ("lw", "c", "rw", "ld", "rd"):
+                    fail(f"Invalid skater lineup slot {pos!r} for game {gid} player {pid}")
+                role = "SKATER"
+            else:
+                fail(f"Unknown even-strength lineup group {group!r} for game {gid} player {pid}")
             rec = {"season":sc["season"], "game_id":gid,"game_date":slate_date,"game_type":gid[4:6].lstrip("0"),"player_id":pid,
                    "team":team,"opponent_team":sc["away"] if side=="HOME" else sc["home"],
                    "home_away":side,"position_group":role,"candidate_source":"LINE_COMBINATIONS", "candidate_captured_utc":to_iso(stamped)}
             key = (gid,pid)
             old = candidates.get(key)
+            if old and (old["position_group"] != role or old["team"] != team):
+                fail(f"Conflicting lineup identity for game {gid} player {pid}")
             if not old or stamped > dt_utc(old["candidate_captured_utc"], "stored lineup capture"):
                 candidates[key] = rec
         counts["lineup_candidates"] = len(candidates)
@@ -532,8 +551,8 @@ def candidate_slate(root: Path, slate_date: str, schedule: dict, snapshots: dict
             if key not in candidates:
                 candidates[key]=rec
                 counts["goalie_candidates_added"] += 1
-            elif candidates[key]["position_group"] != "GOALIE":
-                fail(f"Inconsistent goalie vs skater role for game {gid} player {goalie['id']}")
+            elif candidates[key]["position_group"] != "GOALIE" or candidates[key]["team"] != team:
+                fail(f"Inconsistent goalie identity (role/team) for game {gid} player {goalie['id']}")
     for gid, sc in schedule.items():
         for team in (sc["home"], sc["away"]):
             if not any(c["game_id"] == gid and c["team"] == team and c["position_group"] == "SKATER" for c in candidates.values()):

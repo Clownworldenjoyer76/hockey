@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the NHL player props pipeline in its specified seven-step order.
+"""Run the NHL player props pipeline in its specified eight-step order.
 
 1. Refresh completed player stats from official NHL results via build_historical_targets.
 2. Today's lineups and starting goalies.
@@ -8,6 +8,7 @@
 5. Recalculate ALL dates' selections with current markets.yaml.
 6. Grade forecasts from fully completed historical dates only.
 7. Grade ALL selection dates (unfinished ones remain PENDING).
+8. Summarize graded bets by market, side, line, probability, and odds ranges.
 
 No step writes to Downloads. Any failed step stops the pipeline.
 """
@@ -78,33 +79,35 @@ def historical_prediction_files(today: str):
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--grade-only', action='store_true',
-                        help='After games finish, only run steps 1, 6 and 7')
+                        help='After games finish, only run steps 1, 6, 7 and 8')
     args=parser.parse_args(argv)
     today=datetime.now(ZoneInfo('America/New_York')).strftime('%Y-%m-%d')
     if not TARGETS.is_file():
         raise FileNotFoundError(f'Missing existing historical targets: {TARGETS}')
-    run_script('1/7 - Update completed NHL player-game statistics',
+    run_script('1/8 - Update completed NHL player-game statistics',
                SCRIPTS/'00_intake'/'build_historical_targets.py','--refresh-daily')
     if not args.grade_only:
-        run_script('2/7 - Capture today\'s lineups and goalies',
+        run_script('2/8 - Capture today\'s lineups and goalies',
                    SCRIPTS/'00_intake'/'todays_starters.py')
-        run_script('3/7 - Capture today\'s sportsbook props',
+        run_script('3/8 - Capture today\'s sportsbook props',
                    SCRIPTS/'00_intake'/'get_props.py')
-        run_script('4/7 - Generate player predictions',
+        run_script('4/8 - Generate player predictions',
                    SCRIPTS/'01_predict'/'predict_player_stats.py',
                    '--slate-date',today,'--targets',str(TARGETS))
-        run_script('5/7 - Recompute all dated selections',
+        run_script('5/8 - Recompute all dated selections',
                    SCRIPTS/'03_select'/'select_nhl_props.py','--all-dates')
     completed = historical_prediction_files(today)
     if completed:
-        run_script('6/7 - Evaluate completed-game predictions',
+        run_script('6/8 - Evaluate completed-game predictions',
                    SCRIPTS/'02_evaluate'/'compare_prediction_accuracy.py',
                    '--predictions',*completed,'--targets',str(TARGETS))
     else:
-        print('6/7 - No fully completed prior-date predictions; evaluation skipped',flush=True)
-    run_script('7/7 - Grade selected OVER/UNDER bets',
+        print('6/8 - No fully completed prior-date predictions; evaluation skipped',flush=True)
+    run_script('7/8 - Grade selected OVER/UNDER bets',
                SCRIPTS/'04_final'/'grader.py','--all-dates')
-    print('\nPIPELINE COMPLETE | current selection files and grading refreshed',flush=True)
+    run_script('8/8 - Summarize graded bets by market and ranges',
+               SCRIPTS/'04_final'/'grade_by_market_range.py')
+    print('\nPIPELINE COMPLETE | current selection files, grading and range summaries refreshed',flush=True)
     return 0
 
 

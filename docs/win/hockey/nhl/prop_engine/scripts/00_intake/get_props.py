@@ -40,7 +40,7 @@ ET = ZoneInfo("America/New_York")
 PROP_ENGINE_ROOT = Path(__file__).resolve().parents[2]
 NHL_ROOT = PROP_ENGINE_ROOT.parent
 OUTPUT_FIELDS = (
-    "date", "game_id", "player", "line", "market",
+    "date", "game_id", "player", "player_id", "line", "market",
     "over_odds", "under_odds", "timestamp",
 )
 
@@ -344,6 +344,75 @@ def load_games(day: str, nhl_root: Path) -> list[tuple[str, str]]:
     return games
 
 
+def official_nhl_ids(day: str, nhl_root: Path, records: list[dict]) -> tuple[int, int]:
+    """Resolve ESPN prop names to the NHL player_id using the same roster
+    verification as todays_starters.py. Never publish an ESPN ID as an NHL ID.
+    Unresolved IDs remain blank, as in the line-combinations export.
+    """
+    from todays_starters import PlayerResolver, normalized, read_team_map
+
+    team_map = read_team_map()
+    names_to_abbrevs: dict[str, set[str]] = defaultdict(set)
+    for abbr, item in team_map.items():
+        names_to_abbrevs[normalized(item["team"])].add(abbr)
+        names_to_abbrevs[normalized(item["official_alias"])].add(abbr)
+
+    reconciliation = nhl_root / "00_intake" / "reconciled" / f"NHL_{day}.csv"
+    game_teams: dict[str, tuple[str, str]] = {}
+    with reconciliation.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if not {"game_id", "game_date", "home_team", "away_team"}.issubset(reader.fieldnames or []):
+            raise ValueError(f"Missing game/team fields in {reconciliation}")
+        for row in reader:
+            if row["game_date"].replace("-", "_") != day:
+                continue
+            game_id = row["game_id"].strip()
+            resolved_teams = []
+            for side in ("home", "away"):
+                name = row[f"{side}_team"].strip()
+                choices = names_to_abbrevs.get(normalized(name), set())
+                if len(choices) != 1:
+                    raise ValueError(f"Unverified {side} team {name!r} in {reconciliation}")
+                resolved_teams.append(next(iter(choices)))
+            if resolved_teams[0] == resolved_teams[1] or game_id in game_teams:
+                raise ValueError(f"Duplicate or invalid NHL matchup: {game_id}")
+            game_teams[game_id] = tuple(resolved_teams)
+
+    resolver = PlayerResolver(game_date=day.replace("_", "-"), team_map=team_map)
+    cache: dict[tuple[str, str, str], str] = {}
+    matched = missing = 0
+    for record in records:
+        game_id = record["game_id"]
+        if game_id not in game_teams:
+            raise ValueError(f"Unrecognized NHL game_id {game_id} in prop results")
+        name = str(record["player"]).strip()
+        role = "goalies" if record["market"] == "Saves" else "skater"
+        key = (game_id, normalized(name), role)
+        if key not in cache:
+            verified = set()
+            for team in game_teams[game_id]:
+                try:
+                    player_id = resolver.resolve(team, name,
+                                                 role="goalies" if role == "goalies" else None)
+                except (ValueError, FileNotFoundError, RuntimeError, OSError):
+                    continue
+                if role == "skater" and (resolver.last_match or {}).get("position_group") == "goalies":
+                    continue
+                verified.add(str(player_id))
+            cache[key] = next(iter(verified)) if len(verified) == 1 else ""
+            if not cache[key]:
+                print(f"WARNING: official NHL player_id unresolved for game={game_id} "
+                      f"player={name!r}; CSV player_id will be blank", file=sys.stderr)
+        # The internal ID on an ESPN record is NOT the NHL ID. Overwrite it
+        # only with a verified NHL ID, or leave blank on unresolved identity.
+        record["player_id"] = cache[key]
+        if record["player_id"]:
+            matched += 1
+        else:
+            missing += 1
+    return matched, missing
+
+
 def captured_at_utc() -> str:
     """UTC timestamp taken after an ESPN event response was received."""
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -450,6 +519,9 @@ def run(day: str, *, nhl_root: Path = NHL_ROOT,
             # identifies the player when the name endpoint is unavailable.
             name = record["player_id"]
         complete.append({**record, "player": name})
+
+    verified, unresolved_ids = official_nhl_ids(day, nhl_root, complete)
+    print(f"OFFICIAL NHL PLAYER IDS | verified_rows={verified} | unresolved_rows={unresolved_ids}")
 
     output = prop_root / "00_intake" / f"{day}_nhl_props_data.csv"
     count = write_daily_csv(

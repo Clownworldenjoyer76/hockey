@@ -157,6 +157,36 @@ def validate_source_row(
             if observed > snapshot or observed > cutoff:
                 error(f"Post-cutoff {side} {label} observation: {where}")
 
+    if family == "lineup-strength":
+        war = {}
+        for name in (
+            "home_skater_war",
+            "away_skater_war",
+            "skater_war_differential",
+        ):
+            raw = (row.get(name) or "").strip()
+            if not raw:
+                war[name] = None
+                continue
+            try:
+                value = float(raw)
+            except ValueError:
+                error(f"Non-numeric lineup WAR {name}={raw!r}: {where}")
+            if not math.isfinite(value):
+                error(f"Non-finite lineup WAR {name}={raw!r}: {where}")
+            war[name] = value
+
+        home = war["home_skater_war"]
+        away = war["away_skater_war"]
+        difference = war["skater_war_differential"]
+        if home is not None and away is not None:
+            if difference is None or not math.isclose(
+                home - away, difference, rel_tol=0.0, abs_tol=1e-7
+            ):
+                error(f"Incorrect lineup WAR differential: {where}")
+        elif difference is not None:
+            error(f"Lineup WAR differential without both team values: {where}")
+
 
 def make_key(
     row: dict[str, str],
@@ -322,24 +352,44 @@ def prepare_history() -> None:
                 )
                 alternatives.append((path, header, rows))
 
-            # WAR archives must be completely and consistently recalculated before restoration.
-            # Validate EVERY same-day lineup candidate; a partially restored old-formula
-            # archive must fail rather than silently overwrite a repaired one.
-            # Preserve the original earlier-file selection for all families because
-            # the stored season rows can have distinct later snapshot timestamps.
+            # Different pregame source snapshots legitimately yield different WAR
+            # after additional prior games become available. Only snapshots with
+            # the same game ID AND the same underlying source timestamp must
+            # agree. checked_rows validates every candidate's T-60 cutoff and
+            # internal WAR arithmetic, regardless of whether it is selected.
             if family == "lineup-strength" and len(alternatives) > 1:
-                snapshot_war = {}
+                snapshot_war: dict[
+                    tuple[tuple[str, ...], datetime],
+                    tuple[tuple[str, str, str], Path],
+                ] = {}
                 for alternative_path, _, alternative_rows in alternatives:
                     for candidate_row in alternative_rows:
                         candidate_key = make_key(candidate_row, key_fields)
-                        triplet = tuple((candidate_row.get(column) or "").strip()
-                                        for column in ("home_skater_war", "away_skater_war",
-                                                       "skater_war_differential"))
-                        if candidate_key in snapshot_war and any(not _same_archived_war(a, b) for a, b in zip(triplet, snapshot_war[candidate_key][0])):
-                            error("Unrepaired lineup WAR archive conflict: "
-                                  f"{candidate_key} "
-                                  f"{snapshot_war[candidate_key][1]} versus {alternative_path}")
-                        snapshot_war[candidate_key] = (triplet, alternative_path)
+                        source_timestamp = utc_stamp(
+                            candidate_row["lineup_snapshot_as_of_utc"],
+                            str(alternative_path),
+                        )
+                        source_key = (candidate_key, source_timestamp)
+                        triplet = tuple(
+                            (candidate_row.get(column) or "").strip()
+                            for column in (
+                                "home_skater_war",
+                                "away_skater_war",
+                                "skater_war_differential",
+                            )
+                        )
+                        previous = snapshot_war.get(source_key)
+                        if previous is not None and any(
+                            not _same_archived_war(left, right)
+                            for left, right in zip(triplet, previous[0])
+                        ):
+                            error(
+                                "Conflicting lineup WAR for identical source "
+                                f"snapshot: {candidate_key} at "
+                                f"{source_timestamp.isoformat()} "
+                                f"{previous[1]} versus {alternative_path}"
+                            )
+                        snapshot_war[source_key] = (triplet, alternative_path)
             # Prefer most complete; retain originally selected archive on ties.
             selected = min(
                 alternatives,

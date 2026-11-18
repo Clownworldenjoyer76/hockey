@@ -6086,6 +6086,150 @@ def test_nhl_sdv_restore_rejects_duplicate_headers(
     with pytest.raises(RuntimeError, match="Missing or duplicate CSV headers"):
         module.prepare_history()
 
+# Regression tests: historical lineup WAR validation and source provenance.
+def _lineup_history_fixture(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+):
+    module = load_repo_module(
+        "docs/win/hockey/nhl/scripts/01_merge/restore_nhl_sdv_history.py"
+    )
+    sdv = tmp_path / "sdv"
+    folder = sdv / "lineup-strength"
+    folder.mkdir(parents=True)
+    monkeypatch.setattr(module, "SDV", sdv)
+    monkeypatch.setattr(
+        module,
+        "FAMILIES",
+        {"lineup-strength": module.FAMILIES["lineup-strength"]},
+    )
+    row = {
+        "game_id": "2026020333",
+        "game_date": "2026-11-17",
+        "home_team": "BOS",
+        "away_team": "LAK",
+        "pregame_cutoff_utc": "2026-11-18T00:00:00Z",
+        "lineup_decision_cutoff_utc": "2026-11-17T23:00:00Z",
+        "lineup_decision_cutoff_source": "fixed_60_minutes_before_puck_drop",
+        "lineup_snapshot_as_of_utc": "2026-11-16T21:06:56.653144Z",
+        "home_skater_rapm": "0.35",
+        "away_skater_rapm": "0.31",
+        "home_skater_war": "-0.5422979304601732",
+        "away_skater_war": "2.4626763160691607",
+        "skater_war_differential": "-3.0049742465293336",
+        "home_pp_value": "1.2",
+        "away_pp_value": "0.8",
+        "home_pk_value": "0.2",
+        "away_pk_value": "0.3",
+        "home_forward_line_strength": "0.5",
+        "away_forward_line_strength": "0.4",
+        "home_defense_pair_strength": "0.4",
+        "away_defense_pair_strength": "0.3",
+        "home_lineup_status": "unknown",
+        "away_lineup_status": "unknown",
+        "home_lineup_observed_at": "",
+        "away_lineup_observed_at": "",
+        "home_lineup_source": "fixture",
+        "away_lineup_source": "fixture",
+    }
+    return module, folder, row
+
+
+def _write_lineup_history_snapshot(
+    folder: Path, timestamp: str, row: dict[str, str]
+) -> Path:
+    path = folder / f"2026_11_17T{timestamp}_ET_game_lineup_features_asof.csv"
+    pd.DataFrame([row]).to_csv(path, index=False)
+    return path
+
+
+def test_nhl_sdv_restore_accepts_refreshed_pregame_war(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module, folder, earlier = _lineup_history_fixture(tmp_path, monkeypatch)
+    _write_lineup_history_snapshot(folder, "030316", earlier)
+    later = dict(earlier)
+    later.update({
+        "lineup_snapshot_as_of_utc": "2026-11-17T21:01:31.280935Z",
+        "home_skater_war": "-1.1399897234137117",
+        "away_skater_war": "2.5575251086879436",
+        "skater_war_differential": "-3.697514832101655",
+    })
+    _write_lineup_history_snapshot(folder, "164702", later)
+
+    module.prepare_history()
+    season = folder / "season_2026_game_lineup_features_asof.csv"
+    restored = pd.read_csv(season, dtype=str).to_dict("records")
+    assert len(restored) == 1
+    assert restored[0]["game_id"] == earlier["game_id"]
+    assert restored[0]["lineup_snapshot_as_of_utc"] == earlier["lineup_snapshot_as_of_utc"]
+    assert restored[0]["home_skater_war"] == earlier["home_skater_war"]
+    module.prepare_history()  # Repeated runs must be idempotent.
+
+
+def test_nhl_sdv_restore_prefers_more_complete_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module, folder, earlier = _lineup_history_fixture(tmp_path, monkeypatch)
+    _write_lineup_history_snapshot(folder, "030316", earlier)
+    later = dict(earlier)
+    later["lineup_snapshot_as_of_utc"] = "2026-11-17T21:01:31Z"
+    later["home_skater_war"] = "-1.0"
+    later["away_skater_war"] = "2.5"
+    later["skater_war_differential"] = "-3.5"
+    extra = dict(later)
+    extra["game_id"] = "2026020334"
+    path = folder / "2026_11_17T164702_ET_game_lineup_features_asof.csv"
+    pd.DataFrame([later, extra]).to_csv(path, index=False)
+    module.prepare_history()
+    season = pd.read_csv(folder / "season_2026_game_lineup_features_asof.csv", dtype=str)
+    assert len(season) == 2
+    assert (season["lineup_snapshot_as_of_utc"] == later["lineup_snapshot_as_of_utc"]).all()
+
+
+def test_nhl_sdv_restore_rejects_same_source_war_conflict(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module, folder, earlier = _lineup_history_fixture(tmp_path, monkeypatch)
+    _write_lineup_history_snapshot(folder, "030316", earlier)
+    later = dict(earlier)
+    later["home_skater_war"] = "-1.0"
+    later["skater_war_differential"] = str(
+        float(later["home_skater_war"]) - float(later["away_skater_war"])
+    )
+    _write_lineup_history_snapshot(folder, "164702", later)
+    with pytest.raises(RuntimeError, match="identical source snapshot"):
+        module.prepare_history()
+
+
+@pytest.mark.parametrize(
+    "bad_values,expected_error",
+    [
+        ({"home_skater_war": "nan"}, "Non-finite lineup WAR"),
+        ({"away_skater_war": "inf"}, "Non-finite lineup WAR"),
+        ({"home_skater_war": "not-a-number"}, "Non-numeric lineup WAR"),
+        ({"skater_war_differential": "999"}, "Incorrect lineup WAR differential"),
+        ({"skater_war_differential": ""}, "Incorrect lineup WAR differential"),
+        (
+            {"home_skater_war": "", "skater_war_differential": "2"},
+            "Lineup WAR differential without both team values",
+        ),
+        (
+            {"lineup_snapshot_as_of_utc": "2026-11-17T23:00:01Z"},
+            "Unsafe lineup decision/snapshot cutoff",
+        ),
+    ],
+)
+def test_nhl_sdv_restore_rejects_invalid_lineup_war_or_cutoff(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    bad_values: dict[str, str], expected_error: str,
+) -> None:
+    module, folder, earlier = _lineup_history_fixture(tmp_path, monkeypatch)
+    earlier.update(bad_values)
+    _write_lineup_history_snapshot(folder, "030316", earlier)
+    with pytest.raises(RuntimeError, match=expected_error):
+        module.prepare_history()
+
+
 # ---------------------------------------------------------------------
 # NHL canonical sportsbook payout regression tests (2026-11-04)
 # ---------------------------------------------------------------------

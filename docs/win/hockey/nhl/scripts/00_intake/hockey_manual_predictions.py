@@ -118,7 +118,16 @@ def load_team_ids(path: Path | None = None) -> dict[str, str]:
                 continue
             key = norm_team(row["alias"])
             tid = str(row["nhl_team_id"]).strip()
-            canonical = norm_team(row["canonical_team"])
+            canonical_name = str(row["canonical_team"]).strip()
+            abbrev = str(row["nhl_abbrev"]).strip()
+            # Shared TBD playoff placeholders intentionally have no NHL team ID.
+            # The normal NHL team-map loader accepts these same placeholders.
+            # Reject malformed placeholders rather than inventing an identity.
+            if canonical_name == "TBD":
+                if row["source"].strip().lower() != "shared" or not key or tid or abbrev:
+                    raise ValueError(f"Invalid NHL TBD placeholder in {path} row {line}")
+                continue
+            canonical = norm_team(canonical_name)
             if not key or not tid.isdecimal() or not canonical:
                 raise ValueError(f"Invalid NHL identity in {path} row {line}")
             if key in result and result[key] != tid:

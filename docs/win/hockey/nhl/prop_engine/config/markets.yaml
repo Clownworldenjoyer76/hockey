@@ -1,0 +1,130 @@
+# Editable NHL player prop selection filters.
+# Markets here use the exact market names in the prediction CSV.
+# pick_preference:
+#   best_prob = select whichever eligible side has the higher model probability
+#   over      = select OVER only (if OVER passes its filters)
+#   under     = select UNDER only (if UNDER passes its filters)
+#   both      = write a separate row for every eligible side
+# Range values are inclusive. Multiple ranges are OR: any listed range may pass.
+# An empty list [] means no restriction on that field.
+# To restrict, for example, replace [] with:
+#   line: [[0.50, 1.499]]
+#   prob: [[0.60, 0.65]]
+#   odds: [[-250, -139], [150, 300]]
+# When a side's odds are missing, the odds filter is skipped for that side.
+# Other filters (enabled / line / prob) still apply.
+# goals_against uses the model threshold for a goalie present in the odds
+# intake file when no goals_against sportsbook line exists; odds stay blank.
+# Defaults: all markets/sides enabled, no range restrictions, best probability.
+
+shots_on_goal:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+
+points:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+
+assists:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+
+goals:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+
+blocked_shots:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+
+power_play_points:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+
+saves:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+
+goals_against:
+  enabled: true
+  pick_preference: best_prob
+  over:
+    enabled: true
+    line: []
+    prob: []
+    odds: []
+  under:
+    enabled: true
+    line: []
+    prob: []
+    odds: []

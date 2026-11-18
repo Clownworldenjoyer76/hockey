@@ -1,130 +1,117 @@
-# Editable NHL player prop selection filters.
-# Markets here use the exact market names in the prediction CSV.
-# pick_preference:
-#   best_prob = select whichever eligible side has the higher model probability
-#   over      = select OVER only (if OVER passes its filters)
-#   under     = select UNDER only (if UNDER passes its filters)
-#   both      = write a separate row for every eligible side
-# Range values are inclusive. Multiple ranges are OR: any listed range may pass.
-# An empty list [] means no restriction on that field.
-# To restrict, for example, replace [] with:
-#   line: [[0.50, 1.499]]
-#   prob: [[0.60, 0.65]]
-#   odds: [[-250, -139], [150, 300]]
-# When a side's odds are missing, the odds filter is skipped for that side.
-# Other filters (enabled / line / prob) still apply.
-# goals_against uses the model threshold for a goalie present in the odds
-# intake file when no goals_against sportsbook line exists; odds stay blank.
-# Defaults: all markets/sides enabled, no range restrictions, best probability.
+# EDITABLE NHL prop filters. Ranges are INCLUSIVE; multiple ranges are OR.
+# These are initial numeric selection rules, NOT backtested profitability thresholds.
+# Missing prices bypass odds filters. Use 'best_prob', 'over', 'under', or 'both'.
+# Probability is 0.00 to 1.00. Lines use actual sportsbook thresholds;
+# goals_against uses the prediction threshold if no sportsbook line exists.
 
 shots_on_goal:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 5.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 350]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 5.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 350]]
 
 points:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 2.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 2.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]
 
 assists:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 1.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 500]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 1.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-350, -100], [100, 400]]
 
 goals:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 1.5]]
+    prob: [[0.25, 1.0]]
+    odds: [[-250, -100], [100, 3000]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 1.5]]
+    prob: [[0.70, 1.0]]
+    odds: [[-600, -100], [100, 500]]
 
 blocked_shots:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 4.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 4.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]
 
 power_play_points:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 1.5]]
+    prob: [[0.25, 1.0]]
+    odds: [[-250, -100], [100, 2000]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 1.5]]
+    prob: [[0.60, 1.0]]
+    odds: [[-500, -100], [100, 400]]
 
 saves:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[15.5, 39.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[15.5, 39.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]
 
 goals_against:
   enabled: true
   pick_preference: best_prob
   over:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 5.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]
   under:
     enabled: true
-    line: []
-    prob: []
-    odds: []
+    line: [[0.5, 5.5]]
+    prob: [[0.55, 1.0]]
+    odds: [[-300, -100], [100, 400]]

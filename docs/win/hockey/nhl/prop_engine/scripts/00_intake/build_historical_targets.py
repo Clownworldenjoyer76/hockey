@@ -90,7 +90,7 @@ def discover_history_directory() -> Path | None:
 
 
 DEFAULT_HISTORY = discover_history_directory()
-DEFAULT_OUTPUT = Path.home() / "Downloads"
+DEFAULT_OUTPUT = Path(__file__).resolve().parents[2] / "data"
 
 
 def output_base_name(start_season: int, end_season: int) -> str:
@@ -579,4 +579,10 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # Standard pipeline step: acquire and validate NEW daily official NHL results.
+    # Explicit original history-builder CLI arguments still rebuild old Parquets.
+    if len(sys.argv) == 1 or "--refresh-daily" in sys.argv[1:]:
+        from refresh_targets_official import main as _refresh_main
+        params = [part for part in sys.argv[1:] if part != "--refresh-daily"]
+        raise SystemExit(_refresh_main(params))
     raise SystemExit(main())

@@ -1,19 +1,19 @@
 {
   "builder_version": "2026-11-17-asof-v2-prop-engine-rolefix1",
   "mode": "slate",
-  "generated_utc": "2026-11-18T19:24:13.623243+00:00",
+  "generated_utc": "2026-11-18T21:27:01.108799+00:00",
   "strict_history_policy": "source game_date < target game_date; no same-day target outcomes used",
   "snapshot_policy": "CapturedUTC strictly before official NHL start_time_utc and no later than requested prediction as-of UTC; blank updates do not override nonblank for the same goalie ID; changing goalie ID resets prior status",
-  "prediction_as_of_utc": "2026-11-18T19:23:57Z",
+  "prediction_as_of_utc": "2026-11-18T21:26:45Z",
   "player_candidates_historical": "target-table participation derived postgame; history features themselves use only prior-day games",
   "no_pregame_history_timestamp": "historical target outcomes have only game_date; date-strict exclusion is deliberately conservative",
   "power_play_points": "NOT GENERATED; power_play_goals is separate",
   "historical_source": "G:\\hockey\\docs\\win\\hockey\\nhl\\prop_engine\\data\\nhl_historical_player_game_targets_2009_2026.csv",
-  "historical_source_sha256": "07d08e3ec18f6d523e90dbda69b3440a18207182a0526d4a5004d0af1a914d9e",
+  "historical_source_sha256": "f74e7b4b4406a8ebc2dfbe89e2a6bfb322f245a904179638b2b7b3febea403a0",
   "historical_input": {
-    "rows": 889458,
-    "played": 848119,
-    "not_played": 41339,
+    "rows": 889898,
+    "played": 848539,
+    "not_played": 41359,
     "seasons": [
       "2009-10",
       "2010-11",
@@ -35,7 +35,7 @@
       "2026-27"
     ],
     "first_date": "2009-10-01",
-    "last_date": "2026-11-16"
+    "last_date": "2026-11-17"
   },
   "goalie_source_dir": "G:\\hockey\\docs\\win\\hockey\\nhl\\00_intake\\lineups",
   "dated_goalie_files": 7,
@@ -62,5 +62,5 @@
     }
   },
   "snapshot_availability_note": "Verified schedule start, prestart captured goalies and ratings only",
-  "output_sha256": "c0b9346b43c2a85538eeaa7664815ed3acb3e3f5bc64cfa35359cfebd3015d48"
+  "output_sha256": "62ce18a45ab18de481aa6773aa572108a73272c32ce8474fae8bc2e75f4e92c0"
 }

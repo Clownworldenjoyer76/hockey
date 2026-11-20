@@ -38,7 +38,7 @@ NHL = v1.NHL
 OUT = NHL / 'my_probability' / 'independent_v5'
 RAW = OUT / 'official_schedule_cache'
 SRC = 'https://api-web.nhle.com/v1/schedule/{date}'
-MODEL_ID = 'independent_v5_multiseason_20261119'
+MODEL_ID = 'independent_v5_multiseason_20261119_datefix1'
 EPS = 1e-7
 PENALTIES = (2.0, 15.0, 60.0, 200.0)
 FEATURE_SETS = {
@@ -131,12 +131,32 @@ def extract_games(payload):
     if not isinstance(days, list):
         raise ValueError('NHL schedule API gameWeek missing or invalid')
     found = []
-    for day in days:
-        if not isinstance(day, dict):
+    for entry in days:
+        if not isinstance(entry, dict):
             continue
-        for game in day.get('games') or []:
-            if isinstance(game, dict):
-                found.append(game)
+        games = entry.get('games') or []
+        if not isinstance(games, list):
+            raise ValueError('NHL schedule gameWeek games must be a list')
+        if not games:
+            continue
+        # The NHL week endpoint provides the authoritative calendar date on
+        # each gameWeek DAY. Individual game objects can omit gameDate.
+        parent_date = str(entry.get('date') or '').strip()
+        try:
+            date.fromisoformat(parent_date)
+        except ValueError as exc:
+            raise ValueError(f'Invalid official gameWeek day date: {parent_date}') from exc
+        for game in games:
+            if not isinstance(game, dict):
+                continue
+            child_date = str(game.get('gameDate') or '').strip()
+            if child_date and child_date != parent_date:
+                raise ValueError(
+                    f'Official NHL game date disagreement for {game.get("id")}: '
+                    f'gameWeek={parent_date}, gameDate={child_date}'
+                )
+            # Never mutate raw cached API payloads.
+            found.append({**game, 'gameDate': child_date or parent_date})
     return found
 
 
@@ -417,7 +437,22 @@ def test_without_network():
         pass
     else:
         raise AssertionError('tied postgame score should not be accepted')
-    print('SELF-TEST PASS: official ID, final-state filter, outcome, invalid score')
+    # Regression: historical schedule games may omit gameDate; it lives on
+    # the enclosing gameWeek day. 2022020001 was previously rejected here.
+    no_date = {**example, 'id': 2022020001}
+    no_date.pop('gameDate')
+    fixture = {'gameWeek': [{'date': '2022-10-07', 'games': [no_date]}]}
+    parsed = extract_games(fixture)
+    assert len(parsed) == 1 and parsed[0]['gameDate'] == '2022-10-07'
+    assert 'gameDate' not in no_date  # cache payload not changed
+    assert parse_completed(parsed[0], 2022)['game_date'] == '2022_10_07'
+    try:
+        extract_games({'gameWeek': [{'date': '2022-10-07', 'games': [{**no_date, 'gameDate': '2022-10-08'}]}]})
+    except ValueError as e:
+        assert 'disagreement' in str(e)
+    else:
+        raise AssertionError('Contradictory NHL dates must fail')
+    print('SELF-TEST PASS: gameWeek date fallback, conflict detection, score and temporal guards')
 
 
 def main():

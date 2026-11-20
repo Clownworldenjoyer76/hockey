@@ -1,0 +1,13 @@
+VERSION xg_maturity_v10_20261120_1
+READ ONLY: no production change; V5/V8/V9 inputs preserved.
+Odds and providers are not model features; no new model trained for selection.
+Feature sources use strictly earlier calendar dates, not independently authenticated capture timestamps.
+Source lag is the newest LEAGUE-WIDE historical event date, NOT a per-team observation age.
+CURRENT 2026_2027: games=358, date_count=52
+Unmatched current/full historical SD ratio: 0.297
+Same first-N-game-dates SD ratio: 0.427
+Age-bin-reweighted reference SD ratio: 0.342
+Raw xG SD and fixed-reference-standardized xG SD have the SAME relative ratio. V8 retrains its scaling on prior dates, but that cannot cause raw xG compression.
+INTERPRETATION: Compression persists after both stage and team-experience matching; inspect PBP xG scale/source construction.
+Age matches are descriptive and may not control schedule quality, opponent effects, or source-model changes.
+All later-season comparisons are exploratory. Do not refit/select on the 2025-27 holdout.

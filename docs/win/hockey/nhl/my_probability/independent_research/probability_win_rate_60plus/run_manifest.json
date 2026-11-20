@@ -1,0 +1,42 @@
+{
+  "created_utc": "2026-11-20T20:14:30.914121+00:00",
+  "task": "60%+ predicted probability must correspond to increasing actual win percentage",
+  "bands": [
+    "60%-<65%",
+    "65%-<70%",
+    "70%+"
+  ],
+  "min_games_per_band": 10,
+  "method": "independent model selected on earlier 2024 games",
+  "2024_model_selection": {
+    "model": "unchanged_V8",
+    "feature_group": NaN,
+    "ridge_penalty": NaN,
+    "cv_training_rule": "each fold trains on earlier 2024 game dates only",
+    "season": "2024_2025_CV",
+    "all_games": 793,
+    "games_at_60plus": 322,
+    "percent_games_at_60plus": 40.605296343001264,
+    "minimum_band_games": 10,
+    "all_bands_adequately_populated": true,
+    "nonincreasing_steps_60plus": 0,
+    "total_downward_win_rate_pp_60plus": -0.0,
+    "strictly_increasing_win_rates_60plus": true,
+    "lowest_60plus_band_win_pct": 57.95454545454545,
+    "highest_60plus_band_win_pct": 85.71428571428571,
+    "top_minus_bottom_win_rate_pp_60plus": 27.759740259740255,
+    "retains_baseline_60plus_coverage": true,
+    "eligible": true,
+    "selection_rank": null
+  },
+  "holdout_result": "NOT_MET_60PLUS_BOTH_SEASONS",
+  "criterion_met_both_seasons": false,
+  "baseline_monotone_both_seasons": false,
+  "candidate_preserves_60plus_coverage_on_both_seasons": true,
+  "no_guarantee_for_unseen_games": true,
+  "D_Ratings_used_as_input": false,
+  "SDV_forecast_used_as_input": false,
+  "market_odds_used_as_input": false,
+  "existing_v8_changed": false,
+  "production_changed": false
+}

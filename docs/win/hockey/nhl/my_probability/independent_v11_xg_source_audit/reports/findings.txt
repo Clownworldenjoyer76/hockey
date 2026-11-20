@@ -1,0 +1,12 @@
+VERSION v11_xg_raw_source_diagnosis_20261120_1
+READ ONLY: V5/V8/V9/V10 unchanged; no network, fitting, calibration, or betting.
+EARLY WINDOW: first 52 distinct regular-season target dates in each season.
+Raw PBP event xG is postgame event data used for source diagnostics, NOT a pregame model input.
+V8 adjusted xG is strictly prior-calendar-day; upstream historical capture timestamps remain unauthenticated.
+Same-stage reference is the mean of 2022-23 and 2023-24 season statistics.
+2026 positive-event xG mean / early reference = 0.849
+2026 raw game xG differential SD / early reference = 0.906
+2026 adjusted prior xG differential SD / early reference = 0.432
+INTERPRETATION: Raw xG is broadly comparable; compression appears downstream in adjusted pregame team ratings or the limited set of prior games.
+The ratios are descriptive; lack of equal game samples, source-model provenance, opponent adjustments and correlated games prevents causal/significance claims.
+Do not tune on the previously inspected 2025-27 periods; no production integration.

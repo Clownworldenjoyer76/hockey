@@ -1,0 +1,8 @@
+V5 official game coverage: 2022-23: 1312, 2023-24: 1312, 2024-25: 1312, 2025-26: 1291, 2026-27: 358
+Historical source snapshot rows: 716. Failing timestamp contracts: 0.
+The SDV P5 history builder supports shifts from NHL start year 2024 (SDV END year 2025); 2022-23 and 2023-24 prior shift-driven goalie/lineup data cannot be reconstructed through this builder.
+Historical cutoff-labelled goalie/lineup snapshots are not independently authenticated as observed pregame; source code can label retrospections with the T-60 cutoff.
+P5 schedules and PBP can support xG as-of reconstruction only when actually present, using source_game_date strictly earlier than target_date.
+No feature entered V5. Do not fit xG, goalies or lineup by imputing entire older seasons to missing; that creates a season/feature availability confound.
+Next safe experiment: populate P5 schedules/PBP for 2022-24; rebuild strict prior-only xG across ALL training and validation seasons; select the xG ablation using 2024-25 only.
+Do not select a new model on 2025-27 holdout results and do not integrate with betting.

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""TEST REPO ONLY. Daily independent NHL moneyline/puck/total side-by-side.
+"""Daily independent NHL moneyline/puck/total side-by-side.
+
+Authorized for local test-repository execution and explicitly enabled
+GitHub Actions execution in Clownworldenjoyer76/hockey.
 
 Reads: local NHL historical results, prior P5 xG, Stage 01 merged, Stage 03
 secondary-signal/EV files. Writes ONLY my_probability/test_repo_side_by_side.
@@ -13,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from collections import defaultdict, deque
 from datetime import datetime, timezone
@@ -58,6 +62,52 @@ COLUMNS = {
 def check(ok, msg):
     if not bool(ok):
         raise ValueError(msg)
+
+
+def authorize_environment():
+    check(
+        tuple(part.lower() for part in ROOT.parts[-4:])
+        == ('docs', 'win', 'hockey', 'nhl'),
+        f'Unexpected NHL repo layout: {ROOT}'
+    )
+
+    running_in_github = (
+        os.environ.get('GITHUB_ACTIONS', '').lower() == 'true'
+    )
+
+    local_test_repo = (
+        not running_in_github
+        and 'test_repo' in {part.lower() for part in ROOT.parts}
+    )
+
+    github_workspace = os.environ.get('GITHUB_WORKSPACE', '')
+
+    authorized_github = (
+        running_in_github
+        and os.environ.get('GITHUB_REPOSITORY', '').lower()
+        == 'clownworldenjoyer76/hockey'
+        and os.environ.get('NHL_ALLOW_INDEPENDENT_COMPARE') == '1'
+        and bool(github_workspace)
+        and ROOT == (
+            Path(github_workspace)
+            / 'docs'
+            / 'win'
+            / 'hockey'
+            / 'nhl'
+        ).resolve()
+    )
+
+    check(
+        local_test_repo or authorized_github,
+        f'SAFETY: unauthorized independent comparison environment: {ROOT}'
+    )
+
+    check(
+        OUT.resolve() == ROOT / 'my_probability' / 'test_repo_side_by_side',
+        f'SAFETY: unexpected comparison output directory: {OUT.resolve()}'
+    )
+
+    return 'GITHUB ACTIONS' if authorized_github else 'LOCAL TEST REPO'
 
 
 def id_normalize(s):
@@ -126,7 +176,7 @@ def requirements(day):
         *[STAGE3/f'{day}_NHL_{m}.csv' for m in COLUMNS]
     ]
     missing=[str(f) for f in files if not f.is_file()]
-    check(not missing, 'The TEST REPO lacks the following inputs:\n  '+ '\n  '.join(missing))
+    check(not missing, 'Independent comparison lacks the following inputs:\n  '+ '\n  '.join(missing))
     return files
 
 
@@ -421,27 +471,44 @@ def self_test():
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--date',help='YYYY_MM_DD; defaults latest Stage 03 day')
-    parser.add_argument('--preflight',action='store_true',help='List missing test-repo source files')
+    parser.add_argument('--preflight',action='store_true',help='List missing independent comparison source files')
     parser.add_argument('--self-test',action='store_true')
     a=parser.parse_args()
+
     if a.self_test:
-        self_test();return
-    check(str(ROOT).lower().endswith('/docs/win/hockey/nhl') or
-          str(ROOT).lower().endswith('\\docs\\win\\hockey\\nhl'),
-          f'Unexpected NHL repo layout: {ROOT}')
-    check('test_repo' in {s.lower() for s in ROOT.parts},
-          f'SAFETY: refusing to run outside G:\\test_repo, got {ROOT}')
+        self_test()
+        return
+
+    environment=authorize_environment()
+
+    print(
+        f'INDEPENDENT COMPARISON AUTHORIZED | '
+        f'environment={environment} | root={ROOT}',
+        flush=True
+    )
+
     day=find_day(a.date)
     requirements(day)
-    print(f'TEST REPO preflight OK | date={day} | all required files exist',flush=True)
-    if a.preflight:return
+
+    print(
+        f'{environment} preflight OK | date={day} | all required files exist',
+        flush=True
+    )
+
+    if a.preflight:
+        return
+
     original,merged=read_stage(day)
     independent=build_independent(day,merged)
     comparison=side_by_side(independent,original)
+
     atomic_csv(independent,OUT/'predictions'/f'{day}_NHL_independent.csv')
     atomic_csv(comparison,OUT/'comparisons'/f'{day}_NHL_three_market_side_by_side.csv')
+
     manifest={'generated_at_utc':datetime.now(timezone.utc).isoformat(),
-      'repo_root':str(ROOT),'date':day,'games':len(independent),
+      'repo_root':str(ROOT),
+      'execution_environment':environment,
+      'date':day,'games':len(independent),
       'compared_market_games':len(comparison),
       'output':'sidecar_only','production_probabilities_changed':False,
       'source_stage03_read_only':True,
@@ -450,13 +517,16 @@ def main():
       'model_total':'nearest 4f k100 inverse distance prior2, retrospectively nominated',
       'models_not_coupled_to_D_Ratings_or_SDV_predictions':True,
       'historical_60plus_pass_does_not_guarantee_future_pass':True}
+
     p=OUT/'manifests'/f'{day}.json'
     p.parent.mkdir(parents=True,exist_ok=True)
     p.write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+
     print('COMPARISON ONLY: original Stage 03 and Stage 04 outputs unchanged.',flush=True)
 
 
 if __name__=='__main__':
-    try:main()
+    try:
+        main()
     except (ValueError,RuntimeError,OSError,ImportError,KeyError) as exc:
         raise SystemExit(f'ERROR: {exc}')

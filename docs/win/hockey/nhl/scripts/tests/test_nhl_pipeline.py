@@ -1404,7 +1404,7 @@ def test_current_team_strength_accepts_only_snapshot_before_pregame_cutoff(
     monkeypatch.setattr(
         module,
         "official_schedule_cutoff_lookup",
-        lambda: {},
+        lambda *args, **kwargs: {},
     )
 
     ratings = (
@@ -3979,7 +3979,7 @@ def test_pull_sdv_goalie_features_use_only_prior_games(
     monkeypatch.setattr(
         module,
         "official_schedule_cutoff_lookup",
-        lambda: {},
+        lambda *args, **kwargs: {},
     )
 
     schedule = module.pl.DataFrame(
@@ -4219,7 +4219,7 @@ def test_pull_sdv_rejects_current_goalie_snapshot_after_t60_cutoff(
     monkeypatch.setattr(
         module,
         "official_schedule_cutoff_lookup",
-        lambda: {},
+        lambda *args, **kwargs: {},
     )
 
     schedule = module.pl.DataFrame(
@@ -4784,7 +4784,7 @@ def test_pull_sdv_lineup_features_use_only_prior_games_and_t60(
     monkeypatch.setattr(
         module,
         "official_schedule_cutoff_lookup",
-        lambda: {},
+        lambda *args, **kwargs: {},
     )
 
     schedule = module.pl.DataFrame(
@@ -4967,7 +4967,7 @@ def test_pull_sdv_rejects_current_lineup_snapshot_after_t60(
     monkeypatch.setattr(
         module,
         "official_schedule_cutoff_lookup",
-        lambda: {},
+        lambda *args, **kwargs: {},
     )
 
     schedule = module.pl.DataFrame(

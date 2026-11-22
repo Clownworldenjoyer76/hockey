@@ -86,6 +86,10 @@ def date_from_prediction_filename(path: Path) -> str:
     return normalize_date(name[len("hockey_") :])
 
 
+def schedule_file_exists(date_value: str) -> bool:
+    return (NHL_SCHEDULE_DIR / f"NHL_{date_value}.csv").is_file()
+
+
 def discover_target_dates() -> list[str]:
     dates: set[str] = set()
 
@@ -101,9 +105,22 @@ def discover_target_dates() -> list[str]:
             if date_value:
                 dates.add(date_value)
 
-    dates.add(datetime.now(ET).strftime("%Y_%m_%d"))
+    today = datetime.now(ET).strftime("%Y_%m_%d")
+    dates.add(today)
 
-    return sorted(dates)
+    # Past schedules do not change: fetch only today/future dates, plus any
+    # past date that has no schedule file yet. YYYY_MM_DD strings sort by date.
+    selected = sorted(
+        date_value
+        for date_value in dates
+        if date_value >= today or not schedule_file_exists(date_value)
+    )
+    log(
+        "Past dates skipped (schedule file exists): "
+        f"{len(dates) - len(selected)}"
+    )
+
+    return selected
 
 
 def get_localized_text(value) -> str:

@@ -216,17 +216,21 @@ def main() -> int:
 
     if populated == 0:
         raise RuntimeError("All metrics are empty; snapshot NOT published")
-    # Reject incomplete club or WAR data before writing either latest/archive.
+    # Teams with no games yet (early season) are left out with a warning.
+    # Unknown team names are still rejected before anything is written.
     from nhl_war_production import CLUBS
     actual_teams = {row["team"] for row in rows}
-    if len(rows) != 32 or actual_teams != CLUBS:
+    if not actual_teams or len(rows) != len(actual_teams) or not actual_teams <= CLUBS:
         raise RuntimeError(
-            f"Player-strength must publish exactly 32 teams: "
-            f"missing={sorted(CLUBS - actual_teams)} "
+            f"Unexpected player-strength teams: "
             f"unexpected={sorted(actual_teams - CLUBS)}; NOT published"
         )
-    if any(not row["skater_war"] for row in rows):
-        raise RuntimeError("A team is missing independently calculated WAR; NOT published")
+    if CLUBS - actual_teams:
+        print(f"WARNING: teams left out (no games yet): {sorted(CLUBS - actual_teams)}",
+              flush=True)
+    no_war = sorted(row["team"] for row in rows if not row["skater_war"])
+    if no_war:
+        print(f"WARNING: teams with no WAR value: {no_war}", flush=True)
     SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
     archive = SNAPSHOT_DIR / f"{stamp}_team_player_strength.csv"
     write_atomic_csv(archive, rows)

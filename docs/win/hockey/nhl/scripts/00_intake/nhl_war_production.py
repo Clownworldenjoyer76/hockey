@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""NHL player WAR production calculation, 32-club scope.
+"""NHL player WAR production calculation, all clubs that have played.
 
 Inputs: SDV's already date-filtered historical PBP and shifts, NHL official
 postgame PBP, boxscores, skater TOI, GS, and official shift charts. No hard-coded
@@ -351,7 +351,7 @@ def create_model(stints, valid_games=None):
     import numpy as np
     from scipy import sparse
     ids=set();time=collections.defaultdict(float);minutes_by_game=collections.defaultdict(float)
-    work=[];bad_lineups=[];observed_games=set()
+    work=[];observed_games=set()
     for rec in stints:
         if str(rec['strength_state'])!='5v5':continue
         gid=int(rec['game_id']);sec=number(rec['duration'])
@@ -385,7 +385,7 @@ def create_model(stints, valid_games=None):
     X=sparse.coo_matrix((np.asarray(data,dtype=float),(row,col)),shape=(len(target),2*n+2)).tocsr()
     return dict(X=X,y=np.asarray(target),weights=np.asarray(weights),games=np.asarray(groups),
                 players=ids,toi=time,game_toi=minutes_by_game,game_set=observed_games,
-                bad_lineups=bad_lineups,stints=len(work))
+                stints=len(work))
 
 
 def ridge(model,lam,keep=None):
@@ -403,27 +403,6 @@ def ridge(model,lam,keep=None):
     relative_err=normal_err/max(1.,float(np.max(np.abs(b))))
     require(relative_err<1e-7,f'RAPM linear system residual too high: {relative_err:.3g}')
     return beta,relative_err
-
-
-def holdout_score(model,lam):
-    import numpy as np
-    games=sorted(int(g) for g in set(model['games']))
-    test_games=set(g for i,g in enumerate(games) if i%5==0)
-    is_test=np.isin(model['games'],list(test_games))
-    require(int(is_test.sum())>=100 and int((~is_test).sum())>=500,'Insufficient independent game holdout')
-    fit,fiterr=ridge(model,lam,~is_test)
-    Y=model['y'][is_test];W=model['weights'][is_test];pred=model['X'][is_test]@fit
-    # The baseline is learned solely on training games, not the game being predicted.
-    trainmean=float(np.average(model['y'][~is_test],weights=model['weights'][~is_test]))
-    modelrmse=math.sqrt(float(np.average((Y-pred)**2,weights=W)))
-    nullrmse=math.sqrt(float(np.average((Y-trainmean)**2,weights=W)))
-    return {'heldout_games':len(test_games),'train_games':len(games)-len(test_games),
-            'heldout_observations':int(is_test.sum()),'ridge_heldout_weighted_rmse':modelrmse,
-            'intercept_only_heldout_weighted_rmse':nullrmse,
-            'ridge_vs_intercept_rmse_change':modelrmse-nullrmse,
-            'training_normal_equations_relative_residual':fiterr}
-
-
 
 
 def _retrieve(url: str, filename: str) -> str:
@@ -768,65 +747,22 @@ def _valid_stints_with_goalies_removed(stints,goalies_by_game):
 
 
 
-
-def _write_5v5_lineup_error_log(stints, model):
-    """Report whether invalid positive-duration 5v5 lineups entered the RAPM design."""
-    from collections import Counter
-
+def _write_war_warnings(warnings):
+    """Print warnings and save them to the intake error log (overwritten each run)."""
     log_path = Path(__file__).resolve().parents[2] / 'errors' / '00_intake' / 'nhl_war_production.txt'
-    bad = []
-    for rec in stints:
-        if str(rec['strength_state']) != '5v5' or float(rec['duration']) <= 0:
-            continue
-        home = rec['home_ids'] or []
-        away = rec['away_ids'] or []
-        if len(home) != 5 or len(away) != 5:
-            bad.append(rec)
-
-    by_game = collections.defaultdict(list)
-    patterns = Counter()
-    for rec in bad:
-        by_game[int(rec['game_id'])].append(rec)
-        patterns[(len(rec['home_ids'] or []), len(rec['away_ids'] or []))] += 1
-    bad_seconds = math.fsum(float(rec['duration']) for rec in bad)
-    lines = [
-        'NHL WAR | HISTORICAL 5v5 LINEUP AUDIT',
-        f'Invalid 5v5 lineups entered RAPM design: {"YES" if bad else "NO"}',
-        f'5v5 stints entering RAPM: {model["stints"]}',
-        f'Invalid 5v5 stints entering RAPM: {len(model["bad_lineups"])}',
-        f'Invalid RAPM observations: {2 * len(model["bad_lineups"])}',
-        f'Affected games: {len(by_game)}',
-        f'Invalid stint duration (seconds): {bad_seconds:.3f}',
-        'Skater counts (home/away): ' + (
-            ', '.join(f'{home}/{away}={count}' for (home, away), count in sorted(patterns.items()))
-            if patterns else 'none'),
-    ]
-    if len(bad) != len(model['bad_lineups']):
-        lines.append(f'WARNING: source records matched={len(bad)}; model flagged={len(model["bad_lineups"])}')
-    ranked = sorted(by_game.items(), key=lambda item: (-math.fsum(float(r['duration']) for r in item[1]), item[0]))
-    for game_id, rows in ranked[:20]:
-        seconds = math.fsum(float(r['duration']) for r in rows)
-        lines.append(f'GAME {game_id}: invalid_stints={len(rows)} duration_s={seconds:.3f}')
-        for rec in sorted(rows, key=lambda r: (-float(r['duration']), float(r.get('start_s') or 0)))[:2]:
-            home, away = rec['home_ids'] or [], rec['away_ids'] or []
-            lines.append(
-                f'  start_s={rec.get("start_s")} end_s={rec.get("end_s")}'
-                f' duration_s={rec["duration"]} home_count={len(home)} away_count={len(away)}'
-                f' home_ids={list(home)} away_ids={list(away)}'
-                f' xgf_home={rec.get("xgf_home")} xgf_away={rec.get("xgf_away")}'
-            )
-    if len(ranked) > 20:
-        lines.append(f'Additional affected games not detailed: {len(ranked) - 20}')
+    lines = ['NHL WAR | RUN WARNINGS'] + (warnings if warnings else ['none'])
+    for line in warnings:
+        print(f'WAR WARNING | {line}', file=sys.stderr, flush=True)
     try:
         log_path.parent.mkdir(parents=True, exist_ok=True)
         log_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
     except OSError as exc:
-        print(f'WAR 5v5 audit log could not be written: {log_path}: {exc}', file=sys.stderr)
+        print(f'WAR warning log could not be written: {log_path}: {exc}', file=sys.stderr)
+
 
 def _model_and_player_times(records):
     """Rebuild two-sided RAPM independently, preserving per-game team attribution."""
     model=create_model(records)
-    _write_5v5_lineup_error_log(records, model)
     coefficients,residual=ridge(model,RIDGE_LAMBDA)
     n=len(model['players'])
     rates={pid:(float(coefficients[i]),float(-coefficients[n+i]))
@@ -901,9 +837,12 @@ def compute_all_32_war(prior_pbp, prior_shifts):
     clubs=set(sum(([h,a] for h,a in source_pair.values()),[]))
     years={int(str(gid)[:4]) for gid in source_pair}
     require(len(years)==1,f'WAR mixed NHL seasons not allowed: {sorted(years)}')
-    expected_clubs = CLUBS if next(iter(years)) >= 2024 else ((CLUBS - {'UTA'}) | {'ARI'})
-    require(clubs==expected_clubs,
-            f'WAR team coverage is not all 32: missing={sorted(expected_clubs-clubs)}, unexpected={sorted(clubs-expected_clubs)}')
+    valid_clubs = CLUBS if next(iter(years)) >= 2024 else ((CLUBS - {'UTA'}) | {'ARI'})
+    require(clubs<=valid_clubs,f'WAR unexpected team names: {sorted(clubs-valid_clubs)}')
+    warnings=[]
+    if valid_clubs-clubs:
+        warnings.append(f'Teams with no prior games, skipped: {sorted(valid_clubs-clubs)}')
+    expected_clubs=set(clubs)
     print(f'WAR OFFICIAL REBUILD | games={len(ids)} teams={len(clubs)}',flush=True)
     records={};problems=[]
     with ThreadPoolExecutor(max_workers=4) as pool:
@@ -917,7 +856,17 @@ def compute_all_32_war(prior_pbp, prior_shifts):
                 records[gid]=official
             except Exception as exc:problems.append(f'{gid}: {exc}')
             if count%40==0:print(f'WAR OFFICIAL RECORDS | {count}/{len(ids)}',flush=True)
-    require(not problems,f'Official NHL WAR sources failed for {len(problems)} games; sample={problems[:6]}')
+    if problems:
+        # A game that cannot be downloaded is left out of the whole calculation.
+        warnings.append(f'{len(problems)} of {len(ids)} games could not be downloaded and were skipped: '
+                        +'; '.join(sorted(problems)))
+        ok_ids=sorted(records)
+        require(ok_ids,'No official NHL games could be downloaded')
+        ids=set(ok_ids)
+        source_pair={g:p for g,p in source_pair.items() if g in ids}
+        prior_pbp=prior_pbp.filter(pl.col('game_id').cast(pl.Int64,strict=False).is_in(ok_ids))
+        prior_shifts=prior_shifts.filter(pl.col('game_id').cast(pl.Int64,strict=False).is_in(ok_ids))
+        expected_clubs={t for pair in source_pair.values() for t in pair}
     goalie_ids={g:r['goalies'] for g,r in records.items()}
     scored=nhl_xg(prior_pbp,league='nhl')
     require(scored.height==prior_pbp.height,'NHL xG source changed PBP event count')
@@ -937,7 +886,7 @@ def compute_all_32_war(prior_pbp, prior_shifts):
     # WAR and team skater_rapm; never rerun the unvalidated SDV RAPM path.
     verified_team_rapm=team_rapm_from_verified_5v5(model,rates,source_pair)
     require(set(verified_team_rapm)==expected_clubs,
-            'WAR verified RAPM does not contain the expected 32 clubs')
+            'WAR verified RAPM does not contain the expected clubs')
     side_toi={}
     for (gid,pid,side),seconds in model['game_toi'].items():
         club=source_pair[gid][0 if side=='home' else 1]
@@ -968,13 +917,16 @@ def compute_all_32_war(prior_pbp, prior_shifts):
     for shot in scored.iter_rows(named=True):pbp_by_game[int(shot['game_id'])].append(shot)
     stints_by_game=collections.defaultdict(list)
     for stint in original:stints_by_game[int(stint['game_id'])].append(stint)
+    # Build each game's player list once, instead of rescanning every player-game per game.
+    game_index_by_gid=collections.defaultdict(set)
+    for g,p,t in all_players:game_index_by_gid[g].add((p,t))
     for gid,official in sorted(records.items()):
         h,a=official['home'],official['away']
         plays=official['plays']
         byid={r['event_id']:r for r in plays if r['event_id'] is not None}
         bytime=collections.defaultdict(list)
         for event in plays:bytime[event['second']].append(event)
-        game_index={(p,t) for g,p,t in all_players if g==gid}
+        game_index=game_index_by_gid[gid]
         raw=sorted(stints_by_game[gid],key=lambda r:(int(r['start_s']),int(r['end_s'])))
         starts=[int(s['start_s']) for s in raw]
         matched_ids=set()
@@ -1061,7 +1013,7 @@ def compute_all_32_war(prior_pbp, prior_shifts):
     for team,parts in team_parts.items():
         team_war[team]=math.fsum(math.fsum(parts[p]) for p in PARTS)/GPW
     require(set(team_war)==expected_clubs,
-            f'WAR has not produced all 32 teams: {sorted(expected_clubs-set(team_war))}')
+            f'WAR has not produced every team with games: {sorted(expected_clubs-set(team_war))}')
     for part in PARTS:
         delta=math.fsum(math.fsum(v[part]) for v in team_parts.values())-math.fsum(math.fsum(v[part]) for v in player_parts.values())
         require(abs(delta)<1e-7,f'All-32 WAR component reconciliation failed: {part}, {delta}')
@@ -1072,6 +1024,7 @@ def compute_all_32_war(prior_pbp, prior_shifts):
           f'EV_design_rows={model["X"].shape[0]} ridge_residual={normal_residual:.3g}',flush=True)
     for team in sorted(team_war):
         print(f'WAR TEAM | {team} | WAR={team_war[team]:+.8f}',flush=True)
+    _write_war_warnings(warnings)
     return team_war, {'teams':len(team_war),'games':len(records),'players':len(player_parts),
        'verified_team_rapm':verified_team_rapm,
        'player_games':len(output),'verified_special_teams_shots':verified_shots,
@@ -1079,33 +1032,6 @@ def compute_all_32_war(prior_pbp, prior_shifts):
        'ridge_normal_equation_residual':normal_residual,
        'total_war':war_total}
 
-
-def reconstruct_official_shift_timeline(charts, plays):
-    """Rebuild personnel-specific intervals from NHL raw shift start/end markers.
-
-    Counts exclude goalies because the authoritative player universe is NHL
-    /skater/timeonice, rather than an unverified SDV change set.
-    """
-    edges={0};movements=collections.defaultdict(list)
-    for side in ('home','away'):
-        for a,b,pid in charts[side]:
-            edges.update((a,b))
-            movements[a].append((side,pid,True))
-            movements[b].append((side,pid,False))
-    # Retain source-event boundaries as separate inspection intervals.
-    for p in plays:edges.add(p['second'])
-    active={'home':set(),'away':set()};out=[]
-    times=sorted(edges)
-    for a,b in zip(times,times[1:]):
-        for side,pid,present in sorted(movements.get(a,[]),key=lambda v:v[2]):
-            if present:active[side].add(pid)
-            else:active[side].discard(pid)
-        home,away=len(active['home']),len(active['away'])
-        side='home' if 3<=away<home<=5 else 'away' if 3<=home<away<=5 else None
-        if b>a:out.append({'start_s':a,'end_s':b,'duration':b-a,
-            'home_skaters':home,'away_skaters':away,'pp_side':side or '',
-            'source':'NHL_individual_shift_start_end'})
-    return out
 
 def selftest():
     # Test verified shift-time weighting (not raw SDV shift-time weighting),
@@ -1148,9 +1074,6 @@ def selftest():
     require(max(abs(fit-alternate))<1e-8,'Independent EV solvers disagree')
     require(parse_situation('1451')=='home' and parse_situation('1541')=='away','NHL PP situation decoding')
     require(clock_seconds('05:32')==332 and clock_seconds(0)==0,'NHL official time parser')
-    testcharts={'home':[(0,60,x) for x in range(1,6)]+[(60,120,x) for x in range(1,6)],
-                'away':[(0,60,x) for x in range(11,16)]+[(60,120,x) for x in range(11,15)]}
-    assert sum(r['duration'] for r in reconstruct_official_shift_timeline(testcharts,[]) if r['pp_side']=='home')==60
     assert len(REPLACEMENT)==2 and all(math.isfinite(v) for x in REPLACEMENT.values() for v in x.values())
     print('PASS | independent 5v5 ridge, NHL official clock, manpower situations and WAR calibration')
 

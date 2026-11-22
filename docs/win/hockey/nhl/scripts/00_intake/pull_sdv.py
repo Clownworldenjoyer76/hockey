@@ -564,11 +564,17 @@ def game_date_time_cutoff_utc(
     return None
 
 
-@lru_cache(maxsize=1)
-def official_schedule_cutoff_lookup() -> dict[
+@lru_cache(maxsize=8)
+def official_schedule_cutoff_lookup(
+    date_keys: tuple[str, ...] = (),
+) -> dict[
     str,
     datetime,
 ]:
+    """Read start times only from the schedule files for the given dates.
+
+    date_keys are YYYY_MM_DD strings matching NHL_YYYY_MM_DD.csv file names.
+    """
     lookup: dict[
         str,
         datetime,
@@ -577,11 +583,10 @@ def official_schedule_cutoff_lookup() -> dict[
     if not OFFICIAL_SCHEDULE_DIR.exists():
         return lookup
 
-    for path in sorted(
-        OFFICIAL_SCHEDULE_DIR.glob(
-            "*.csv"
-        )
-    ):
+    for key in sorted(set(date_keys)):
+        path = OFFICIAL_SCHEDULE_DIR / f"NHL_{key}.csv"
+        if not path.is_file():
+            continue
         try:
             pdf = pd.read_csv(
                 path,
@@ -712,8 +717,33 @@ def schedule_games_with_cutoffs(
         ),
     )
 
+    # Read only the schedule files for the dates in this schedule (plus one day
+    # either side, in case a late game is dated differently in the two sources).
+    needed_days: set[date] = set()
+    for raw_day in pdf[date_col].unique():
+        parsed_raw_day = pd.to_datetime(
+            raw_day,
+            errors="coerce",
+        )
+        if not pd.isna(parsed_raw_day):
+            day = parsed_raw_day.date()
+            needed_days.update(
+                (
+                    day - timedelta(days=1),
+                    day,
+                    day + timedelta(days=1),
+                )
+            )
+
     official_lookup = (
-        official_schedule_cutoff_lookup()
+        official_schedule_cutoff_lookup(
+            tuple(
+                sorted(
+                    d.strftime("%Y_%m_%d")
+                    for d in needed_days
+                )
+            )
+        )
     )
 
     rows: list[
@@ -4236,14 +4266,14 @@ def compute_lineup_team_metrics(
     # game reports, not a CSV or archive in Downloads.
     from nhl_war_production import compute_all_32_war
     verified_team_war, war_audit = compute_all_32_war(prior_pbp, prior_shifts)
-    if war_audit["teams"] != 32:
-        raise RuntimeError("Verified NHL WAR must contain all 32 teams")
+    if not verified_team_war:
+        raise RuntimeError("Verified NHL WAR contains no teams")
     # The independent WAR calculation returns exactly the per-team, verified
     # 5v5 skater RAPM on the same corrected model/ridge and its accepted stints.
     # This replaces nhl.nhl_skater_rapm(), which used invalid 5v5 lineups.
     verified_team_rapm = war_audit.get("verified_team_rapm")
     if not isinstance(verified_team_rapm, dict) or set(verified_team_rapm) != set(verified_team_war):
-        raise RuntimeError("Verified NHL 5v5 RAPM must cover the same 32 teams as WAR")
+        raise RuntimeError("Verified NHL 5v5 RAPM must cover the same teams as WAR")
     if any(not math.isfinite(float(v)) for v in verified_team_rapm.values()):
         raise RuntimeError("Verified NHL 5v5 RAPM has invalid team scores")
 
@@ -4502,11 +4532,17 @@ def build_game_lineup_features_from_snapshots(
         for side in ("home", "away"):
             team = row[f"{side}_team"]
             if team not in selected["teams"]:
-                raise RuntimeError(
-                    f"Team {team!r} absent from player snapshot {selected['source']} "
-                    f"for game_id={game_id}; no silent fallback permitted"
+                # Early season: a team with no games yet is not in the snapshot.
+                print(
+                    f"WARN | lineup-strength | team {team!r} absent from player "
+                    f"snapshot {selected['source']} for game_id={game_id}; "
+                    "player-strength values left blank",
+                    file=sys.stderr,
+                    flush=True,
                 )
-            metrics = selected["teams"][team]
+                metrics = {metric: None for metric in LINEUP_TEAM_METRICS}
+            else:
+                metrics = selected["teams"][team]
             for metric in LINEUP_TEAM_METRICS:
                 row[f"{side}_{metric}"] = metrics[metric]
             row[f"{side}_lineup_status"] = "unknown"

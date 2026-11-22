@@ -81,12 +81,6 @@ SCHEDULE_REQUIRED = (
     "game_id", "game_date", "home_team", "away_team",
     "home_team_abbrev", "away_team_abbrev", "home_team_id", "away_team_id",
 )
-PLAYER_REQUIRED = ("playerId", "name", "groupIdentifier", "categoryIdentifier", "positionIdentifier")
-GROUP_CATEGORIES = {
-    **{f"f{i}": "ev" for i in range(1, 5)},
-    **{f"d{i}": "ev" for i in range(1, 4)},
-    "g": "ev", "pp1": "pp", "pp2": "pp", "pk1": "pk", "pk2": "pk", "ir": "oi",
-}
 
 # Verifiable nickname/full-name variations, never generic fuzzy matching.
 # A candidate is accepted ONLY when it is unique within the same team's
@@ -280,10 +274,9 @@ def read_schedule(date_value, teams, schedule_dir=SCHEDULE_DIR, nhl_fetch=None):
         try:
             schedule = nhl_daily_schedule(date_value, teams, nhl_fetch=nhl_fetch)
         except (RuntimeError, ValueError, TypeError, KeyError, OSError) as exc:
-            # Scraping all 32 team lineups does not depend on there being a local
-            # schedule. Never assign unverifiable game IDs; expose degradation.
+            # Never assign unverifiable game IDs; expose degradation.
             print(f"WARNING: Official NHL schedule unavailable/invalid: {exc}", flush=True)
-            print("WARNING: Exporting all 32 teams with blank game_id values", flush=True)
+            print("WARNING: No game IDs available; no teams will be fetched or exported", flush=True)
             return {}
         print(f"Official NHL scoreboard: {len(schedule)//2} games; "
               f"{len(schedule)} teams matched to game_id", flush=True)
@@ -467,8 +460,14 @@ class PlayerResolver:
                       "nhl_season": 0, "nhl_search": 0, "unresolved": 0}
 
     def _load(self, team):
-        self.current[team], self.current_roles[team] = roster_index(
-            self.dir / f"latest_{team}_roster.csv", include_roles=True)
+        path = self.dir / f"latest_{team}_roster.csv"
+        if not path.is_file():
+            # No current roster file: use an empty list so the archived rosters
+            # and the official NHL lookups still run.
+            print(f"WARNING: {path.name} not found; using archived and NHL rosters", flush=True)
+            self.current[team], self.current_roles[team] = {}, {}
+            return
+        self.current[team], self.current_roles[team] = roster_index(path, include_roles=True)
 
     def _historical(self, team):
         combined = {}
@@ -690,11 +689,15 @@ def validate_group(player, context):
 
 
 def build_rows(pages, date_value, captured, team_map_path=TEAM_MAP_PATH,
-               schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR):
-    if set(pages) != set(TEAMS):
-        raise ValueError(f"Expected 32 teams, received {len(pages)}: missing={sorted(set(TEAMS)-set(pages))}")
-    teams = read_team_map(team_map_path)
-    scheduled = read_schedule(date_value, teams, schedule_dir)
+               schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR,
+               teams=None, scheduled=None):
+    if teams is None:
+        teams = read_team_map(team_map_path)
+    if scheduled is None:
+        scheduled = read_schedule(date_value, teams, schedule_dir)
+    missing_pages = sorted(set(scheduled) - set(pages))
+    if missing_pages:
+        raise ValueError(f"Missing lineup pages for scheduled teams: {missing_pages}")
     resolver = PlayerResolver(roster_dir, game_date=date_value, team_map=teams)
     rows = []
     crosswalk = {}
@@ -717,7 +720,7 @@ def build_rows(pages, date_value, captured, team_map_path=TEAM_MAP_PATH,
             raise ValueError(f"{context}: team name doesn't match official NHL mapping")
         players = page.get("players")
         if not isinstance(players, list) or not players:
-            # No lineup data is not a complete 32-team scrape.
+            # No lineup data for a scheduled team is not a complete scrape.
             raise ValueError(f"{context}: missing player assignments")
 
         def note(i, player, issue, details):
@@ -945,13 +948,18 @@ def main():
     now = datetime.now(timezone.utc)
     date_value = now.astimezone(EASTERN).date().isoformat()
     captured = now.isoformat(timespec="seconds").replace("+00:00", "Z")
+    teams = read_team_map()
+    scheduled = read_schedule(date_value, teams)
+    to_fetch = [(abbrev, slug) for abbrev, slug in TEAMS.items() if abbrev in scheduled]
+    print(f"Teams playing {date_value}: {len(to_fetch)}", flush=True)
     pages = {}
-    for index, (abbrev, slug) in enumerate(TEAMS.items(), 1):
+    for index, (abbrev, slug) in enumerate(to_fetch, 1):
         pages[abbrev] = get_page(abbrev, slug)
-        print(f"Fetched {index}/32: {abbrev} ({len(pages[abbrev]['players'])} assignments)", flush=True)
-        if index < len(TEAMS):
+        print(f"Fetched {index}/{len(to_fetch)}: {abbrev} ({len(pages[abbrev]['players'])} assignments)", flush=True)
+        if index < len(to_fetch):
             time.sleep(0.3)
-    rows, stats, name_mismatches = build_rows(pages, date_value, captured)
+    rows, stats, name_mismatches = build_rows(pages, date_value, captured,
+                                              teams=teams, scheduled=scheduled)
     path = write_csv(rows, date_value)
     mismatch_report = write_name_mismatches(name_mismatches, date_value)
     removed = remove_unwanted_previous_reports()

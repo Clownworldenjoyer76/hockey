@@ -19,7 +19,8 @@ def american_to_decimal(value) -> float | None:
         american = float(value)
     except (TypeError, ValueError, OverflowError):
         return None
-    if not math.isfinite(american) or american == 0:
+    # American odds are always +100 or higher, or -100 or lower.
+    if not math.isfinite(american) or abs(american) < 100:
         return None
     return 1.0 + (american / 100.0 if american > 0 else 100.0 / abs(american))
 
@@ -42,10 +43,13 @@ def reconcile_dataframe_prices(
                 log(f"PRICE WARNING missing American column: {american_col}", "WARN")
             continue
         american = pd.to_numeric(df[american_col], errors="coerce")
-        existing = pd.to_numeric(df.get(decimal_col), errors="coerce")
+        if decimal_col in df.columns:
+            existing = pd.to_numeric(df[decimal_col], errors="coerce")
+        else:
+            existing = pd.Series(np.nan, index=df.index, dtype="float64")
         canonical = pd.Series(np.nan, index=df.index, dtype="float64")
-        pos = (american > 0) & np.isfinite(american)
-        neg = (american < 0) & np.isfinite(american)
+        pos = (american >= 100) & np.isfinite(american)
+        neg = (american <= -100) & np.isfinite(american)
         canonical.loc[pos] = 1.0 + american.loc[pos] / 100.0
         canonical.loc[neg] = 1.0 + 100.0 / american.loc[neg].abs()
         mismatch = (

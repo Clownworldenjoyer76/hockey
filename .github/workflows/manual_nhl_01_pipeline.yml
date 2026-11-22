@@ -99,14 +99,6 @@ jobs:
           path: ~/.cache/nhl_xg_models
           key: sdv-nhl-xg-models-v1
 
-      - name: Cache NHL full-season SDV datasets
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/nhl_sdv_season_v2
-          key: nhl-sdv-season-v2-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: |
-            nhl-sdv-season-v2-
-
       - name: Create required NHL directories
         run: |
           mkdir -p docs/win/hockey/nhl/errors/00_intake

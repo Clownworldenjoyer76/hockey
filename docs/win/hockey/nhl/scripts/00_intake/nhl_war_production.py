@@ -31,6 +31,8 @@ CLUBS = frozenset('ANA BOS BUF CAR CBJ CGY CHI COL DAL DET EDM FLA LAK MIN MTL N
 PARTS = ('ev_off','ev_def','pp','pk','pens','faceoffs')
 GPW = 6.596
 RIDGE_LAMBDA = 100.0
+# Most games that may fail to download and be skipped. One more stops the run.
+MAX_SKIPPED_GAMES = 1
 # Audited 2023-24 depth-skater calibration, weighted capped at 300 minutes.
 # These are model parameters, not precomputed player or team WAR.
 REPLACEMENT = {
@@ -856,6 +858,8 @@ def compute_all_32_war(prior_pbp, prior_shifts):
                 records[gid]=official
             except Exception as exc:problems.append(f'{gid}: {exc}')
             if count%40==0:print(f'WAR OFFICIAL RECORDS | {count}/{len(ids)}',flush=True)
+    require(len(problems)<=MAX_SKIPPED_GAMES,
+            f'{len(problems)} games could not be downloaded (limit {MAX_SKIPPED_GAMES}); sample={problems[:6]}')
     if problems:
         # A game that cannot be downloaded is left out of the whole calculation.
         warnings.append(f'{len(problems)} of {len(ids)} games could not be downloaded and were skipped: '

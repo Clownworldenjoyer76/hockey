@@ -126,92 +126,15 @@ def library_version() -> str:
         return "uninstalled"
 
 
-def _cache_file(label: str, season: int) -> Path:
-    return OPTIONS.cache_dir / f"{label}_season_{season}.pickle"
-
-
-def _cache_fresh(metadata: dict[str, Any], label: str, season: int,
-                 current: bool, now: datetime) -> bool:
-    if (metadata.get("schema") != 2
-            or metadata.get("label") != label
-            or metadata.get("season") != season
-            or metadata.get("python") != platform.python_version_tuple()[:2]
-            or metadata.get("sportsdataverse") != library_version()):
-        return False
-    try:
-        stamped = datetime.fromisoformat(metadata["fetched_at_utc"])
-        if stamped.tzinfo is None or stamped > now:
-            return False
-        age_seconds = (now - stamped).total_seconds()
-    except (ValueError, TypeError, KeyError):
-        return False
-    if current:
-        # Cached in-season data is never reused across ET calendar days.
-        # The season dataset can gain new game results overnight.
-        return (
-            stamped.astimezone(NY).date() == now.astimezone(NY).date()
-            and age_seconds <= OPTIONS.cache_current_hours * 3600
-        )
-    return age_seconds <= OPTIONS.cache_historical_days * 86400
-
-
 def cached_season_pull(failures: list[str], label: str, function,
                        season: int, *, current: bool):
-    """Trust only same-version, same-season, freshness-checked cache entries.
+    """Load one full-season SportsDataverse dataset. No caching.
 
-    Existing game-level as-of validations remain entirely in their builders.
-    Cached full-season source frames never bypass those validations.
+    `season` is the year the SportsDataverse loader expects, which is the
+    END year of the season (2027 = the 2026-27 season).
     """
-    path = _cache_file(label, season)
-    now = datetime.now(timezone.utc)
-    if not OPTIONS.no_cache and path.is_file():
-        try:
-            # Cache is created by this workflow, not loaded from user uploads.
-            with path.open("rb") as stream:
-                metadata, value = pickle.load(stream)
-            if _cache_fresh(metadata, label, season, current, now) and not frame_empty(value):
-                with TIMING_LOCK:
-                    CACHE_COUNTS["hit"] += 1
-                print(f"SDV CACHE HIT | {label} | season={season}", flush=True)
-                return value
-            with TIMING_LOCK:
-                CACHE_COUNTS["invalid"] += 1
-        except (OSError, EOFError, ValueError, TypeError, AttributeError, pickle.UnpicklingError):
-            with TIMING_LOCK:
-                CACHE_COUNTS["invalid"] += 1
-
-    with TIMING_LOCK:
-        CACHE_COUNTS["miss"] += 1
-    print(f"SDV CACHE MISS | {label} | season={season}", flush=True)
-    value = safe_pull(failures, "season-context", label, function, season)
-    if value is None or frame_empty(value) or OPTIONS.no_cache:
-        return value
-
-    OPTIONS.cache_dir.mkdir(parents=True, exist_ok=True)
-    meta = {
-        "schema": 2,
-        "label": label,
-        "season": season,
-        "python": platform.python_version_tuple()[:2],
-        "sportsdataverse": library_version(),
-        "fetched_at_utc": now.isoformat(),
-    }
-    tmp_path = None
-    try:
-        with tempfile.NamedTemporaryFile(mode="wb", prefix=".nhl_sdv_",
-                                         suffix=".tmp", dir=OPTIONS.cache_dir,
-                                         delete=False) as stream:
-            tmp_path = Path(stream.name)
-            pickle.dump((meta, value), stream, protocol=pickle.HIGHEST_PROTOCOL)
-        os.replace(tmp_path, path)
-        with TIMING_LOCK:
-            CACHE_COUNTS["write"] += 1
-    except (OSError, TypeError, ValueError, pickle.PicklingError) as exc:
-        print(f"WARN | SDV cache write {label}: {exc}", file=sys.stderr)
-    finally:
-        if tmp_path is not None:
-            tmp_path.unlink(missing_ok=True)
-    return value
+    print(f"SDV LOAD | {label} | loader_year={season}", flush=True)
+    return safe_pull(failures, "season-context", label, function, season)
 
 
 def write_timing_report(wall_seconds: float) -> None:
@@ -2665,7 +2588,7 @@ def pull_schedule(
         "schedule",
         f"load_nhl_schedule_{season}",
         nhl.load_nhl_schedule,
-        season,
+        season + 1,  # loader takes the END year of the season
     )
 
     if parsed is not None:
@@ -3011,13 +2934,16 @@ def pull_season_context(
 ):
     # Only PBP and shifts feed the production goalie/lineup calculations.
     # Other full-season datasets are retained behind diagnostic opt-in.
+    # The pipeline labels a season by its START year (2026 = 2026-27), but the
+    # SportsDataverse loaders take the END year (2027 = 2026-27).
+    loader_year = season + 1
     context = {
         "pbp": cached_season_pull(
-            failures, "pbp", nhl.load_nhl_pbp_full, season, current=current,
+            failures, "pbp", nhl.load_nhl_pbp_full, loader_year, current=current,
         ),
         "shifts": (
             cached_season_pull(
-                failures, "shifts", nhl.load_nhl_shifts, season, current=current,
+                failures, "shifts", nhl.load_nhl_shifts, loader_year, current=current,
             ) if need_shifts else None
         ),
     }
@@ -3028,7 +2954,7 @@ def pull_season_context(
             ("rosters", nhl.load_nhl_rosters, "rosters", "lineup-strength"),
         ):
             context[key] = cached_season_pull(
-                failures, label, function, season, current=current,
+                failures, label, function, loader_year, current=current,
             )
     return context
 
@@ -5277,7 +5203,7 @@ def pull_odds(
                 "odds",
                 f"load_nhl_schedule_{season}",
                 nhl.load_nhl_schedule,
-                season,
+                season + 1,  # loader takes the END year of the season
             )
         )
 
@@ -5793,7 +5719,7 @@ def run_one(
                 "team-strength",
                 "load_nhl_pbp_full",
                 nhl.load_nhl_pbp_full,
-                season,
+                season + 1,  # loader takes the END year of the season
             )
 
         ratings_asof = safe_pull(

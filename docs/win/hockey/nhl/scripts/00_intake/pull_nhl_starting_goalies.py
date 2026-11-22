@@ -69,7 +69,6 @@ HEADERS = [
 REQUIRED_DFO_FIELDS = (
     "date", "time", "dateGmt", "homeTeamName", "awayTeamName",
     "homeTeamAbbreviation", "awayTeamAbbreviation",
-    "homeGoalieName", "awayGoalieName",
 )
 SCHEDULE_FIELDS = (
     "game_id", "game_date", "game_time", "home_team", "away_team",
@@ -368,17 +367,22 @@ def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR,
             supplied_name = str(game[f"{side}TeamName"]).strip()
             if norm_name(supplied_name) != norm_name(expected_name):
                 raise ValueError(f"{context}: DFO {side} team name {supplied_name!r} doesn't match {abbrev} ({expected_name})")
+            goalie_name = str(game.get(f"{side}GoalieName") or "").strip()
+            if not goalie_name:
+                print(f"WARNING: {context} game_id={game_id}: no {side} goalie name from "
+                      f"Daily Faceoff; {side}_player_id set to unknown", flush=True)
+                player_ids[side] = "unknown"
+                continue
             if abbrev not in official_roster_cache:
                 official_roster_cache[abbrev] = load_official_goalies(abbrev, nhl_fetch)
-            goalie_name = str(game[f"{side}GoalieName"]).strip()
             name_key = norm_name(goalie_name)
             player_id = official_roster_cache[abbrev].get(name_key)
             if player_id is None:
-                raise ValueError(
-                    f"{context} game_id={game_id}: {side} goalie {goalie_name!r} "
-                    f"is not on the official CURRENT NHL goalie roster for {abbrev}; "
-                    "no player ID assigned. Check Daily Faceoff and NHL roster updates."
-                )
+                print(f"WARNING: {context} game_id={game_id}: {side} goalie {goalie_name!r} "
+                      f"is not on the official CURRENT NHL goalie roster for {abbrev}; "
+                      f"{side}_player_id set to unknown", flush=True)
+                player_ids[side] = "unknown"
+                continue
             # SDV roster snapshots are diagnostic, not authoritative: the normal
             # pipeline does not regenerate them unless diagnostics are requested.
             if abbrev not in roster_cache:
@@ -450,7 +454,8 @@ def main():
     rows, game_date = build_rows(games)
     destination = write_csv(rows, game_date)
     print(f"CSV: {destination}")
-    print(f"Games: {len(rows)} | Columns: {len(HEADERS)} | NHL IDs matched: {2 * len(rows)}")
+    matched = sum(1 for r in rows for k in ("home_player_id", "away_player_id") if r[k] != "unknown")
+    print(f"Games: {len(rows)} | Columns: {len(HEADERS)} | NHL IDs matched: {matched} | unknown: {2 * len(rows) - matched}")
 
 
 if __name__ == "__main__":

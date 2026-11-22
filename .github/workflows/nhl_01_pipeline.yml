@@ -208,9 +208,9 @@ jobs:
             echo "No regular-season/playoff games today. Stages 00-04 will be skipped."
           fi
 
-    #  - name: Run NHL D-Ratings scraper
-    #    if: steps.current_slate.outputs.has_games == 'true'
-    #    run: python docs/win/hockey/nhl/scripts/00_intake/hockey_drat_scraper.py
+      - name: Run NHL D-Ratings scraper
+        if: steps.current_slate.outputs.has_games == 'true'
+        run: python docs/win/hockey/nhl/scripts/00_intake/hockey_drat_scraper.py
 
       - name: Transform NHL predictions
         if: steps.current_slate.outputs.has_games == 'true'

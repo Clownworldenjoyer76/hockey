@@ -5,14 +5,12 @@
     "merged_games": 5,
     "prediction_games": 5,
     "scheduled_games": 5,
-    "selected_bets": 3,
+    "selected_bets": 4,
     "sportsbook_games": 5
   },
-  "fatal_errors": [
-    "NHL workflow status is CANCELLED"
-  ],
+  "fatal_errors": [],
   "game_date_new_york": "2026_11_22",
-  "generated_at_utc": "2026-11-22T17:10:47.555992+00:00",
+  "generated_at_utc": "2026-11-22T17:19:04.631530+00:00",
   "paths": {
     "games": [
       "docs/win/hockey/nhl/00_intake/games/2026_11_22_nhl_games.csv"
@@ -55,7 +53,7 @@
       "exists": true,
       "name": "Transform Final Scores",
       "path": "docs/win/hockey/nhl/errors/05_final_scores/transform_final_scores.txt",
-      "status": "2026-11-22T11:44:57.809886+00:00 | WROTE OFFICIAL NHL GAME STATUS: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv | rows=653"
+      "status": "2026-11-22T17:18:59.594254+00:00 | WROTE OFFICIAL NHL GAME STATUS: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv | rows=653"
     },
     {
       "exists": true,
@@ -166,14 +164,14 @@
       "status": "STATUS: NO OUTPUT"
     }
   ],
-  "status": "failed",
+  "status": "healthy",
   "warnings": [],
   "workflow": {
     "name": "NHL Pipeline",
     "ref_name": "main",
     "run_attempt": "1",
-    "run_id": "45047909098",
-    "sha": "8aa32187fdf291ec8217a3f84563ed2521416504",
-    "status": "cancelled"
+    "run_id": "45048376928",
+    "sha": "bfa85324698cde5967ad90dc86eaa5a02e2b2dac",
+    "status": "success"
   }
 }

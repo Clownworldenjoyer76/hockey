@@ -65,6 +65,9 @@ ERROR_DIR.mkdir(
     exist_ok=True,
 )
 
+# The ONLY place the sportsbook order is set. First name is used first.
+# Names are matched exactly, except those in PROVIDER_PREFIX_MATCH, which are
+# matched on the start of the name.
 PROVIDER_PRIORITY = [
     "Titanbets",
     "MGM",
@@ -72,6 +75,10 @@ PROVIDER_PRIORITY = [
     "Caesars Sportsbook",
     "SugarHouse",
 ]
+
+PROVIDER_PREFIX_MATCH = {
+    "caesars sportsbook",
+}
 
 FIELDS = [
     "sportsbook_event_id",
@@ -391,24 +398,26 @@ def provider_group_rank(
         ).lower()
     )
 
-    if name == "titanbets":
-        return 0
-
-    if name == "mgm":
-        return 1
-
-    if name == "bet365":
-        return 2
-
-    if name.startswith(
-        "caesars sportsbook"
+    for rank, listed in enumerate(
+        PROVIDER_PRIORITY
     ):
-        return 3
+        listed = listed.lower()
 
-    if name == "sugarhouse":
-        return 4
+        if name == listed:
+            return rank
 
-    return 5
+        if (
+            listed
+            in PROVIDER_PREFIX_MATCH
+            and name.startswith(
+                listed
+            )
+        ):
+            return rank
+
+    return len(
+        PROVIDER_PRIORITY
+    )
 
 
 def provider_priority_value(

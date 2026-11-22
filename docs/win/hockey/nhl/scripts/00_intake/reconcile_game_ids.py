@@ -18,9 +18,8 @@ if str(SCRIPT_DIR) not in sys.path:
 
 # noinspection PyPep8
 from team_map_common import (
+    load_nhl_team_map,
     normalize_team_alias_key,
-    parse_nhl_team_map_row,
-    register_team_identity,
     strip_record,
 )
 from zoneinfo import ZoneInfo
@@ -276,127 +275,18 @@ def validate_cross_date_id_uniqueness(results: list[dict]) -> None:
 
 
 def load_team_map() -> dict:
-    if not MAP_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing team mapping file: {MAP_PATH}"
-        )
-
-    by_source: dict[
-        str,
-        dict[str, dict[str, str]],
-    ] = defaultdict(dict)
-    by_id: dict[str, dict[str, str]] = {}
-    by_abbrev: dict[str, dict[str, str]] = {}
-    supported_sources = {
-        "dratings",
-        "sportsbook",
-        "official_nhl",
-        "shared",
-        "final_scores",
-    }
-
-    with MAP_PATH.open(
-        "r",
-        newline="",
-        encoding="utf-8-sig",
-    ) as handle:
-        reader = csv.DictReader(handle)
-
-        required = {
-            "league",
-            "source",
-            "alias",
-            "canonical_team",
-            "nhl_team_id",
-            "nhl_abbrev",
-        }
-        fieldnames = set(reader.fieldnames or [])
-        missing = sorted(required - fieldnames)
-
-        if missing:
-            raise ValueError(
-                f"{MAP_PATH} missing required columns: {missing}"
-            )
-
-        for row_number, row in enumerate(reader, start=2):
-            parsed = parse_nhl_team_map_row(
-                row,
-                row_number,
-                MAP_PATH,
-                supported_sources=supported_sources,
-            )
-            if parsed is None:
-                continue
-
-            (
-                source,
-                alias,
-                team_id,
-                abbrev,
-                identity,
-            ) = parsed
-
-            register_team_identity(
-                by_id,
-                team_id,
-                identity,
-                MAP_PATH,
-            )
-
-            if abbrev:
-                prior_abbrev = by_abbrev.get(abbrev)
-                if (
-                    prior_abbrev is not None
-                    and prior_abbrev != identity
-                ):
-                    raise ValueError(
-                        f"{MAP_PATH} has conflicting identity for "
-                        f"nhl_abbrev={abbrev}: "
-                        f"{prior_abbrev} != {identity}"
-                    )
-                by_abbrev[abbrev] = identity
-
-            key = normalize_team_alias_key(alias)
-            prior_alias = by_source[source].get(key)
-
-            if (
-                prior_alias is not None
-                and prior_alias != identity
-            ):
-                raise ValueError(
-                    f"{MAP_PATH} has conflicting mapping for "
-                    f"source={source} alias={alias!r}: "
-                    f"{prior_alias} != {identity}"
-                )
-
-            by_source[source][key] = identity
-
-    if not by_source.get("official_nhl"):
-        raise ValueError(
-            f"No official_nhl mappings loaded from {MAP_PATH}"
-        )
-
-    if not by_source.get("dratings"):
-        raise ValueError(
-            f"No dratings mappings loaded from {MAP_PATH}"
-        )
-
-    if not by_source.get("sportsbook"):
-        raise ValueError(
-            f"No sportsbook mappings loaded from {MAP_PATH}"
-        )
-
-    if len(by_id) != 32:
-        raise ValueError(
-            f"Expected 32 stable NHL team IDs in {MAP_PATH}; "
-            f"found {len(by_id)}"
-        )
-
-    return {
-        "by_source": dict(by_source),
-        "by_id": by_id,
-        "by_abbrev": by_abbrev,
-    }
+    return load_nhl_team_map(
+        MAP_PATH,
+        supported_sources={
+            "dratings",
+            "sportsbook",
+            "official_nhl",
+            "shared",
+            "final_scores",
+        },
+        required_sources=("official_nhl", "dratings", "sportsbook"),
+        expected_team_count=32,
+    )
 
 
 def mapping_source(source: str) -> str:
@@ -890,7 +780,7 @@ def match_source_rows_to_schedule(
         tuple[str, str, str],
         list[dict[str, str]],
     ],
-    team_map: dict[str, str],
+    team_map: dict,
 ) -> tuple[
     list[dict],
     list[dict[str, str]],
@@ -1169,7 +1059,7 @@ def reconcile_date(
     date_value: str,
     sportsbook_path: Path | None,
     prediction_path: Path | None,
-    team_map: dict[str, str],
+    team_map: dict,
     raw_espn_events: dict[str, dict] | None = None,
 ) -> dict:
     schedule_rows, schedule_index = (

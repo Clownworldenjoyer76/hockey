@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # docs/win/hockey/nhl/scripts/00_intake/transform_hockey.py
 
-import re
 import traceback
 import sys
 from pathlib import Path
@@ -13,6 +12,8 @@ if str(SCRIPT_DIR) not in sys.path:
 
 # noinspection PyPep8
 from team_map_common import (
+    alias_map_for_source,
+    load_nhl_team_map,
     normalize_team_alias_key,
     strip_record,
 )
@@ -27,7 +28,6 @@ INPUT_DIR = BASE_DIR / "00_intake" / "predictions" / "scraper"
 OUTPUT_DIR = BASE_DIR / "00_intake" / "predictions"
 
 MAP_PATH = BASE_DIR / "config" / "mapping" / "team_map_nhl.csv"
-NO_MAP_PATH = BASE_DIR / "config" / "mapping" / "no_map_nhl_pred.csv"
 
 ERROR_DIR = BASE_DIR / "errors" / "00_intake"
 ERROR_DIR.mkdir(parents=True, exist_ok=True)
@@ -62,88 +62,11 @@ def load_team_map(source: str) -> dict[str, dict[str, str]]:
     if not MAP_PATH.exists():
         raise FileNotFoundError(f"Missing team mapping file: {MAP_PATH}")
 
-    df = pd.read_csv(MAP_PATH, dtype=str).fillna("")
-
-    required_columns = {
-        "league",
-        "source",
-        "alias",
-        "canonical_team",
-        "nhl_team_id",
-        "nhl_abbrev",
-    }
-    missing = sorted(required_columns - set(df.columns))
-
-    if missing:
-        raise ValueError(
-            f"{MAP_PATH} missing required columns: {missing}"
-        )
-
-    allowed_sources = {source, "shared", "official_nhl"}
-    mapping: dict[str, dict[str, str]] = {}
-    identity_by_id: dict[str, tuple[str, str]] = {}
-
-    for row_number, row in df.iterrows():
-        league = str(row["league"]).strip().lower()
-        row_source = str(row["source"]).strip().lower()
-
-        if league != "nhl" or row_source not in allowed_sources:
-            continue
-
-        alias = str(row["alias"]).strip()
-        canonical = str(row["canonical_team"]).strip()
-        team_id = str(row["nhl_team_id"]).strip()
-        abbrev = str(row["nhl_abbrev"]).strip().upper()
-
-        if not alias or not canonical:
-            continue
-
-        if canonical != "TBD":
-            if not team_id or not team_id.isdigit():
-                raise ValueError(
-                    f"{MAP_PATH} row {row_number + 2} has invalid "
-                    f"nhl_team_id={team_id!r}"
-                )
-
-            if not re.fullmatch(r"[A-Z]{3}", abbrev):
-                raise ValueError(
-                    f"{MAP_PATH} row {row_number + 2} has invalid "
-                    f"nhl_abbrev={abbrev!r}"
-                )
-
-            prior_identity = identity_by_id.get(team_id)
-            identity_value = (canonical, abbrev)
-
-            if prior_identity is not None and prior_identity != identity_value:
-                raise ValueError(
-                    f"{MAP_PATH} has conflicting identity for "
-                    f"nhl_team_id={team_id}: "
-                    f"{prior_identity} != {identity_value}"
-                )
-
-            identity_by_id[team_id] = identity_value
-
-        identity = {
-            "canonical_team": canonical,
-            "nhl_team_id": team_id,
-            "nhl_abbrev": abbrev,
-        }
-
-        key = normalize_team_alias_key(alias)
-        prior = mapping.get(key)
-
-        if prior is not None and prior != identity:
-            raise ValueError(
-                f"{MAP_PATH} has conflicting {source} mapping for "
-                f"alias={alias!r}: {prior} != {identity}"
-            )
-
-        mapping[key] = identity
-
-    if not mapping:
-        raise ValueError(
-            f"No NHL mappings loaded for source={source} from {MAP_PATH}"
-        )
+    mapping = alias_map_for_source(
+        load_nhl_team_map(MAP_PATH),
+        source,
+        MAP_PATH,
+    )
 
     stable_ids = {
         identity["nhl_team_id"]
@@ -213,24 +136,23 @@ def parse_float(value):
         return ""
 
 
-def write_no_map_file(no_map_records: list) -> None:
-    NO_MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
+def log_unmapped_teams(no_map_records: list) -> None:
+    """Write every team name that was not found in the team map to the log.
 
-    if not no_map_records:
-        pd.DataFrame(
-            columns=[
-                "source_file",
-                "raw_team",
-                "stripped_team",
-                "normalized_attempt",
-            ]
-        ).to_csv(NO_MAP_PATH, index=False)
-        log(f"WROTE no-map file with 0 rows: {NO_MAP_PATH}")
-        return
+    The name is left as it is in the prediction file. pred_name_normalization.py
+    then lists it in config/mapping/no_map_nhl_pred.csv.
+    """
+    seen = sorted(
+        {
+            (record["source_file"], record["raw_team"])
+            for record in no_map_records
+        }
+    )
 
-    no_map_df = pd.DataFrame(no_map_records).drop_duplicates()
-    no_map_df.to_csv(NO_MAP_PATH, index=False)
-    log(f"WROTE no-map file: {NO_MAP_PATH} ({len(no_map_df)} rows)")
+    for source_file, raw_team in seen:
+        log(f"UNMAPPED TEAM: {raw_team!r} in {source_file}")
+
+    log(f"Unmapped team names: {len(seen)}")
 
 
 def transform_prediction_file(
@@ -339,7 +261,6 @@ def main():
         log(f"Input directory: {INPUT_DIR}")
         log(f"Output directory: {OUTPUT_DIR}")
         log(f"Mapping file: {MAP_PATH}")
-        log(f"No-map file: {NO_MAP_PATH}")
         log("Official NHL game_id assignment is deferred to reconcile_game_ids.py")
 
         team_map = load_team_map("dratings")
@@ -358,7 +279,7 @@ def main():
                 files_written=files_written,
             )
 
-        write_no_map_file(no_map_records)
+        log_unmapped_teams(no_map_records)
 
         log("--- SUMMARY ---")
         log(f"Input files processed: {len(input_files)}")

@@ -11,20 +11,13 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 import sportsdataverse.nhl as nhl
+from sportsdataverse._common_espn_parsers import parse_items
 
 
 ET = ZoneInfo("America/New_York")
 
 JSON_OUT_DIR = Path("docs/win/hockey/nhl/odds")
 SNAPSHOT_ROOT = JSON_OUT_DIR / "snapshots"
-
-PROVIDER_PRIORITY = [
-    "Titanbets",
-    "MGM",
-    "Bet365",
-    "Caesars Sportsbook",
-    "SugarHouse",
-]
 
 JSON_OUT_DIR.mkdir(parents=True, exist_ok=True)
 SNAPSHOT_ROOT.mkdir(parents=True, exist_ok=True)
@@ -327,12 +320,16 @@ def fetch_event_odds(
     list[dict],
     Any,
 ]:
-    parsed = nhl.espn_nhl_game_odds(
+    # One request. The library builds its parsed table from this same raw
+    # reply with parse_items, so the parsed rows and the saved raw copy now
+    # always come from the same reply.
+    raw = nhl.espn_nhl_game_odds(
         event_id=event_id,
+        return_parsed=False,
     )
 
     rows = frame_records(
-        parsed
+        parse_items(raw)
     )
 
     normalized_rows = []
@@ -347,11 +344,6 @@ def fetch_event_odds(
         normalized_rows.append(
             out
         )
-
-    raw = nhl.espn_nhl_game_odds(
-        event_id=event_id,
-        return_parsed=False,
-    )
 
     return (
         normalized_rows,
@@ -486,9 +478,6 @@ def main() -> None:
         "bookmaker_strategy": {
             "type": (
                 "priority_fallback_per_market"
-            ),
-            "priority": (
-                PROVIDER_PRIORITY
             ),
             "exclude_live_odds_providers": (
                 True

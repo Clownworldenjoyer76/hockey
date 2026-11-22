@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import csv
 import sys
-import re
 import traceback
 from collections.abc import Callable, Iterable
 from datetime import datetime, timezone
@@ -15,7 +14,11 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 # noinspection PyPep8
-from team_map_common import normalize_alias_key
+from team_map_common import (
+    alias_map_for_source,
+    load_nhl_team_map,
+    normalize_alias_key,
+)
 
 
 def make_logger(
@@ -50,135 +53,11 @@ def load_team_map(
             f"team_map_nhl.csv not found: {map_file}"
         )
 
-    mapping: dict[str, dict[str, str]] = {}
-    identity_by_id: dict[str, tuple[str, str]] = {}
-    allowed_sources = {
+    mapping = alias_map_for_source(
+        load_nhl_team_map(map_file),
         source,
-        "shared",
-        "official_nhl",
-    }
-
-    with map_file.open(
-        newline="",
-        encoding="utf-8-sig",
-    ) as handle:
-        reader = csv.DictReader(handle)
-
-        required = {
-            "league",
-            "source",
-            "alias",
-            "canonical_team",
-            "nhl_team_id",
-            "nhl_abbrev",
-        }
-        fieldnames = set(reader.fieldnames or [])
-        missing = sorted(required - fieldnames)
-
-        if missing:
-            raise ValueError(
-                f"{map_file} missing required columns: {missing}"
-            )
-
-        for row_number, row in enumerate(
-            reader,
-            start=2,
-        ):
-            league = str(
-                row.get("league", "")
-            ).strip().lower()
-            row_source = str(
-                row.get("source", "")
-            ).strip().lower()
-
-            if (
-                league != "nhl"
-                or row_source not in allowed_sources
-            ):
-                continue
-
-            alias = str(
-                row.get("alias", "")
-            ).strip()
-            canonical = str(
-                row.get("canonical_team", "")
-            ).strip()
-            team_id = str(
-                row.get("nhl_team_id", "")
-            ).strip()
-            abbrev = str(
-                row.get("nhl_abbrev", "")
-            ).strip().upper()
-
-            if not alias or not canonical:
-                continue
-
-            if canonical != "TBD":
-                if (
-                    not team_id
-                    or not team_id.isdigit()
-                ):
-                    raise ValueError(
-                        f"{map_file} row {row_number} has invalid "
-                        f"nhl_team_id={team_id!r}"
-                    )
-
-                if not re.fullmatch(
-                    r"[A-Z]{3}",
-                    abbrev,
-                ):
-                    raise ValueError(
-                        f"{map_file} row {row_number} has invalid "
-                        f"nhl_abbrev={abbrev!r}"
-                    )
-
-                prior_identity = identity_by_id.get(
-                    team_id
-                )
-                identity_value = (
-                    canonical,
-                    abbrev,
-                )
-
-                if (
-                    prior_identity is not None
-                    and prior_identity != identity_value
-                ):
-                    raise ValueError(
-                        f"{map_file} has conflicting identity for "
-                        f"nhl_team_id={team_id}: "
-                        f"{prior_identity} != {identity_value}"
-                    )
-
-                identity_by_id[team_id] = (
-                    identity_value
-                )
-
-            identity = {
-                "canonical_team": canonical,
-                "nhl_team_id": team_id,
-                "nhl_abbrev": abbrev,
-            }
-
-            key = normalize_alias_key(alias)
-            prior = mapping.get(key)
-
-            if (
-                prior is not None
-                and prior != identity
-            ):
-                raise ValueError(
-                    f"{map_file} has conflicting {source} mapping for "
-                    f"alias={alias!r}: {prior} != {identity}"
-                )
-
-            mapping[key] = identity
-
-    if not mapping:
-        raise ValueError(
-            f"No NHL mappings loaded for source={source} "
-            f"from {map_file}"
-        )
+        map_file,
+    )
 
     stable_ids = {
         identity["nhl_team_id"]

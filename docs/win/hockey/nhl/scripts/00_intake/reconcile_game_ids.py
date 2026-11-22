@@ -1621,36 +1621,6 @@ def discover_source_files() -> tuple[
     )
 
 
-def reconciled_file_exists(
-    date_value: str,
-) -> bool:
-    return (
-        RECONCILED_DIR
-        / f"NHL_{date_value}.csv"
-    ).is_file()
-
-
-def select_dates_to_reconcile(
-    dates: list[str],
-) -> list[str]:
-    """Return today/future dates and past dates with no reconciled file.
-
-    A past date that already has 00_intake/reconciled/NHL_<date>.csv was
-    reconciled and committed by an earlier run, so it is not verified again.
-    Date strings are YYYY_MM_DD, so string comparison is date comparison.
-    """
-    today = datetime.now(ET).strftime("%Y_%m_%d")
-
-    return [
-        date_value
-        for date_value in dates
-        if (
-            date_value >= today
-            or not reconciled_file_exists(date_value)
-        )
-    ]
-
-
 def write_audit(
     result: dict,
 ) -> Path:
@@ -1779,19 +1749,11 @@ def main() -> None:
                 "files found to reconcile"
             )
 
-        dates = select_dates_to_reconcile(
-            all_dates
-        )
+        dates = all_dates
 
         log(
             "Dates to reconcile: "
             f"{len(dates)}"
-        )
-
-        log(
-            "Past dates skipped "
-            "(reconciled file exists): "
-            f"{len(all_dates) - len(dates)}"
         )
 
         # Read ESPN's original event IDs and timestamps before writing any

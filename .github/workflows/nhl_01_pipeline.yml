@@ -1,4 +1,4 @@
-name: NHL 01 Pipeline
+name: OLD NHL 01 Pipeline
 
 on:
   workflow_dispatch:
@@ -105,14 +105,6 @@ jobs:
           path: ~/.cache/nhl_xg_models
           key: sdv-nhl-xg-models-v1
 
-      - name: Cache NHL full-season SDV datasets
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/nhl_sdv_season_v2
-          key: nhl-sdv-season-v2-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: |
-            nhl-sdv-season-v2-
-
       - name: Install Playwright system dependencies
         run: python -m playwright install-deps chromium
 
@@ -171,7 +163,6 @@ jobs:
           python -m py_compile docs/win/hockey/nhl/scripts/04_select/hockey_select_bets.py
           python -m py_compile docs/win/hockey/nhl/scripts/04_select/validate_markets_config.py
           python -m py_compile docs/win/hockey/nhl/scripts/05_final_scores/01_nhl_results_grade.py
-          python -m py_compile docs/win/hockey/nhl/scripts/01_merge/test_repo_independent_compare.py
 
       - name: Run fixture-only NHL game ID reconciliation test
         run: python docs/win/hockey/nhl/scripts/tests/test_game_id_reconciliation.py
@@ -217,9 +208,9 @@ jobs:
             echo "No regular-season/playoff games today. Stages 00-04 will be skipped."
           fi
 
-      - name: Run NHL D-Ratings scraper
-        if: steps.current_slate.outputs.has_games == 'true'
-        run: python docs/win/hockey/nhl/scripts/00_intake/hockey_drat_scraper.py
+    #  - name: Run NHL D-Ratings scraper
+    #    if: steps.current_slate.outputs.has_games == 'true'
+    #    run: python docs/win/hockey/nhl/scripts/00_intake/hockey_drat_scraper.py
 
       - name: Transform NHL predictions
         if: steps.current_slate.outputs.has_games == 'true'
@@ -318,27 +309,6 @@ jobs:
       - name: 03 Edges - Build NHL secondary model signals
         if: steps.current_slate.outputs.has_games == 'true'
         run: python docs/win/hockey/nhl/scripts/03_edges/build_secondary_model_signals.py
-
-      - name: 03 Compare independent NHL probabilities
-        if: steps.current_slate.outputs.has_games == 'true'
-        env:
-          NHL_ALLOW_INDEPENDENT_COMPARE: "1"
-        run: |
-          python -m pip install scikit-learn==1.8.0
-          python docs/win/hockey/nhl/scripts/01_merge/test_repo_independent_compare.py --self-test
-          python docs/win/hockey/nhl/scripts/01_merge/test_repo_independent_compare.py --date "$DATE" --preflight
-          python docs/win/hockey/nhl/scripts/01_merge/test_repo_independent_compare.py --date "$DATE"
-
-      - name: Upload independent NHL comparison report
-        if: steps.current_slate.outputs.has_games == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: nhl-independent-comparison-${{ env.DATE }}
-          path: |
-            docs/win/hockey/nhl/my_probability/test_repo_side_by_side/predictions/${{ env.DATE }}_NHL_independent.csv
-            docs/win/hockey/nhl/my_probability/test_repo_side_by_side/comparisons/${{ env.DATE }}_NHL_three_market_side_by_side.csv
-            docs/win/hockey/nhl/my_probability/test_repo_side_by_side/manifests/${{ env.DATE }}.json
-          if-no-files-found: error
 
       - name: 04 Select - Validate markets config
         if: steps.current_slate.outputs.has_games == 'true'

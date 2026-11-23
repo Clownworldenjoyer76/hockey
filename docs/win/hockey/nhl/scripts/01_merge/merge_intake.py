@@ -3,12 +3,27 @@
 
 import csv
 import re
+import sys
 import traceback
 from pathlib import Path
 from typing import Never
 from datetime import datetime, UTC, timedelta
 from zoneinfo import ZoneInfo
 
+
+SCRIPTS_DIR = str(Path(__file__).resolve().parents[1])
+if SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, SCRIPTS_DIR)
+
+# noinspection PyPep8
+from feature_columns_common import (
+    FATIGUE_FEATURE_COLUMNS,
+    GOALIE_FEATURE_COLUMNS,
+    LINEUP_FEATURE_COLUMNS,
+    LINEUP_NUMERIC_FEATURE_COLUMNS,
+    SDV_PREDICTION_COLUMNS,
+    TEAM_STRENGTH_FEATURE_COLUMNS,
+)
 
 BASE_DIR = Path("docs/win/hockey/nhl")
 
@@ -56,36 +71,6 @@ TEAM_STRENGTH_VALUE_COLUMNS = [
     "net_z",
 ]
 
-TEAM_STRENGTH_FEATURE_COLUMNS = [
-    "home_adj_xgf",
-    "away_adj_xgf",
-    "adj_xgf_differential",
-    "home_adj_xga",
-    "away_adj_xga",
-    "adj_xga_differential",
-    "home_adj_xg_net",
-    "away_adj_xg_net",
-    "adj_xg_net_differential",
-    "home_adj_gf",
-    "away_adj_gf",
-    "adj_gf_differential",
-    "home_adj_ga",
-    "away_adj_ga",
-    "adj_ga_differential",
-    "home_off_rank",
-    "away_off_rank",
-    "off_rank_differential",
-    "home_def_rank",
-    "away_def_rank",
-    "def_rank_differential",
-    "home_net_rank",
-    "away_net_rank",
-    "net_rank_differential",
-    "home_net_z",
-    "away_net_z",
-    "net_z_differential",
-]
-
 
 GOALIE_STATUS_VALUES = {
     "projected",
@@ -108,39 +93,6 @@ LINEUP_STATUS_VALUES = {
     "unknown",
 }
 
-LINEUP_NUMERIC_METRICS = [
-    "skater_rapm",
-    "skater_war",
-    "pp_value",
-    "pk_value",
-    "forward_line_strength",
-    "defense_pair_strength",
-]
-
-LINEUP_NUMERIC_FEATURE_COLUMNS = [
-    column
-    for metric in LINEUP_NUMERIC_METRICS
-    for column in (
-        f"home_{metric}",
-        f"away_{metric}",
-        f"{metric}_differential",
-    )
-]
-
-LINEUP_METADATA_COLUMNS = [
-    "home_lineup_status",
-    "away_lineup_status",
-    "home_lineup_observed_at",
-    "away_lineup_observed_at",
-    "home_lineup_source",
-    "away_lineup_source",
-]
-
-LINEUP_FEATURE_COLUMNS = [
-    *LINEUP_NUMERIC_FEATURE_COLUMNS,
-    *LINEUP_METADATA_COLUMNS,
-]
-
 REQUIRED_LINEUP_COLUMNS = [
     "game_id",
     "game_date",
@@ -152,22 +104,6 @@ REQUIRED_LINEUP_COLUMNS = [
     "lineup_snapshot_as_of_utc",
     "pregame_cutoff_source",
     *LINEUP_FEATURE_COLUMNS,
-]
-
-GOALIE_FEATURE_COLUMNS = [
-    "home_expected_starter",
-    "away_expected_starter",
-    "home_starter_gsax",
-    "away_starter_gsax",
-    "home_backup_gsax",
-    "away_backup_gsax",
-    "starter_gsax_differential",
-    "home_goalie_status",
-    "away_goalie_status",
-    "home_goalie_status_observed_at",
-    "away_goalie_status_observed_at",
-    "home_goalie_status_source",
-    "away_goalie_status_source",
 ]
 
 REQUIRED_GOALIE_COLUMNS = [
@@ -183,12 +119,6 @@ REQUIRED_GOALIE_COLUMNS = [
     *GOALIE_FEATURE_COLUMNS,
 ]
 
-
-SDV_PREDICTION_COLUMNS = [
-    "sdv_home_win_prob",
-    "sdv_exp_margin",
-    "sdv_exp_total",
-]
 
 REQUIRED_SDV_PREDICTION_COLUMNS = [
     "game_id",
@@ -206,21 +136,7 @@ MERGED_COLUMNS = [
     "game_id",
     "away_team",
     "home_team",
-    "home_days_rest",
-    "away_days_rest",
-    "home_back_to_back",
-    "away_back_to_back",
-    "home_games_in_4_days",
-    "away_games_in_4_days",
-    "home_three_in_four",
-    "away_three_in_four",
-    "home_games_in_6_days",
-    "away_games_in_6_days",
-    "home_four_in_six",
-    "away_four_in_six",
-    "home_games_in_7_days",
-    "away_games_in_7_days",
-    "rest_differential",
+    *FATIGUE_FEATURE_COLUMNS,
     *TEAM_STRENGTH_FEATURE_COLUMNS,
     *GOALIE_FEATURE_COLUMNS,
     *LINEUP_FEATURE_COLUMNS,
@@ -1651,7 +1567,7 @@ def validate_goalie_timestamp_contract(
     decision_cutoff: datetime,
     decision_cutoff_source: str,
     snapshot_as_of: datetime,
-    observed_at: datetime,
+    observed_at: datetime | None,
     canonical_game_start: datetime | None,
     canonical_decision_cutoff: datetime | None,
     source_file: str,
@@ -1695,7 +1611,10 @@ def validate_goalie_timestamp_contract(
             f"file={source_file}"
         )
 
-    if observed_at > decision_cutoff:
+    if (
+        observed_at is not None
+        and observed_at > decision_cutoff
+    ):
         fail(
             "Unsafe SportsDataverse goalie observation timestamp: "
             f"game_id={game_id} side={side} "
@@ -1704,7 +1623,10 @@ def validate_goalie_timestamp_contract(
             f"file={source_file}"
         )
 
-    if observed_at > snapshot_as_of:
+    if (
+        observed_at is not None
+        and observed_at > snapshot_as_of
+    ):
         fail(
             "SportsDataverse goalie status observation occurs "
             "after the stored goalie snapshot: "
@@ -1912,14 +1834,25 @@ def load_goalie_index() -> dict[
                         f"has invalid {side}_goalie_status={status!r}"
                     )
 
-                observed_at = parse_utc_timestamp(
+                observed_text = str(
                     row.get(
                         f"{side}_goalie_status_observed_at",
                         "",
                     )
+                ).strip()
+
+                observed_at = (
+                    parse_utc_timestamp(
+                        observed_text
+                    )
+                    if observed_text
+                    else None
                 )
 
-                if observed_at is None:
+                if observed_at is None and (
+                    observed_text
+                    or status != "unknown"
+                ):
                     fail(
                         f"{path} row {row_number} "
                         f"has invalid {side}_goalie_status_observed_at"
@@ -1961,7 +1894,11 @@ def load_goalie_index() -> dict[
 
                 normalized[
                     f"{side}_goalie_status_observed_at"
-                ] = observed_at.isoformat()
+                ] = (
+                    observed_at.isoformat()
+                    if observed_at is not None
+                    else ""
+                )
 
             normalized[
                 "starter_gsax_differential"
@@ -2154,14 +2091,32 @@ def goalie_features_for_game(
         "home",
         "away",
     ):
-        observed_at = parse_utc_timestamp(
+        status = str(
+            row.get(
+                f"{side}_goalie_status",
+                "",
+            )
+        ).strip().lower()
+
+        observed_text = str(
             row.get(
                 f"{side}_goalie_status_observed_at",
                 "",
             )
+        ).strip()
+
+        observed_at = (
+            parse_utc_timestamp(
+                observed_text
+            )
+            if observed_text
+            else None
         )
 
-        if observed_at is None:
+        if observed_at is None and (
+            observed_text
+            or status != "unknown"
+        ):
             fail(
                 "SportsDataverse goalie row missing valid "
                 f"{side} observation timestamp: game_id={game_id}"

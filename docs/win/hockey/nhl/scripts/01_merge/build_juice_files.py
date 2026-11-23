@@ -317,7 +317,16 @@ def process_file(path: Path) -> list[tuple[str, int]]:
         "dk_total_over_decimal","dk_total_under_decimal",
     ]
     for col in numeric_columns:
-        df[col] = to_numeric(df[col])
+        original = df[col]
+        converted = to_numeric(original)
+        had_value = original.notna() & original.astype(str).str.strip().ne("")
+        blanked = int((had_value & converted.isna()).sum())
+        if blanked:
+            log(
+                f"NON-NUMERIC VALUES BLANKED: file={path.name} "
+                f"column={col} count={blanked}"
+            )
+        df[col] = converted
     slate_date = path.name.replace("_NHL_merged.csv", "")
     outputs = [
         (OUTPUT_DIR / f"{slate_date}_NHL_moneyline.csv", build_moneyline),

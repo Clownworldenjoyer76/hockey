@@ -1,6 +1,6 @@
 {
-  "finished_at_utc": "2026-11-24T19:58:20.512750+00:00",
-  "wall_seconds": 43.301,
+  "finished_at_utc": "2026-11-24T20:35:59.102064+00:00",
+  "wall_seconds": 42.339,
   "cache": {
     "hit": 0,
     "miss": 0,
@@ -10,35 +10,35 @@
   "summary": {
     "request/schedule/nhl_web_schedule": {
       "count": 1,
-      "seconds": 0.37243
+      "seconds": 0.37537
     },
     "stage/schedule": {
       "count": 1,
-      "seconds": 0.44973
+      "seconds": 0.41555
     },
     "request/team-strength/nhl_team_ratings": {
       "count": 1,
-      "seconds": 3.58055
+      "seconds": 2.80798
     },
     "request/team-strength/normalize_team_ratings_asof": {
       "count": 1,
-      "seconds": 0.02815
+      "seconds": 0.02816
     },
     "stage/team_strength": {
       "count": 1,
-      "seconds": 3.63067
+      "seconds": 2.85102
     },
     "request/season-context/pbp": {
       "count": 1,
-      "seconds": 1.47779
+      "seconds": 1.08142
     },
     "request/season-context/shifts": {
       "count": 1,
-      "seconds": 0.53649
+      "seconds": 0.67557
     },
     "stage/season_context": {
       "count": 1,
-      "seconds": 2.01439
+      "seconds": 1.75711
     },
     "stage/save_season_context": {
       "count": 1,
@@ -46,76 +46,76 @@
     },
     "stage/lineup_strength_snapshot_read": {
       "count": 1,
-      "seconds": 0.22752
+      "seconds": 0.01986
     },
     "request/goalie/game_goalie_features_asof": {
       "count": 1,
-      "seconds": 36.29526
+      "seconds": 36.66271
     },
     "stage/goalie_feature_calculation": {
       "count": 1,
-      "seconds": 36.29529
+      "seconds": 36.66274
     },
     "request/fatigue/EDM_club_schedule_attempt_1": {
       "count": 1,
-      "seconds": 0.32886
+      "seconds": 0.32599
     },
     "request/fatigue/VGK_club_schedule_attempt_1": {
       "count": 1,
-      "seconds": 0.55317
+      "seconds": 0.52067
     },
     "stage/fatigue": {
       "count": 1,
-      "seconds": 0.61991
+      "seconds": 0.58708
     },
     "request/sdv_predictions/nhl_predict_games": {
       "count": 1,
-      "seconds": 0.00726
+      "seconds": 0.00221
     },
     "stage/sdv_predictions": {
       "count": 1,
-      "seconds": 0.02153
+      "seconds": 0.01106
     }
   },
   "events": [
     {
       "name": "request/schedule/nhl_web_schedule",
-      "seconds": 0.37243,
+      "seconds": 0.37537,
       "status": "ok"
     },
     {
       "name": "stage/schedule",
-      "seconds": 0.44973,
+      "seconds": 0.41555,
       "status": "ok"
     },
     {
       "name": "request/team-strength/nhl_team_ratings",
-      "seconds": 3.58055,
+      "seconds": 2.80798,
       "status": "ok"
     },
     {
       "name": "request/team-strength/normalize_team_ratings_asof",
-      "seconds": 0.02815,
+      "seconds": 0.02816,
       "status": "ok"
     },
     {
       "name": "stage/team_strength",
-      "seconds": 3.63067,
+      "seconds": 2.85102,
       "status": "ok"
     },
     {
       "name": "request/season-context/pbp",
-      "seconds": 1.47779,
+      "seconds": 1.08142,
       "status": "ok"
     },
     {
       "name": "request/season-context/shifts",
-      "seconds": 0.53649,
+      "seconds": 0.67557,
       "status": "ok"
     },
     {
       "name": "stage/season_context",
-      "seconds": 2.01439,
+      "seconds": 1.75711,
       "status": "ok"
     },
     {
@@ -125,42 +125,42 @@
     },
     {
       "name": "stage/lineup_strength_snapshot_read",
-      "seconds": 0.22752,
+      "seconds": 0.01986,
       "status": "ok"
     },
     {
       "name": "request/goalie/game_goalie_features_asof",
-      "seconds": 36.29526,
+      "seconds": 36.66271,
       "status": "ok"
     },
     {
       "name": "stage/goalie_feature_calculation",
-      "seconds": 36.29529,
+      "seconds": 36.66274,
       "status": "ok"
     },
     {
       "name": "request/fatigue/EDM_club_schedule_attempt_1",
-      "seconds": 0.32886,
+      "seconds": 0.32599,
       "status": "ok"
     },
     {
       "name": "request/fatigue/VGK_club_schedule_attempt_1",
-      "seconds": 0.55317,
+      "seconds": 0.52067,
       "status": "ok"
     },
     {
       "name": "stage/fatigue",
-      "seconds": 0.61991,
+      "seconds": 0.58708,
       "status": "ok"
     },
     {
       "name": "request/sdv_predictions/nhl_predict_games",
-      "seconds": 0.00726,
+      "seconds": 0.00221,
       "status": "ok"
     },
     {
       "name": "stage/sdv_predictions",
-      "seconds": 0.02153,
+      "seconds": 0.01106,
       "status": "ok"
     }
   ]

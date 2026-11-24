@@ -1,67 +1,71 @@
-[2026-11-24T21:06:28.851466+00:00] START 01_nhl_results_grade.py
-[2026-11-24T21:06:28.858657+00:00] CLEARED OLD NHL GRADED OUTPUTS
-[2026-11-24T21:06:29.080439+00:00] SELECT ROWS LOADED | files=56 | rows=852
-[2026-11-24T21:06:29.172832+00:00] FINAL SCORE ROWS LOADED | files=55 | rows=384
-[2026-11-24T21:06:29.179701+00:00] OFFICIAL STATUS ROWS LOADED | rows=661
-[2026-11-24T21:06:29.404132+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
-[2026-11-24T21:06:29.404376+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
-[2026-11-24T21:06:29.418568+00:00] GRADING RECONCILIATION | selected=852 | graded=850 | pending=2 | unresolved=0
-[2026-11-24T21:06:29.427035+00:00] WROTE PENDING GRADING ROWS | docs/win/hockey/nhl/05_final_scores/intermediate/01_nhl_results_grade_pending.csv | rows=2
-[2026-11-24T21:06:29.427117+00:00] NO UNRESOLVED GRADING ROWS
-[2026-11-24T21:06:29.436013+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_09_29_results_NHL.csv | rows=9
-[2026-11-24T21:06:29.438924+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_09_30_results_NHL.csv | rows=7
-[2026-11-24T21:06:29.441926+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_01_results_NHL.csv | rows=14
-[2026-11-24T21:06:29.444919+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_02_results_NHL.csv | rows=13
-[2026-11-24T21:06:29.448164+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_03_results_NHL.csv | rows=31
-[2026-11-24T21:06:29.451098+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_04_results_NHL.csv | rows=10
-[2026-11-24T21:06:29.454056+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_05_results_NHL.csv | rows=10
-[2026-11-24T21:06:29.457321+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_06_results_NHL.csv | rows=23
-[2026-11-24T21:06:29.460213+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_07_results_NHL.csv | rows=6
-[2026-11-24T21:06:29.463273+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_08_results_NHL.csv | rows=19
-[2026-11-24T21:06:29.466143+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_09_results_NHL.csv | rows=8
-[2026-11-24T21:06:29.469318+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_10_results_NHL.csv | rows=27
-[2026-11-24T21:06:29.472144+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_11_results_NHL.csv | rows=5
-[2026-11-24T21:06:29.474970+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_12_results_NHL.csv | rows=6
-[2026-11-24T21:06:29.478232+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_13_results_NHL.csv | rows=35
-[2026-11-24T21:06:29.481104+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_14_results_NHL.csv | rows=5
-[2026-11-24T21:06:29.484248+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_15_results_NHL.csv | rows=29
-[2026-11-24T21:06:29.487049+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_16_results_NHL.csv | rows=4
-[2026-11-24T21:06:29.490218+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_17_results_NHL.csv | rows=31
-[2026-11-24T21:06:29.492993+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_18_results_NHL.csv | rows=3
-[2026-11-24T21:06:29.509729+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_19_results_NHL.csv | rows=11
-[2026-11-24T21:06:29.513229+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_20_results_NHL.csv | rows=21
-[2026-11-24T21:06:29.516149+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_21_results_NHL.csv | rows=4
-[2026-11-24T21:06:29.519284+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_22_results_NHL.csv | rows=25
-[2026-11-24T21:06:29.522102+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_23_results_NHL.csv | rows=4
-[2026-11-24T21:06:29.525314+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_24_results_NHL.csv | rows=27
-[2026-11-24T21:06:29.528162+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_25_results_NHL.csv | rows=10
-[2026-11-24T21:06:29.531027+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_26_results_NHL.csv | rows=8
-[2026-11-24T21:06:29.534164+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_27_results_NHL.csv | rows=25
-[2026-11-24T21:06:29.537075+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_28_results_NHL.csv | rows=9
-[2026-11-24T21:06:29.540223+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_29_results_NHL.csv | rows=26
-[2026-11-24T21:06:29.543110+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_30_results_NHL.csv | rows=8
-[2026-11-24T21:06:29.546303+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_31_results_NHL.csv | rows=19
-[2026-11-24T21:06:29.549287+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_01_results_NHL.csv | rows=13
-[2026-11-24T21:06:29.552346+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_02_results_NHL.csv | rows=9
-[2026-11-24T21:06:29.555726+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_03_results_NHL.csv | rows=26
-[2026-11-24T21:06:29.558667+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_04_results_NHL.csv | rows=7
-[2026-11-24T21:06:29.561913+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_05_results_NHL.csv | rows=28
-[2026-11-24T21:06:29.564884+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_06_results_NHL.csv | rows=7
-[2026-11-24T21:06:29.568061+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_07_results_NHL.csv | rows=28
-[2026-11-24T21:06:29.571060+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_08_results_NHL.csv | rows=16
-[2026-11-24T21:06:29.573887+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_09_results_NHL.csv | rows=7
-[2026-11-24T21:06:29.576848+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_10_results_NHL.csv | rows=16
-[2026-11-24T21:06:29.579809+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_11_results_NHL.csv | rows=13
-[2026-11-24T21:06:29.582947+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_12_results_NHL.csv | rows=26
-[2026-11-24T21:06:29.586064+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_13_results_NHL.csv | rows=5
-[2026-11-24T21:06:29.589325+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_14_results_NHL.csv | rows=32
-[2026-11-24T21:06:29.592256+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_15_results_NHL.csv | rows=11
-[2026-11-24T21:06:29.595207+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_16_results_NHL.csv | rows=4
-[2026-11-24T21:06:29.598282+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_17_results_NHL.csv | rows=21
-[2026-11-24T21:06:29.601441+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_18_results_NHL.csv | rows=6
-[2026-11-24T21:06:29.604634+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_19_results_NHL.csv | rows=27
-[2026-11-24T21:06:29.607875+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_21_results_NHL.csv | rows=30
-[2026-11-24T21:06:29.610827+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_22_results_NHL.csv | rows=11
-[2026-11-24T21:06:29.613827+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_23_results_NHL.csv | rows=15
-[2026-11-24T21:06:29.629947+00:00] WROTE MASTER GRADED | docs/win/hockey/nhl/05_final_scores/graded/NHL_final.csv | rows=850
-[2026-11-24T21:06:29.630426+00:00] END 01_nhl_results_grade.py
+[2026-11-24T21:34:16.881714+00:00] START 01_nhl_results_grade.py
+[2026-11-24T21:34:16.887354+00:00] CLEARED OLD NHL GRADED OUTPUTS
+[2026-11-24T21:34:17.256149+00:00] SELECT ROWS LOADED | files=56 | rows=2310
+[2026-11-24T21:34:17.394553+00:00] FINAL SCORE ROWS LOADED | files=55 | rows=384
+[2026-11-24T21:34:17.401710+00:00] OFFICIAL STATUS ROWS LOADED | rows=661
+[2026-11-24T21:34:18.110752+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
+[2026-11-24T21:34:18.111073+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
+[2026-11-24T21:34:18.111361+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
+[2026-11-24T21:34:18.111655+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
+[2026-11-24T21:34:18.111971+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
+[2026-11-24T21:34:18.112263+00:00] PENDING GAME | game_id=2026020385 | game_state=FUT
+[2026-11-24T21:34:18.150115+00:00] GRADING RECONCILIATION | selected=2310 | graded=2304 | pending=6 | unresolved=0
+[2026-11-24T21:34:18.167965+00:00] WROTE PENDING GRADING ROWS | docs/win/hockey/nhl/05_final_scores/intermediate/01_nhl_results_grade_pending.csv | rows=6
+[2026-11-24T21:34:18.168111+00:00] NO UNRESOLVED GRADING ROWS
+[2026-11-24T21:34:18.183735+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_09_29_results_NHL.csv | rows=30
+[2026-11-24T21:34:18.188795+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_09_30_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.194414+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_01_results_NHL.csv | rows=48
+[2026-11-24T21:34:18.199707+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_02_results_NHL.csv | rows=30
+[2026-11-24T21:34:18.206001+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_03_results_NHL.csv | rows=78
+[2026-11-24T21:34:18.211534+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_04_results_NHL.csv | rows=30
+[2026-11-24T21:34:18.216791+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_05_results_NHL.csv | rows=24
+[2026-11-24T21:34:18.222482+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_06_results_NHL.csv | rows=54
+[2026-11-24T21:34:18.227495+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_07_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.233298+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_08_results_NHL.csv | rows=60
+[2026-11-24T21:34:18.238430+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_09_results_NHL.csv | rows=24
+[2026-11-24T21:34:18.244687+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_10_results_NHL.csv | rows=84
+[2026-11-24T21:34:18.249633+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_11_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.255890+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_12_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.262396+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_13_results_NHL.csv | rows=96
+[2026-11-24T21:34:18.267348+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_14_results_NHL.csv | rows=12
+[2026-11-24T21:34:18.273253+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_15_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.278683+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_16_results_NHL.csv | rows=12
+[2026-11-24T21:34:18.301103+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_17_results_NHL.csv | rows=84
+[2026-11-24T21:34:18.306447+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_18_results_NHL.csv | rows=12
+[2026-11-24T21:34:18.311749+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_19_results_NHL.csv | rows=24
+[2026-11-24T21:34:18.317718+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_20_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.322733+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_21_results_NHL.csv | rows=12
+[2026-11-24T21:34:18.328855+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_22_results_NHL.csv | rows=72
+[2026-11-24T21:34:18.333973+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_23_results_NHL.csv | rows=12
+[2026-11-24T21:34:18.340244+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_24_results_NHL.csv | rows=72
+[2026-11-24T21:34:18.345686+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_25_results_NHL.csv | rows=30
+[2026-11-24T21:34:18.350780+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_26_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.356766+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_27_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.361916+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_28_results_NHL.csv | rows=24
+[2026-11-24T21:34:18.367931+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_29_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.373054+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_30_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.379043+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_10_31_results_NHL.csv | rows=60
+[2026-11-24T21:34:18.384336+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_01_results_NHL.csv | rows=30
+[2026-11-24T21:34:18.389558+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_02_results_NHL.csv | rows=24
+[2026-11-24T21:34:18.395727+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_03_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.400927+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_04_results_NHL.csv | rows=24
+[2026-11-24T21:34:18.406936+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_05_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.412027+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_06_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.418090+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_07_results_NHL.csv | rows=72
+[2026-11-24T21:34:18.423539+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_08_results_NHL.csv | rows=36
+[2026-11-24T21:34:18.428618+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_09_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.434497+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_10_results_NHL.csv | rows=42
+[2026-11-24T21:34:18.439976+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_11_results_NHL.csv | rows=36
+[2026-11-24T21:34:18.446005+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_12_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.450979+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_13_results_NHL.csv | rows=12
+[2026-11-24T21:34:18.457374+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_14_results_NHL.csv | rows=84
+[2026-11-24T21:34:18.462789+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_15_results_NHL.csv | rows=30
+[2026-11-24T21:34:18.467649+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_16_results_NHL.csv | rows=12
+[2026-11-24T21:34:18.473537+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_17_results_NHL.csv | rows=66
+[2026-11-24T21:34:18.478570+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_18_results_NHL.csv | rows=18
+[2026-11-24T21:34:18.484561+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_19_results_NHL.csv | rows=72
+[2026-11-24T21:34:18.490816+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_21_results_NHL.csv | rows=84
+[2026-11-24T21:34:18.496091+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_22_results_NHL.csv | rows=30
+[2026-11-24T21:34:18.501636+00:00] WROTE DAILY GRADED | docs/win/hockey/nhl/05_final_scores/graded/2026_11_23_results_NHL.csv | rows=42
+[2026-11-24T21:34:18.562175+00:00] WROTE MASTER GRADED | docs/win/hockey/nhl/05_final_scores/graded/NHL_final.csv | rows=2304
+[2026-11-24T21:34:18.562927+00:00] END 01_nhl_results_grade.py

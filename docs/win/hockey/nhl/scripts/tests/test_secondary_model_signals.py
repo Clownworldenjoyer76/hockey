@@ -260,7 +260,7 @@ def test_markets_yaml_secondary_model_contract() -> None:
     path = NHL_ROOT / "config" / "markets.yaml"
     payload = yaml.safe_load(path.read_text(encoding="utf-8"))
     secondary = payload["markets"]["nhl"]["secondary_model"]
-    assert secondary["enabled"] is True
+    assert secondary["enabled"] is False
     assert secondary["min_train_rows"] == 100
     assert secondary["disagreement_quantile"] == pytest.approx(0.75)
     assert secondary["derived_signal_by_market"] == {

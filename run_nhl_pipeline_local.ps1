@@ -81,10 +81,23 @@ try {
         $env:GITHUB_REPOSITORY = 'clownworldenjoyer76/hockey'
         $env:NHL_ALLOW_INDEPENDENT_COMPARE = '1'
         $env:GITHUB_WORKSPACE = $Repo
-        try { S311 '01_merge\test_repo_independent_compare.py' @('--date',$RunDate) }
+        try {
+            $FinalDir = "$Nhl\my_probability\final_files"
+            $PredDir  = "$Nhl\my_probability\test_repo_side_by_side\predictions"
+            New-Item -ItemType Directory -Force -Path $FinalDir | Out-Null
+            $Days = @(Get-ChildItem "$Nhl\03_edges\secondary_signals" -File -Filter '????_??_??_NHL_moneyline.csv' | ForEach-Object { $_.Name.Substring(0,10) } | Sort-Object)
+            Log "independent comparison dates available: $($Days.Count)"
+            foreach ($Day in $Days) {
+                if (-not (Test-Path "$PredDir\${Day}_NHL_independent.csv")) {
+                    S311 '01_merge\test_repo_independent_compare.py' @('--date',$Day)
+                }
+            }
+            foreach ($Day in $Days) {
+                Copy-Item -Path "$PredDir\${Day}_NHL_independent.csv" -Destination "$FinalDir\" -Force -ErrorAction Stop
+            }
+            Log "Copied $($Days.Count) independent prediction file(s) to final_files"
+        }
         finally { Remove-Item Env:GITHUB_ACTIONS,Env:GITHUB_REPOSITORY,Env:NHL_ALLOW_INDEPENDENT_COMPARE,Env:GITHUB_WORKSPACE -ErrorAction SilentlyContinue }
-        Copy-Item -Path "$Nhl\my_probability\test_repo_side_by_side\predictions\${RunDate}_NHL_independent.csv" -Destination "$Nhl\my_probability\final_files\" -Force -ErrorAction Stop
-        Log "Copied ${RunDate}_NHL_independent.csv to final_files"
         S311 '04_select\validate_markets_config.py'
         S311 '04_select\hockey_select_bets.py'
     } else { Log 'No regular-season/playoff games today. Stages 00-04 skipped.' }

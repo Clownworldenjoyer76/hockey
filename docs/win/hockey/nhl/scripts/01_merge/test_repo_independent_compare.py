@@ -8,7 +8,7 @@ Reads: local NHL historical results, prior P5 xG, Stage 01 merged, Stage 03
 secondary-signal/EV files. Writes ONLY my_probability/test_repo_side_by_side.
 Never replaces a pipeline probability, EV, Kelly, bet selection, or source file.
 Fixed research candidates: V8 xG (2024-selected xG penalty) + form gate;
-50/50 original/Poisson-goal puck-line alpha=5; totals nearest as-of 4-feature,
+ridge-only puck-line (fit_puck_ridge); totals nearest as-of 4-feature,
 k=100, inverse-distance weights, prior=2. Totals candidate was picked after
 inspecting both retrospective seasons. No promise of future monotonicity.
 """
@@ -356,7 +356,7 @@ def build_independent(day, merged):
     ml=np.where(favorite_home,new_conf,1-new_conf)
     original_puck=fit_puck_ridge(past).predict(current)
     puck_goals=goal_puck(fit_goals(past),current)
-    puck=.5*original_puck+.5*puck_goals
+    puck=original_puck
     total=nearest_total(past,current)
     independent=current[['game_id','game_date','home_team','away_team','home_puck_line','total']].copy()
     independent['independent_home_prob_moneyline']=ml
@@ -368,7 +368,7 @@ def build_independent(day, merged):
     independent['moneyline_form_adjusted']=reduce
     independent['moneyline_v8_unadjusted_home']=original
     independent['model_moneyline']='V8_xG_form_gate_70pct'
-    independent['model_puck_line']='50pct_original_ridge_50pct_goals_alpha5'
+    independent['model_puck_line']='original_ridge_only'
     independent['model_total']='nearest_4f_k100_inverse_distance_prior2'
     for first,second in [('independent_home_prob_moneyline','independent_away_prob_moneyline'),
                          ('independent_home_prob_puck_line','independent_away_prob_puck_line'),
@@ -513,7 +513,7 @@ def main():
       'output':'sidecar_only','production_probabilities_changed':False,
       'source_stage03_read_only':True,
       'model_moneyline':'V8 independent xG + 70pct form gate',
-      'model_puck':'50pct independent ridge + 50pct Poisson goals alpha5',
+      'model_puck':'independent ridge only',
       'model_total':'nearest 4f k100 inverse distance prior2, retrospectively nominated',
       'models_not_coupled_to_D_Ratings_or_SDV_predictions':True,
       'historical_60plus_pass_does_not_guarantee_future_pass':True}

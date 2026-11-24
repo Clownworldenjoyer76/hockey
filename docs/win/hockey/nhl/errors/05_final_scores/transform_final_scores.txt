@@ -1,141 +1,132 @@
-2026-11-24T11:11:11.224127+00:00 | === transform_final_scores START ===
-2026-11-24T11:11:11.224171+00:00 | TARGET_DATE_SOURCE=/home/runner/work/hockey/hockey/docs/win/hockey/nhl/04_select
-2026-11-24T11:11:11.224183+00:00 | DRAT_CHECK_DIR=/home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw
-2026-11-24T11:11:11.224192+00:00 | OUT_DIR=/home/runner/work/hockey/hockey/docs/win/hockey/nhl/05_final_scores/final_scores
-2026-11-24T11:11:11.224201+00:00 | STATUS_FILE=/home/runner/work/hockey/hockey/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv
-2026-11-24T11:11:11.224584+00:00 | Stage 04 target dates discovered: 56
-2026-11-24T11:11:11.224612+00:00 | CURRENT_GAME_DATE_ET=2026_11_24
-2026-11-24T11:11:11.237968+00:00 | Loaded existing official NHL status history: rows=660
-2026-11-24T11:11:11.260752+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_09_29_nhl_raw.json
-2026-11-24T11:11:11.261914+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_09_30_nhl_raw.json
-2026-11-24T11:11:11.262378+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_01_nhl_raw.json
-2026-11-24T11:11:11.262879+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_02_nhl_raw.json
-2026-11-24T11:11:11.263337+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_03_nhl_raw.json
-2026-11-24T11:11:11.263906+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_04_nhl_raw.json
-2026-11-24T11:11:11.264356+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_05_nhl_raw.json
-2026-11-24T11:11:11.264775+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_06_nhl_raw.json
-2026-11-24T11:11:11.265309+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_07_nhl_raw.json
-2026-11-24T11:11:11.265717+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_08_nhl_raw.json
-2026-11-24T11:11:11.266247+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_09_nhl_raw.json
-2026-11-24T11:11:11.266706+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_10_nhl_raw.json
-2026-11-24T11:11:11.267290+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_11_nhl_raw.json
-2026-11-24T11:11:11.267700+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_12_nhl_raw.json
-2026-11-24T11:11:11.268125+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_13_nhl_raw.json
-2026-11-24T11:11:11.268731+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_14_nhl_raw.json
-2026-11-24T11:11:11.269156+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_15_nhl_raw.json
-2026-11-24T11:11:11.269680+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_16_nhl_raw.json
-2026-11-24T11:11:11.270083+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_17_nhl_raw.json
-2026-11-24T11:11:11.270661+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_18_nhl_raw.json
-2026-11-24T11:11:11.271050+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_19_nhl_raw.json
-2026-11-24T11:11:11.271502+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_20_nhl_raw.json
-2026-11-24T11:11:11.272022+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_21_nhl_raw.json
-2026-11-24T11:11:11.272431+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_22_nhl_raw.json
-2026-11-24T11:11:11.273037+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_23_nhl_raw.json
-2026-11-24T11:11:11.273594+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_24_nhl_raw.json
-2026-11-24T11:11:11.274337+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_25_nhl_raw.json
-2026-11-24T11:11:11.274960+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_26_nhl_raw.json
-2026-11-24T11:11:11.275423+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_27_nhl_raw.json
-2026-11-24T11:11:11.275973+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_28_nhl_raw.json
-2026-11-24T11:11:11.276441+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_29_nhl_raw.json
-2026-11-24T11:11:11.277015+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_30_nhl_raw.json
-2026-11-24T11:11:11.277454+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_10_31_nhl_raw.json
-2026-11-24T11:11:11.277974+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_01_nhl_raw.json
-2026-11-24T11:11:11.278476+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_02_nhl_raw.json
-2026-11-24T11:11:11.278899+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_03_nhl_raw.json
-2026-11-24T11:11:11.279464+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_04_nhl_raw.json
-2026-11-24T11:11:11.280026+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_05_nhl_raw.json
-2026-11-24T11:11:11.280620+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_06_nhl_raw.json
-2026-11-24T11:11:11.281050+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_07_nhl_raw.json
-2026-11-24T11:11:11.281618+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_08_nhl_raw.json
-2026-11-24T11:11:11.282096+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_09_nhl_raw.json
-2026-11-24T11:11:11.282510+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_10_nhl_raw.json
-2026-11-24T11:11:11.282975+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_11_nhl_raw.json
-2026-11-24T11:11:11.283439+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_12_nhl_raw.json
-2026-11-24T11:11:11.283962+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_13_nhl_raw.json
-2026-11-24T11:11:11.284391+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_14_nhl_raw.json
-2026-11-24T11:11:11.284978+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_15_nhl_raw.json
-2026-11-24T11:11:11.285441+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_16_nhl_raw.json
-2026-11-24T11:11:11.285834+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_17_nhl_raw.json
-2026-11-24T11:11:11.286386+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_18_nhl_raw.json
-2026-11-24T11:11:11.286812+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_19_nhl_raw.json
-2026-11-24T11:11:11.287369+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_21_nhl_raw.json
-2026-11-24T11:11:11.287941+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_22_nhl_raw.json
-2026-11-24T11:11:11.288382+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_23_nhl_raw.json
-2026-11-24T11:11:11.288852+00:00 | Reading D-Ratings check source: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/00_intake/drat_raw/2026_11_24_nhl_raw.json
-2026-11-24T11:11:11.295913+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_29 | preserved_final_rows=5
-2026-11-24T11:11:11.301718+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_30 | preserved_final_rows=3
-2026-11-24T11:11:11.306840+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_01 | preserved_final_rows=8
-2026-11-24T11:11:11.311962+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_02 | preserved_final_rows=5
-2026-11-24T11:11:11.317213+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_03 | preserved_final_rows=13
-2026-11-24T11:11:11.322000+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_04 | preserved_final_rows=5
-2026-11-24T11:11:11.326741+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_05 | preserved_final_rows=4
-2026-11-24T11:11:11.331590+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_06 | preserved_final_rows=9
-2026-11-24T11:11:11.336294+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_07 | preserved_final_rows=3
-2026-11-24T11:11:11.341128+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_08 | preserved_final_rows=10
-2026-11-24T11:11:11.345885+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_09 | preserved_final_rows=4
-2026-11-24T11:11:11.350828+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_10 | preserved_final_rows=14
-2026-11-24T11:11:11.355563+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_11 | preserved_final_rows=3
-2026-11-24T11:11:11.360497+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_12 | preserved_final_rows=3
-2026-11-24T11:11:11.365600+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_13 | preserved_final_rows=16
-2026-11-24T11:11:11.370284+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_14 | preserved_final_rows=2
-2026-11-24T11:11:11.375193+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_15 | preserved_final_rows=11
-2026-11-24T11:11:11.379898+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_16 | preserved_final_rows=2
-2026-11-24T11:11:11.384832+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_17 | preserved_final_rows=14
-2026-11-24T11:11:11.389563+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_18 | preserved_final_rows=2
-2026-11-24T11:11:11.394366+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_19 | preserved_final_rows=4
-2026-11-24T11:11:11.399199+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_20 | preserved_final_rows=11
-2026-11-24T11:11:11.403784+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_21 | preserved_final_rows=2
-2026-11-24T11:11:11.408685+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_22 | preserved_final_rows=12
-2026-11-24T11:11:11.413362+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_23 | preserved_final_rows=2
-2026-11-24T11:11:11.418254+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_24 | preserved_final_rows=12
-2026-11-24T11:11:11.422989+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_25 | preserved_final_rows=5
-2026-11-24T11:11:11.427647+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_26 | preserved_final_rows=3
-2026-11-24T11:11:11.432525+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_27 | preserved_final_rows=11
-2026-11-24T11:11:11.437306+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_28 | preserved_final_rows=4
-2026-11-24T11:11:11.442156+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_29 | preserved_final_rows=11
-2026-11-24T11:11:11.446800+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_30 | preserved_final_rows=3
-2026-11-24T11:11:11.451628+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_31 | preserved_final_rows=10
-2026-11-24T11:11:11.456370+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_01 | preserved_final_rows=5
-2026-11-24T11:11:11.461334+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_02 | preserved_final_rows=4
-2026-11-24T11:11:11.466239+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_03 | preserved_final_rows=11
-2026-11-24T11:11:11.470912+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_04 | preserved_final_rows=4
-2026-11-24T11:11:11.475806+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_05 | preserved_final_rows=11
-2026-11-24T11:11:11.480553+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_06 | preserved_final_rows=3
-2026-11-24T11:11:11.485504+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_07 | preserved_final_rows=12
-2026-11-24T11:11:11.490172+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_08 | preserved_final_rows=6
-2026-11-24T11:11:11.494828+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_09 | preserved_final_rows=3
-2026-11-24T11:11:11.499613+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_10 | preserved_final_rows=7
-2026-11-24T11:11:11.504798+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_11 | preserved_final_rows=6
-2026-11-24T11:11:11.509756+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_12 | preserved_final_rows=11
-2026-11-24T11:11:11.514406+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_13 | preserved_final_rows=2
-2026-11-24T11:11:11.519304+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_14 | preserved_final_rows=14
-2026-11-24T11:11:11.523939+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_15 | preserved_final_rows=5
-2026-11-24T11:11:11.528561+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_16 | preserved_final_rows=2
-2026-11-24T11:11:11.533391+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_17 | preserved_final_rows=11
-2026-11-24T11:11:11.538001+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_18 | preserved_final_rows=3
-2026-11-24T11:11:11.542924+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_19 | preserved_final_rows=12
-2026-11-24T11:11:11.547875+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_21 | preserved_final_rows=14
-2026-11-24T11:11:11.552564+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_22 | preserved_final_rows=5
-2026-11-24T11:11:11.552879+00:00 | Processing official NHL final scores for 2026_11_23
-2026-11-24T11:11:11.552949+00:00 | Fetching official NHL scores: https://api-web.nhle.com/v1/score/2026-11-23
-2026-11-24T11:11:11.590092+00:00 | DRAT CHECK MISSING: 2026_11_23 | Blue Jackets at Devils | official_game_id=2026020378
-2026-11-24T11:11:11.590234+00:00 | DRAT CHECK MISSING: 2026_11_23 | Kings at Canadiens | official_game_id=2026020379
-2026-11-24T11:11:11.590286+00:00 | DRAT CHECK MISSING: 2026_11_23 | Flames at Senators | official_game_id=2026020380
-2026-11-24T11:11:11.590330+00:00 | DRAT CHECK MISSING: 2026_11_23 | Maple Leafs at Islanders | official_game_id=2026020381
-2026-11-24T11:11:11.590371+00:00 | DRAT CHECK MISSING: 2026_11_23 | Mammoth at Jets | official_game_id=2026020382
-2026-11-24T11:11:11.590411+00:00 | DRAT CHECK MISSING: 2026_11_23 | Ducks at Kraken | official_game_id=2026020383
-2026-11-24T11:11:11.590450+00:00 | DRAT CHECK MISSING: 2026_11_23 | Wild at Sharks | official_game_id=2026020384
-2026-11-24T11:11:11.594481+00:00 | WROTE OFFICIAL FINAL SCORES: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/05_final_scores/final_scores/2026_11_23_NHL_final_scores.csv | rows=7
-2026-11-24T11:11:11.594514+00:00 | Processing official NHL final scores for 2026_11_24
-2026-11-24T11:11:11.594555+00:00 | Fetching official NHL scores: https://api-web.nhle.com/v1/score/2026-11-24
-2026-11-24T11:11:11.635204+00:00 | No officially final NHL games for 2026_11_24
-2026-11-24T11:11:11.651229+00:00 | WROTE OFFICIAL NHL GAME STATUS: /home/runner/work/hockey/hockey/docs/win/hockey/nhl/05_final_scores/intermediate/nhl_game_status.csv | rows=661
-2026-11-24T11:11:11.651366+00:00 | Stage 04 target dates considered: 56
-2026-11-24T11:11:11.651407+00:00 | Official NHL dates queried: 2
-2026-11-24T11:11:11.651417+00:00 | Completed historical dates skipped: 54
-2026-11-24T11:11:11.651425+00:00 | Existing final-score rows preserved without refetch/replacement: 377
-2026-11-24T11:11:11.651433+00:00 | Official NHL status rows written: 661
-2026-11-24T11:11:11.651441+00:00 | D-Ratings check files processed: 56
-2026-11-24T11:11:11.651449+00:00 | Official final-score rows written on queried dates: 7
-2026-11-24T11:11:11.651457+00:00 | Official final-score files written on queried dates: 1
-2026-11-24T11:11:11.651464+00:00 | === transform_final_scores END ===
+2026-11-24T19:59:46.108187+00:00 | === transform_final_scores START ===
+2026-11-24T19:59:46.109187+00:00 | TARGET_DATE_SOURCE=G:\hockey\docs\win\hockey\nhl\04_select
+2026-11-24T19:59:46.109187+00:00 | DRAT_CHECK_DIR=G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw
+2026-11-24T19:59:46.109187+00:00 | OUT_DIR=G:\hockey\docs\win\hockey\nhl\05_final_scores\final_scores
+2026-11-24T19:59:46.109187+00:00 | STATUS_FILE=G:\hockey\docs\win\hockey\nhl\05_final_scores\intermediate\nhl_game_status.csv
+2026-11-24T19:59:46.110421+00:00 | Stage 04 target dates discovered: 56
+2026-11-24T19:59:46.110421+00:00 | CURRENT_GAME_DATE_ET=2026_11_24
+2026-11-24T19:59:46.138318+00:00 | Loaded existing official NHL status history: rows=661
+2026-11-24T19:59:46.176157+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_09_29_nhl_raw.json
+2026-11-24T19:59:46.203295+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_09_30_nhl_raw.json
+2026-11-24T19:59:46.227454+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_01_nhl_raw.json
+2026-11-24T19:59:46.255532+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_02_nhl_raw.json
+2026-11-24T19:59:46.261620+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_03_nhl_raw.json
+2026-11-24T19:59:46.275334+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_04_nhl_raw.json
+2026-11-24T19:59:46.284414+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_05_nhl_raw.json
+2026-11-24T19:59:46.285413+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_06_nhl_raw.json
+2026-11-24T19:59:46.310072+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_07_nhl_raw.json
+2026-11-24T19:59:46.315560+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_08_nhl_raw.json
+2026-11-24T19:59:46.340342+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_09_nhl_raw.json
+2026-11-24T19:59:46.342776+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_10_nhl_raw.json
+2026-11-24T19:59:46.369488+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_11_nhl_raw.json
+2026-11-24T19:59:46.379762+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_12_nhl_raw.json
+2026-11-24T19:59:46.395458+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_13_nhl_raw.json
+2026-11-24T19:59:46.421737+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_14_nhl_raw.json
+2026-11-24T19:59:46.434932+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_15_nhl_raw.json
+2026-11-24T19:59:46.462502+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_16_nhl_raw.json
+2026-11-24T19:59:46.493572+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_17_nhl_raw.json
+2026-11-24T19:59:46.507956+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_18_nhl_raw.json
+2026-11-24T19:59:46.524542+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_19_nhl_raw.json
+2026-11-24T19:59:46.538387+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_20_nhl_raw.json
+2026-11-24T19:59:46.562096+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_21_nhl_raw.json
+2026-11-24T19:59:46.583138+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_22_nhl_raw.json
+2026-11-24T19:59:46.591289+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_23_nhl_raw.json
+2026-11-24T19:59:46.614835+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_24_nhl_raw.json
+2026-11-24T19:59:46.628300+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_25_nhl_raw.json
+2026-11-24T19:59:46.642562+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_26_nhl_raw.json
+2026-11-24T19:59:46.653089+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_27_nhl_raw.json
+2026-11-24T19:59:46.677314+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_28_nhl_raw.json
+2026-11-24T19:59:46.693388+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_29_nhl_raw.json
+2026-11-24T19:59:46.709278+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_30_nhl_raw.json
+2026-11-24T19:59:46.709278+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_10_31_nhl_raw.json
+2026-11-24T19:59:46.725342+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_01_nhl_raw.json
+2026-11-24T19:59:46.748717+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_02_nhl_raw.json
+2026-11-24T19:59:46.755593+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_03_nhl_raw.json
+2026-11-24T19:59:46.776715+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_04_nhl_raw.json
+2026-11-24T19:59:46.798609+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_05_nhl_raw.json
+2026-11-24T19:59:46.819800+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_06_nhl_raw.json
+2026-11-24T19:59:46.826753+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_07_nhl_raw.json
+2026-11-24T19:59:46.845816+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_08_nhl_raw.json
+2026-11-24T19:59:46.861647+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_09_nhl_raw.json
+2026-11-24T19:59:46.861647+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_10_nhl_raw.json
+2026-11-24T19:59:46.887446+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_11_nhl_raw.json
+2026-11-24T19:59:46.899140+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_12_nhl_raw.json
+2026-11-24T19:59:46.907363+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_13_nhl_raw.json
+2026-11-24T19:59:46.934086+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_14_nhl_raw.json
+2026-11-24T19:59:46.950049+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_15_nhl_raw.json
+2026-11-24T19:59:46.957332+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_16_nhl_raw.json
+2026-11-24T19:59:46.978305+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_17_nhl_raw.json
+2026-11-24T19:59:47.001153+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_18_nhl_raw.json
+2026-11-24T19:59:47.021204+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_19_nhl_raw.json
+2026-11-24T19:59:47.036307+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_21_nhl_raw.json
+2026-11-24T19:59:47.050278+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_22_nhl_raw.json
+2026-11-24T19:59:47.067218+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_23_nhl_raw.json
+2026-11-24T19:59:47.095147+00:00 | Reading D-Ratings check source: G:\hockey\docs\win\hockey\nhl\00_intake\drat_raw\2026_11_24_nhl_raw.json
+2026-11-24T19:59:47.110569+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_29 | preserved_final_rows=5
+2026-11-24T19:59:47.118304+00:00 | INCREMENTAL SKIP: completed historical date 2026_09_30 | preserved_final_rows=3
+2026-11-24T19:59:47.125296+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_01 | preserved_final_rows=8
+2026-11-24T19:59:47.132298+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_02 | preserved_final_rows=5
+2026-11-24T19:59:47.140396+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_03 | preserved_final_rows=13
+2026-11-24T19:59:47.146849+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_04 | preserved_final_rows=5
+2026-11-24T19:59:47.153654+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_05 | preserved_final_rows=4
+2026-11-24T19:59:47.161249+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_06 | preserved_final_rows=9
+2026-11-24T19:59:47.167907+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_07 | preserved_final_rows=3
+2026-11-24T19:59:47.175292+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_08 | preserved_final_rows=10
+2026-11-24T19:59:47.182272+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_09 | preserved_final_rows=4
+2026-11-24T19:59:47.190047+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_10 | preserved_final_rows=14
+2026-11-24T19:59:47.196270+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_11 | preserved_final_rows=3
+2026-11-24T19:59:47.203803+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_12 | preserved_final_rows=3
+2026-11-24T19:59:47.211286+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_13 | preserved_final_rows=16
+2026-11-24T19:59:47.217788+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_14 | preserved_final_rows=2
+2026-11-24T19:59:47.225267+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_15 | preserved_final_rows=11
+2026-11-24T19:59:47.232583+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_16 | preserved_final_rows=2
+2026-11-24T19:59:47.239338+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_17 | preserved_final_rows=14
+2026-11-24T19:59:47.246065+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_18 | preserved_final_rows=2
+2026-11-24T19:59:47.253065+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_19 | preserved_final_rows=4
+2026-11-24T19:59:47.260737+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_20 | preserved_final_rows=11
+2026-11-24T19:59:47.267238+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_21 | preserved_final_rows=2
+2026-11-24T19:59:47.274933+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_22 | preserved_final_rows=12
+2026-11-24T19:59:47.278119+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_23 | preserved_final_rows=2
+2026-11-24T19:59:47.288957+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_24 | preserved_final_rows=12
+2026-11-24T19:59:47.296322+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_25 | preserved_final_rows=5
+2026-11-24T19:59:47.302387+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_26 | preserved_final_rows=3
+2026-11-24T19:59:47.310397+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_27 | preserved_final_rows=11
+2026-11-24T19:59:47.317813+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_28 | preserved_final_rows=4
+2026-11-24T19:59:47.324898+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_29 | preserved_final_rows=11
+2026-11-24T19:59:47.331907+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_30 | preserved_final_rows=3
+2026-11-24T19:59:47.339941+00:00 | INCREMENTAL SKIP: completed historical date 2026_10_31 | preserved_final_rows=10
+2026-11-24T19:59:47.347462+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_01 | preserved_final_rows=5
+2026-11-24T19:59:47.353576+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_02 | preserved_final_rows=4
+2026-11-24T19:59:47.361274+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_03 | preserved_final_rows=11
+2026-11-24T19:59:47.369285+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_04 | preserved_final_rows=4
+2026-11-24T19:59:47.376772+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_05 | preserved_final_rows=11
+2026-11-24T19:59:47.383516+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_06 | preserved_final_rows=3
+2026-11-24T19:59:47.390390+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_07 | preserved_final_rows=12
+2026-11-24T19:59:47.398302+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_08 | preserved_final_rows=6
+2026-11-24T19:59:47.405085+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_09 | preserved_final_rows=3
+2026-11-24T19:59:47.412321+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_10 | preserved_final_rows=7
+2026-11-24T19:59:47.419428+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_11 | preserved_final_rows=6
+2026-11-24T19:59:47.427229+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_12 | preserved_final_rows=11
+2026-11-24T19:59:47.434435+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_13 | preserved_final_rows=2
+2026-11-24T19:59:47.442281+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_14 | preserved_final_rows=14
+2026-11-24T19:59:47.449301+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_15 | preserved_final_rows=5
+2026-11-24T19:59:47.456229+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_16 | preserved_final_rows=2
+2026-11-24T19:59:47.463242+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_17 | preserved_final_rows=11
+2026-11-24T19:59:47.470683+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_18 | preserved_final_rows=3
+2026-11-24T19:59:47.478233+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_19 | preserved_final_rows=12
+2026-11-24T19:59:47.486129+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_21 | preserved_final_rows=14
+2026-11-24T19:59:47.493317+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_22 | preserved_final_rows=5
+2026-11-24T19:59:47.500536+00:00 | INCREMENTAL SKIP: completed historical date 2026_11_23 | preserved_final_rows=7
+2026-11-24T19:59:47.500536+00:00 | Processing official NHL final scores for 2026_11_24
+2026-11-24T19:59:47.500536+00:00 | Fetching official NHL scores: https://api-web.nhle.com/v1/score/2026-11-24
+2026-11-24T19:59:47.959411+00:00 | No officially final NHL games for 2026_11_24
+2026-11-24T19:59:47.990986+00:00 | WROTE OFFICIAL NHL GAME STATUS: G:\hockey\docs\win\hockey\nhl\05_final_scores\intermediate\nhl_game_status.csv | rows=661
+2026-11-24T19:59:47.990986+00:00 | Stage 04 target dates considered: 56
+2026-11-24T19:59:47.990986+00:00 | Official NHL dates queried: 1
+2026-11-24T19:59:47.990986+00:00 | Completed historical dates skipped: 55
+2026-11-24T19:59:47.990986+00:00 | Existing final-score rows preserved without refetch/replacement: 384
+2026-11-24T19:59:47.990986+00:00 | Official NHL status rows written: 661
+2026-11-24T19:59:47.990986+00:00 | D-Ratings check files processed: 56
+2026-11-24T19:59:47.990986+00:00 | Official final-score rows written on queried dates: 0
+2026-11-24T19:59:47.990986+00:00 | Official final-score files written on queried dates: 0
+2026-11-24T19:59:47.990986+00:00 | === transform_final_scores END ===

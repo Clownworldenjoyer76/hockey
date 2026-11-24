@@ -2,7 +2,7 @@ markets:
   nhl:
   # SEE BOTTOM OF FILE FOR DETAILS.
     secondary_model:
-      enabled: true
+      enabled: false
       selection_mode: high_disagreement_requires_secondary_support
       unavailable_behavior: use_primary
       min_train_rows: 100
@@ -27,9 +27,9 @@ markets:
         odds_bands:
           - [-1000, 1000]
         ev_bands:
-          - [-1000.00, 999.9999]
+          - [-0.999999, 999.9999]
         kelly_bands:
-          - [-1000.0, 999.9999]
+          - [0.0, 999.9999]
 
       away:
         enabled: true
@@ -40,9 +40,9 @@ markets:
         odds_bands:
           - [-1000, 1000]
         ev_bands:
-          - [-1000.00, 999.9999]
+          - [-0.999999, 999.9999]
         kelly_bands:
-          - [-1000.0, 999.9999]
+          - [0.0, 999.9999]
 ##########################################################################################################################################################       
 ##########################################################################################################################################################
 # ── PUCK LINE  ────────────────────────────────────######################################################################################################
@@ -61,9 +61,9 @@ markets:
         odds_bands:
           - [-1000, 1000]
         ev_bands:
-          - [-1000.00, 999.9999]
+          - [-0.999999, 999.9999]
         kelly_bands:
-          - [-1000.0, 999.9999]
+          - [0.0, 999.9999]
 
       away:
         enabled: true
@@ -76,9 +76,9 @@ markets:
         odds_bands:
           - [-1000, 1000]
         ev_bands:
-          - [-1000.00, 999.9999]
+          - [-0.999999, 999.9999]
         kelly_bands:
-          - [-1000.0, 999.9999]
+          - [0.0, 999.9999]
 ##########################################################################################################################################################       
 ##########################################################################################################################################################
 # ── TOTAL      ────────────────────────────────────######################################################################################################
@@ -98,9 +98,9 @@ markets:
         odds_bands:
           - [-1000, 1000]
         ev_bands:
-          - [-1000.00, 999.9999]
+          - [-0.999999, 999.9999]
         kelly_bands:
-          - [-1000.0, 999.9999]
+          - [0.0, 999.9999]
 
       under:
         enabled: true
@@ -113,10 +113,9 @@ markets:
         odds_bands:
           - [-1000, 1000]
         ev_bands:
-          - [-1000.00, 999.9999]
+          - [-0.999999, 999.9999]
         kelly_bands:
-          - [-1000.0, 999.9999]
-
+          - [0.0, 999.9999]
           
 ##########################################################################################
 ##### NOTES ON FILTERS ###################################################################
@@ -152,17 +151,45 @@ markets:
 #        total: meta
 ###############################################################
 ###############################################################
-# moneyline:
 #      pick_preference: pick one below:
           # best_my_model_prob
           # best_ev = one moneyline side max per game, highest EV; best_prob = one moneyline side max per game, highest model probability
           # best_prob = one moneyline side max per game, highest model probability
           # all = can select both sides if both pass
           # best_my_model_prob
-  # home:
-   #     enabled: true
-        # based on home_model_prob_moneyline from the moneyline EV file
-       # prob_bands:
-        #  - [0.00, 1.00]
-        # Direct probability produced by the configured NHL secondary model.
-        #my_model_prob_bands:
+###############################################################
+############################################################### 
+# **Bands:** each side's `prob_bands`, `my_model_prob_bands`, `odds_bands`, `ev_bands`, `kelly_bands` and `line_bands` still filter. The validator requires all of these keys and rejects `kelly_bands` below 0 and `ev_bands` below -1.
+
+
+# secondary_model
+# **`secondary_model`:** with `enabled: true`, a high-disagreement bet with no secondary support is rejected. 
+#`enabled: false` removes that, but `test_markets_yaml_secondary_model_contract` asserts `true`, so pytest would fail and stop the run.
+  # If you set enabled: false in markets.yaml, change line 263 of G:\hockey\docs\win\hockey\nhl\scripts\tests\test_secondary_model_signals.py:
+  # From: assert secondary["enabled"] is True
+  # To: assert secondary["enabled"] is False
+  # Lines 264–270 stay unchanged. They check min_train_rows, disagreement_quantile and derived_signal_by_market, which stay in the config either way.
+  # For the Python Sript: Python's boolean is False with a capital F. A lowercase false is a name error in Python. The lowercase false in markets.yaml is correct, because that file is YAML.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

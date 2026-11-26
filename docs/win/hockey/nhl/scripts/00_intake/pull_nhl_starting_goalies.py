@@ -6,18 +6,26 @@ Run from GitHub Actions or the repository root:
 
 Requires the dated NHL schedule and team map. Validates goalie identities
 against current official NHL team rosters; compares saved SDV goalie snapshots
-for staleness. Writes only the dated starting-goalies CSV, after all source
-records have been matched and validated.
+for staleness. Initial captures write 33 columns. Later runs merge only
+status/confirmation fields, and starter IDs/stats when the starter changes.
+Existing game rows are immutable at/after their scheduled UTC start.
+Outputs: 00_intake/lineups/goalies/YYYY-MM-DD_goalies.csv.
+Optional --date YYYY-MM-DD; otherwise uses today's Eastern calendar date.
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
+from collections import Counter
+from contextlib import contextmanager
+from html import unescape
 import json
 import os
 import re
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from html.parser import HTMLParser
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -27,7 +35,7 @@ from urllib.request import Request, urlopen
 SOURCE_URL = "https://www.dailyfaceoff.com/starting-goalies"
 NHL_API_ROOT = "https://api-web.nhle.com/v1"
 BASE_DIR = Path(__file__).resolve().parents[2]  # docs/win/hockey/nhl
-OUTPUT_DIR = BASE_DIR / "00_intake" / "lineups"
+OUTPUT_DIR = BASE_DIR / "00_intake" / "lineups" / "goalies"
 SCHEDULE_DIR = BASE_DIR / "00_intake" / "nhl_schedule"
 ROSTER_DIR = BASE_DIR / "sdv" / "goalie"
 TEAM_MAP_PATH = BASE_DIR / "config" / "mapping" / "team_map_nhl.csv"
@@ -64,7 +72,14 @@ HEADERS = [
     "awayNewsStrengthName",
     "homeNewsDetails",
     "awayNewsDetails",
+    "homeConfirmedAt",
+    "awayConfirmedAt",
 ]
+
+STATUS_SUFFIXES = ("NewsStrengthId", "NewsStrengthName", "NewsDetails", "ConfirmedAt")
+STAT_SUFFIXES = ("GoalieWins", "GoalieLosses", "GoalieOvertimeLosses",
+                 "GoalieShutouts", "GoalieSavePercentage", "GoalieGoalsAgainstAvg")
+ISO_STAMP = r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z"
 
 REQUIRED_DFO_FIELDS = (
     "date", "time", "dateGmt", "homeTeamName", "awayTeamName",
@@ -110,14 +125,14 @@ def read_games(html):
         data = json.loads(data)
     if isinstance(data, dict):
         data = data.get("games")
-    if not isinstance(data, list) or not data:
-        raise ValueError("Expected a nonempty game list in pageProps.data")
+    if not isinstance(data, list):
+        raise ValueError("Expected a game list in pageProps.data")
     if not all(isinstance(game, dict) for game in data):
         raise ValueError("Game list contains a non-object record")
     return data
 
 
-def read_csv(path, required_fields):
+def read_csv(path, required_fields, allow_empty=False):
     if not path.is_file():
         raise FileNotFoundError(f"Required input file missing: {path}")
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
@@ -126,9 +141,9 @@ def read_csv(path, required_fields):
         if missing:
             raise ValueError(f"{path}: missing columns {sorted(missing)}")
         records = list(reader)
-    if not records:
+    if not records and not allow_empty:
         raise ValueError(f"Required input file is empty: {path}")
-    if any(None in row for row in records):
+    if any(None in row or any(v is None for v in row.values()) for row in records):
         raise ValueError(f"Malformed CSV row with unexpected extra cells: {path}")
     return records
 
@@ -198,7 +213,7 @@ def load_team_map(path=TEAM_MAP_PATH):
 
 def load_schedule(game_date, team_map, schedule_dir=SCHEDULE_DIR):
     path = schedule_dir / f"NHL_{game_date.replace('-', '_')}.csv"
-    records = read_csv(path, SCHEDULE_FIELDS)
+    records = read_csv(path, SCHEDULE_FIELDS, allow_empty=True)
     index = {}
     game_ids = set()
     for number, row in enumerate(records, start=2):
@@ -319,7 +334,8 @@ def csv_cell(value):
 
 
 def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR,
-               team_map_path=TEAM_MAP_PATH, nhl_fetch=None):
+               team_map_path=TEAM_MAP_PATH, nhl_fetch=None, *,
+               captured_at=None):
     dates = set()
     keys = set()
     for number, game in enumerate(games, start=1):
@@ -340,7 +356,7 @@ def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR,
     schedule = load_schedule(game_date, team_map, schedule_dir)
     roster_cache = {}
     official_roster_cache = {}
-    captured = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    captured = (captured_at or datetime.now(timezone.utc)).isoformat(timespec="seconds").replace("+00:00", "Z")
     rows = []
     matched_game_ids = set()
 
@@ -419,7 +435,7 @@ def build_rows(games, schedule_dir=SCHEDULE_DIR, roster_dir=ROSTER_DIR,
     return rows, game_date
 
 
-def write_csv(rows, game_date, output_dir=OUTPUT_DIR):
+def write_csv(rows, game_date, output_dir=OUTPUT_DIR, *, before_replace=None):
     output_dir.mkdir(parents=True, exist_ok=True)
     destination = output_dir / f"{game_date}_goalies.csv"
     temp_name = None
@@ -432,6 +448,8 @@ def write_csv(rows, game_date, output_dir=OUTPUT_DIR):
             writer = csv.DictWriter(temp, fieldnames=HEADERS, lineterminator="\n")
             writer.writeheader()
             writer.writerows(rows)
+        if before_replace is not None:
+            before_replace()
         os.replace(temp_name, destination)
     finally:
         if temp_name and os.path.exists(temp_name):
@@ -439,9 +457,193 @@ def write_csv(rows, game_date, output_dir=OUTPUT_DIR):
     return destination
 
 
-def main():
+def eastern_date(now):
+    """Use NHL/DFO Eastern calendar date; no third-party tzdata needed on Windows."""
+    try:
+        return now.astimezone(ZoneInfo("America/New_York")).date().isoformat()
+    except ZoneInfoNotFoundError:
+        # Current US DST rules, in force since 2007. Boundaries in UTC.
+        year = now.year
+        march = datetime(year, 3, 1, 7, tzinfo=timezone.utc)
+        november = datetime(year, 11, 1, 6, tzinfo=timezone.utc)
+        start = march + timedelta(days=(6 - march.weekday()) % 7 + 7)
+        end = november + timedelta(days=(6 - november.weekday()) % 7)
+        return (now - timedelta(hours=4 if start <= now < end else 5)).date().isoformat()
+
+
+def flat(text):
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(c for c in text if not unicodedata.combining(c))
+    return " ".join(re.sub(r"(?i)\bSt\.\s+Louis\b", "St Louis", text).split())
+
+
+def page_text(html):
+    # Same visible-HTML extraction used by the successful PowerShell test.
+    html = re.sub(r"<(script|style)\b[^>]*>.*?</\1\s*>", " ", html,
+                  flags=re.I | re.S)
+    html = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
+    return flat(unescape(re.sub(r"<[^>]+>", " ", html)))
+
+
+def game_key(game):
+    return (normalized_date(game["date"]),
+            str(game["homeTeamAbbreviation"]).strip().upper(),
+            str(game["awayTeamAbbreviation"]).strip().upper())
+
+
+def attach_confirmations(html, games, eligible_keys, observed_at):
+    """Extract actual DFO status timestamps, never infer them from capture time."""
+    page = page_text(html)
+    starts = []
+    for game in games:
+        stamp = parse_utc(game["dateGmt"], "DFO start").isoformat(
+            timespec="milliseconds").replace("+00:00", "Z")
+        pattern = (re.escape(flat(str(game["awayTeamName"]))) + r"\s+at\s+" +
+                   re.escape(flat(str(game["homeTeamName"]))) + r"\s+" + re.escape(stamp))
+        matches = list(re.finditer(pattern, page, flags=re.I))
+        if len(matches) == 1:
+            starts.append((matches[0].start(), game_key(game)))
+    blocks = {}
+    if len(starts) == len(games) and len({i for i, _ in starts}) == len(games):
+        starts.sort()
+        for i, (pos, key) in enumerate(starts):
+            end = starts[i + 1][0] if i + 1 < len(starts) else len(page)
+            blocks[key] = page[pos:end]
+    names = Counter(norm_name(g.get(f"{side}GoalieName"))
+                    for g in games for side in ("home", "away"))
+    for game in games:
+        key = game_key(game)
+        if key not in eligible_keys:
+            continue
+        for side in ("home", "away"):
+            field = f"{side}ConfirmedAt"
+            game[field] = ""
+            if str(game.get(f"{side}NewsStrengthName") or "").strip().casefold() != "confirmed":
+                continue
+            name = str(game.get(f"{side}GoalieName") or "").strip()
+            if not name:
+                raise ValueError(f"{key} {side}: Confirmed without a goalie name")
+            text = blocks.get(key)
+            if text is None:
+                if names[norm_name(name)] != 1:
+                    raise ValueError(f"{key} {side}: ambiguous goalie name {name}")
+                text = page
+            pattern = re.escape(flat(name)) + r"\s+Confirmed\s+(" + ISO_STAMP + r")"
+            values = set(re.findall(pattern, text, flags=re.I))
+            # In a matchup containing the same name twice, never guess the side.
+            other = "away" if side == "home" else "home"
+            if norm_name(name) == norm_name(game.get(f"{other}GoalieName")):
+                raise ValueError(f"{key}: duplicate goalie names within matchup")
+            if len(values) != 1:
+                raise ValueError(f"{key} {side} {name}: missing/ambiguous confirmation timestamp")
+            stamp = values.pop()
+            if not re.fullmatch(ISO_STAMP, stamp):
+                raise ValueError(f"{key} {side}: invalid timestamp {stamp}")
+            if parse_utc(stamp, f"{key} {side}") > observed_at:
+                raise ValueError(f"{key} {side}: confirmation is later than capture time")
+            game[field] = stamp
+
+
+def read_existing(path, game_date):
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames != HEADERS:
+            raise ValueError(f"{path}: expected exact 33-column schema; original file retained")
+        rows = list(reader)
+    ids = set()
+    for row in rows:
+        if None in row or any(v is None for v in row.values()):
+            raise ValueError(f"{path}: malformed row")
+        gid = nhl_id(row["game_id"], str(path))
+        if gid in ids or normalized_date(row["date"]) != game_date:
+            raise ValueError(f"{path}: duplicate game ID or incorrect date")
+        parse_utc(row["dateGmt"], str(path))
+        ids.add(gid)
+    return rows
+
+
+def as_text_row(row):
+    return {field: str(row.get(field)) if row.get(field) is not None else ""
+            for field in HEADERS}
+
+
+def merge_rows(existing, incoming, now):
+    """Retain all original rows; only approved fields may change before start."""
+    incoming_by_id = {str(r["game_id"]): as_text_row(r) for r in incoming}
+    if len(incoming_by_id) != len(incoming):
+        raise ValueError("Duplicate incoming game IDs")
+    output = []
+    for old in existing:
+        gid = old["game_id"]
+        fresh = incoming_by_id.pop(gid, None)
+        if now >= parse_utc(old["dateGmt"], gid) or fresh is None:
+            output.append(old.copy())
+            continue
+        for field in ("date", "home_team_id", "away_team_id", "homeTeamAbbreviation",
+                      "awayTeamAbbreviation"):
+            if old[field] != fresh[field]:
+                raise ValueError(f"{gid}: existing {field} differs from verified source")
+        if parse_utc(old["dateGmt"], gid) != parse_utc(fresh["dateGmt"], gid):
+            raise ValueError(f"{gid}: scheduled start changed; original row retained")
+        row = old.copy()
+        for side in ("home", "away"):
+            id_field = f"{side}_player_id"
+            # A missing/unresolved source identity must not overwrite a known goalie
+            # or attach someone else's confirmation to the existing ID.
+            if fresh[id_field] == "unknown" and old[id_field] != "unknown":
+                print(f"WARNING: {gid} {side}: unresolved source goalie; retaining existing side", flush=True)
+                continue
+            if not fresh[f"{side}NewsStrengthName"] and old[f"{side}NewsStrengthName"]:
+                print(f"WARNING: {gid} {side}: missing source status; retaining existing side", flush=True)
+                continue
+            if not fresh[f"{side}NewsStrengthId"] and old[f"{side}NewsStrengthId"]:
+                print(f"WARNING: {gid} {side}: missing source status ID; retaining existing side", flush=True)
+                continue
+            if fresh[id_field] != old[id_field]:
+                row[id_field] = fresh[id_field]
+                for suffix in STAT_SUFFIXES:
+                    row[side + suffix] = fresh[side + suffix]
+            for suffix in STATUS_SUFFIXES:
+                row[side + suffix] = fresh[side + suffix]
+        output.append(row)
+    # New rows are initial captures (even if the first run is after start).
+    output.extend(incoming_by_id.values())
+    return output
+
+
+@contextmanager
+def output_lock(output_dir):
+    """Serialize runs using an OS lock that is released even after a crash."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir.parent / ".starting_goalies.lock"
+    with path.open("a+b") as handle:
+        handle.seek(0, os.SEEK_END)
+        if handle.tell() == 0:
+            handle.write(b"0")
+            handle.flush()
+        handle.seek(0)
+        if os.name == "nt":
+            import msvcrt
+            msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+            try:
+                yield
+            finally:
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def fetch_page(game_date):
     request = Request(
-        SOURCE_URL,
+        f"{SOURCE_URL}/{game_date}",
         headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml",
@@ -449,13 +651,86 @@ def main():
     )
     with urlopen(request, timeout=45) as response:
         html = response.read().decode(response.headers.get_content_charset() or "utf-8")
+    return html, datetime.now(timezone.utc)
 
-    games = read_games(html)
-    rows, game_date = build_rows(games)
-    destination = write_csv(rows, game_date)
-    print(f"CSV: {destination}")
-    matched = sum(1 for r in rows for k in ("home_player_id", "away_player_id") if r[k] != "unknown")
-    print(f"Games: {len(rows)} | Columns: {len(HEADERS)} | NHL IDs matched: {matched} | unknown: {2 * len(rows) - matched}")
+
+def run(game_date, output_dir=OUTPUT_DIR, schedule_dir=SCHEDULE_DIR,
+        roster_dir=ROSTER_DIR, team_map_path=TEAM_MAP_PATH, nhl_fetch=None,
+        page_fetch=None, clock=None):
+    clock = clock or (lambda: datetime.now(timezone.utc))
+    game_date = normalized_date(game_date)
+    destination = output_dir / f"{game_date}_goalies.csv"
+    with output_lock(output_dir):
+        existing = read_existing(destination, game_date)
+        by_id = {r["game_id"]: r for r in existing}
+        team_map = load_team_map(team_map_path)
+        schedule = load_schedule(game_date, team_map, schedule_dir)
+        scheduled_ids = {r["game_id"].strip() for r in schedule.values()}
+        now = clock()
+        if destination.exists() and scheduled_ids <= by_id.keys() and all(
+                now >= parse_utc(r["dateGmt"], r["game_id"]) for r in existing):
+            print(f"CSV unchanged (all rows locked): {destination}")
+            return destination
+        html, captured = (page_fetch or fetch_page)(game_date)
+        games = read_games(html)
+        heading_date = datetime.strptime(game_date, "%Y-%m-%d")
+        heading = f"NHL Starting Goalies: {heading_date:%A, %B} {heading_date.day}"
+        if heading.casefold() not in page_text(html).casefold():
+            raise ValueError(f"Expected DFO page heading not found: {heading}")
+        seen = set()
+        eligible = []
+        now = clock()
+        for game in games:
+            for field in REQUIRED_DFO_FIELDS:
+                require_text(game, field, "Daily Faceoff")
+            key = game_key(game)
+            if key in seen or key not in schedule:
+                raise ValueError(f"Duplicate or unmatched DFO game: {key}")
+            seen.add(key)
+            gid = schedule[key]["game_id"].strip()
+            old = by_id.get(gid)
+            if old is not None and now >= parse_utc(old["dateGmt"], gid):
+                continue
+            eligible.append(game)
+        # Never silently publish an incomplete initial day or partial source page.
+        # Previously captured rows remain valid if DFO omits a matchup later.
+        missing = [key for key, row in schedule.items()
+                   if key not in seen and row["game_id"].strip() not in by_id]
+        if missing:
+            raise ValueError(f"DFO missing uncaptured scheduled games: {missing}")
+        incoming = []
+        if eligible:
+            attach_confirmations(html, games, {game_key(g) for g in eligible}, captured)
+            incoming, source_date = build_rows(
+                eligible, schedule_dir, roster_dir, team_map_path, nhl_fetch,
+                captured_at=captured)
+            if source_date != game_date:
+                raise ValueError("DFO date differs from requested date")
+        # Recheck scheduled start after all network requests / validations.
+        merged = merge_rows(existing, incoming, clock())
+        if destination.exists() and merged == existing:
+            print(f"CSV unchanged: {destination}")
+            return destination
+        # Detect a row crossing its lock time during CSV staging, before replacement.
+        changed_existing = [old for old, new in zip(existing, merged) if old != new]
+        def before_replace():
+            now = clock()
+            if any(now >= parse_utc(row["dateGmt"], row["game_id"])
+                   for row in changed_existing):
+                raise ValueError("Scheduled start reached during write; original CSV retained. Rerun.")
+        write_csv(merged, game_date, output_dir, before_replace=before_replace)
+        print(f"CSV: {destination}")
+        print(f"Games: {len(merged)} | Columns: {len(HEADERS)} | "
+              f"New: {len(merged)-len(existing)} | Updated: {len(changed_existing)} | "
+              f"Retained: {len(existing)-len(changed_existing)}")
+        return destination
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", help="NHL game date YYYY-MM-DD; defaults to today Eastern time")
+    args = parser.parse_args()
+    run(args.date or eastern_date(datetime.now(timezone.utc)))
 
 
 if __name__ == "__main__":

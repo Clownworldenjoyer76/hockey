@@ -1,0 +1,261 @@
+RUN DATE 2026_11_26
+[2026-11-26T04:00:02] START pip install 3.11
+Requirement already satisfied: pandas==3.0.5 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (3.0.5)
+Requirement already satisfied: numpy==1.26.4 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 2)) (1.26.4)
+Requirement already satisfied: scipy==1.12.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 3)) (1.12.0)
+Requirement already satisfied: pyyaml==6.0.3 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 4)) (6.0.3)
+Requirement already satisfied: playwright==1.62.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (1.62.0)
+Requirement already satisfied: pytz==2026.3.post1 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 6)) (2026.3.post1)
+Requirement already satisfied: requests==2.34.2 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (2.34.2)
+Requirement already satisfied: openpyxl==3.1.5 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 8)) (3.1.5)
+Requirement already satisfied: sportsdataverse==0.0.75 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.0.75)
+Requirement already satisfied: polars==1.44.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 10)) (1.44.1)
+Requirement already satisfied: pyarrow==25.0.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 11)) (25.0.1)
+Requirement already satisfied: pytest==9.1.1 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (9.1.1)
+Requirement already satisfied: python-dateutil>=2.8.2 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from pandas==3.0.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (2.9.0.post0)
+Requirement already satisfied: tzdata in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from pandas==3.0.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (2026.5)
+Requirement already satisfied: pyee<14,>=13 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from playwright==1.62.0->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (13.0.1)
+Requirement already satisfied: greenlet<4.0.0,>=3.1.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from playwright==1.62.0->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (3.5.6)
+Requirement already satisfied: charset_normalizer<4,>=2 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (3.5.1)
+Requirement already satisfied: idna<4,>=2.5 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (3.19)
+Requirement already satisfied: urllib3<3,>=1.26 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (2.7.0)
+Requirement already satisfied: certifi>=2023.5.7 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (2026.7.22)
+Requirement already satisfied: et-xmlfile in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from openpyxl==3.1.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 8)) (2.0.0)
+Requirement already satisfied: attrs>=20.3.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (26.1.0)
+Requirement already satisfied: beautifulsoup4>=4.11.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (4.15.0)
+Requirement already satisfied: inflection>=0.5.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.5.1)
+Requirement already satisfied: lxml>=4.9.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (6.1.3)
+Requirement already satisfied: matplotlib>=3.5.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.11.2)
+Requirement already satisfied: pyjanitor>=0.23.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.32.75)
+Requirement already satisfied: tqdm>=4.50.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (4.70.1)
+Requirement already satisfied: scikit-learn>=1.0.0 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.4.2)
+Requirement already satisfied: xgboost>=2.0.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.2.0)
+Requirement already satisfied: rapidfuzz>=3.13.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.14.6)
+Requirement already satisfied: polars-runtime-32==1.44.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from polars==1.44.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 10)) (1.44.1)
+Requirement already satisfied: colorama>=0.4 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (0.4.6)
+Requirement already satisfied: iniconfig>=1.0.1 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (2.3.0)
+Requirement already satisfied: packaging>=22 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (26.3)
+Requirement already satisfied: pluggy<2,>=1.5 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (1.6.0)
+Requirement already satisfied: pygments>=2.7.2 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (2.21.0)
+Requirement already satisfied: typing-extensions in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from pyee<14,>=13->playwright==1.62.0->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (4.16.0)
+Requirement already satisfied: soupsieve>=1.6.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from beautifulsoup4>=4.11.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.0.4)
+Requirement already satisfied: contourpy>=1.0.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.3.3)
+Requirement already satisfied: cycler>=0.10 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.12.1)
+Requirement already satisfied: fonttools>=4.28.2 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (4.68.0)
+Requirement already satisfied: kiwisolver>=1.3.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.5.1)
+Requirement already satisfied: pillow>=9 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (13.0.0)
+Requirement already satisfied: pyparsing>=3 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.3.3)
+Requirement already satisfied: natsort<9,>=8.4.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (8.4.0)
+Requirement already satisfied: pandas-flavor<0.9,>=0.8.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.8.1)
+Requirement already satisfied: multipledispatch in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.0.0)
+Requirement already satisfied: janitor-rs==0.6.8 in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.6.8)
+Requirement already satisfied: xarray in C:\Users\Mat\AppData\Local\Programs\Python\Python311\Lib\site-packages (from pandas-flavor<0.9,>=0.8.1->pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (2026.9.0)
+Requirement already satisfied: six>=1.5 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from python-dateutil>=2.8.2->pandas==3.0.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (1.17.0)
+Requirement already satisfied: joblib>=1.2.0 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from scikit-learn>=1.0.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.5.3)
+Requirement already satisfied: threadpoolctl>=2.0.0 in C:\Users\Mat\AppData\Roaming\Python\Python311\site-packages (from scikit-learn>=1.0.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.6.0)
+[2026-11-26T04:00:05] OK pip install 3.11
+[2026-11-26T04:00:05] START tests\validate_pipeline.py
+PASS | Required directories present: 18
+PASS | Required files present: 9
+PASS | Workflow Python references resolve: 33
+PASS | team_map_nhl.csv schema and official NHL mappings
+PASS | sportsdataverse version matches requirements.txt: 0.0.75
+NHL Stage 02 calibration validation complete: 0 errors, 64 warning(s).
+PASS | Configuration/schema validator passed: docs/win/hockey/nhl/scripts/02_juice/validate_juice_config.py
+NHL markets config validation complete: 0 errors.
+PASS | Configuration/schema validator passed: docs/win/hockey/nhl/scripts/04_select/validate_markets_config.py
+NHL pre-run pipeline validation PASSED.
+[2026-11-26T04:00:12] OK tests\validate_pipeline.py
+[2026-11-26T04:00:12] START pip install 3.12
+Requirement already satisfied: pandas==3.0.5 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (3.0.5)
+Requirement already satisfied: numpy==1.26.4 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 2)) (1.26.4)
+Requirement already satisfied: scipy==1.12.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 3)) (1.12.0)
+Requirement already satisfied: pyyaml==6.0.3 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 4)) (6.0.3)
+Requirement already satisfied: playwright==1.62.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (1.62.0)
+Requirement already satisfied: pytz==2026.3.post1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 6)) (2026.3.post1)
+Requirement already satisfied: requests==2.34.2 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (2.34.2)
+Requirement already satisfied: openpyxl==3.1.5 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 8)) (3.1.5)
+Requirement already satisfied: sportsdataverse==0.0.75 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.0.75)
+Requirement already satisfied: polars==1.44.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 10)) (1.44.1)
+Requirement already satisfied: pyarrow==25.0.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 11)) (25.0.1)
+Requirement already satisfied: pytest==9.1.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (9.1.1)
+Requirement already satisfied: python-dateutil>=2.8.2 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pandas==3.0.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (2.9.0.post0)
+Requirement already satisfied: tzdata in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pandas==3.0.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (2026.3)
+Requirement already satisfied: pyee<14,>=13 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from playwright==1.62.0->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (13.0.1)
+Requirement already satisfied: greenlet<4.0.0,>=3.1.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from playwright==1.62.0->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (3.5.6)
+Requirement already satisfied: charset_normalizer<4,>=2 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (3.5.1)
+Requirement already satisfied: idna<4,>=2.5 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (3.19)
+Requirement already satisfied: urllib3<3,>=1.26 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (2.7.0)
+Requirement already satisfied: certifi>=2023.5.7 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests==2.34.2->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 7)) (2026.7.22)
+Requirement already satisfied: et-xmlfile in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from openpyxl==3.1.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 8)) (2.0.0)
+Requirement already satisfied: attrs>=20.3.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (26.1.0)
+Requirement already satisfied: beautifulsoup4>=4.11.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (4.15.0)
+Requirement already satisfied: inflection>=0.5.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.5.1)
+Requirement already satisfied: lxml>=4.9.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (6.1.3)
+Requirement already satisfied: matplotlib>=3.5.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.11.1)
+Requirement already satisfied: pyjanitor>=0.23.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.32.27)
+Requirement already satisfied: tqdm>=4.50.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (4.70.0)
+Requirement already satisfied: scikit-learn>=1.0.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.9.1)
+Requirement already satisfied: xgboost>=2.0.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.2.0)
+Requirement already satisfied: rapidfuzz>=3.13.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.14.6)
+Requirement already satisfied: polars-runtime-32==1.44.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from polars==1.44.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 10)) (1.44.1)
+Requirement already satisfied: colorama>=0.4 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (0.4.6)
+Requirement already satisfied: iniconfig>=1.0.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (2.3.0)
+Requirement already satisfied: packaging>=22 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (26.3)
+Requirement already satisfied: pluggy<2,>=1.5 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (1.6.0)
+Requirement already satisfied: pygments>=2.7.2 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pytest==9.1.1->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 12)) (2.21.0)
+Requirement already satisfied: typing-extensions in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pyee<14,>=13->playwright==1.62.0->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 5)) (4.16.0)
+Requirement already satisfied: soupsieve>=1.6.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from beautifulsoup4>=4.11.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (2.9.2)
+Requirement already satisfied: contourpy>=1.0.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.3.3)
+Requirement already satisfied: cycler>=0.10 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.12.1)
+Requirement already satisfied: fonttools>=4.28.2 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (4.64.0)
+Requirement already satisfied: kiwisolver>=1.3.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.5.1)
+Requirement already satisfied: pillow>=9 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (12.3.0)
+Requirement already satisfied: pyparsing>=3 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from matplotlib>=3.5.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.3.2)
+Requirement already satisfied: natsort<9,>=8.4.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (8.4.0)
+Requirement already satisfied: pandas-flavor<0.9,>=0.8.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.8.1)
+Requirement already satisfied: multipledispatch in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.0.0)
+Requirement already satisfied: janitor-rs<0.7,>=0.6.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (0.6.1)
+Requirement already satisfied: xarray in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from pandas-flavor<0.9,>=0.8.1->pyjanitor>=0.23.1->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (2026.7.0)
+Requirement already satisfied: six>=1.5 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from python-dateutil>=2.8.2->pandas==3.0.5->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 1)) (1.17.0)
+Requirement already satisfied: joblib>=1.4.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from scikit-learn>=1.0.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (1.6.0)
+Requirement already satisfied: narwhals>=2.0.1 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from scikit-learn>=1.0.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (2.25.0)
+Requirement already satisfied: threadpoolctl>=3.5.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from scikit-learn>=1.0.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.6.0)
+Requirement already satisfied: cloudpickle>=3.0 in C:\Users\Mat\AppData\Local\Programs\Python\Python312\Lib\site-packages (from joblib>=1.4.0->scikit-learn>=1.0.0->sportsdataverse==0.0.75->-r G:\hockey\docs\win\hockey\nhl\requirements.txt (line 9)) (3.1.2)
+
+[notice] A new release of pip is available: 26.2.1 -> 26.3
+[notice] To update, run: C:\Users\Mat\AppData\Local\Programs\Python\Python312\python.exe -m pip install --upgrade pip
+[2026-11-26T04:00:15] OK pip install 3.12
+START pytest (3.12)
+OK pytest (3.12)
+[2026-11-26T04:00:32] START playwright install chromium
+[2026-11-26T04:00:35] OK playwright install chromium
+[2026-11-26T04:00:35] START compile 00_intake\nhl_odds_pull.py
+[2026-11-26T04:00:35] OK compile 00_intake\nhl_odds_pull.py
+[2026-11-26T04:00:35] START compile 00_intake\transform_hockey_odds.py
+[2026-11-26T04:00:35] OK compile 00_intake\transform_hockey_odds.py
+[2026-11-26T04:00:35] START compile 00_intake\transform_hockey.py
+[2026-11-26T04:00:36] OK compile 00_intake\transform_hockey.py
+[2026-11-26T04:00:36] START compile 00_intake\pull_nhl_schedule.py
+[2026-11-26T04:00:36] OK compile 00_intake\pull_nhl_schedule.py
+[2026-11-26T04:00:36] START compile 00_intake\reconcile_game_ids.py
+[2026-11-26T04:00:36] OK compile 00_intake\reconcile_game_ids.py
+[2026-11-26T04:00:36] START compile 00_intake\build_games.py
+[2026-11-26T04:00:36] OK compile 00_intake\build_games.py
+[2026-11-26T04:00:36] START compile tests\test_game_id_reconciliation.py
+[2026-11-26T04:00:36] OK compile tests\test_game_id_reconciliation.py
+[2026-11-26T04:00:36] START compile 03_edges\build_secondary_model_signals.py
+[2026-11-26T04:00:36] OK compile 03_edges\build_secondary_model_signals.py
+[2026-11-26T04:00:36] START compile 04_select\hockey_select_bets.py
+[2026-11-26T04:00:37] OK compile 04_select\hockey_select_bets.py
+[2026-11-26T04:00:37] START compile 04_select\validate_markets_config.py
+[2026-11-26T04:00:37] OK compile 04_select\validate_markets_config.py
+[2026-11-26T04:00:37] START compile 05_final_scores\01_nhl_results_grade.py
+[2026-11-26T04:00:37] OK compile 05_final_scores\01_nhl_results_grade.py
+[2026-11-26T04:00:37] START tests\test_game_id_reconciliation.py
+NHL odds transform complete.
+
+Done.
+NHL official schedule pull complete.
+NHL game ID reconciliation complete.
+NHL build_games.py summary
+Started: 2026-11-26 04:00:40
+Input directory: docs\win\hockey\nhl\00_intake\reconciled
+Output directory: docs\win\hockey\nhl\00_intake\games
+Log path: docs\win\hockey\nhl\errors\00_intake\build_games.txt
+Canonical game_id source: official NHL schedule via reconcile_game_ids.py
+Historical games files are retained independently of the currently available reconciled/sportsbook input files.
+
+Processing reconciled file: docs\win\hockey\nhl\00_intake\reconciled\NHL_2025_10_08.csv
+Date: 2025_10_08
+Rows written: 1
+Output file: docs\win\hockey\nhl\00_intake\games\2025_10_08_nhl_games.csv
+
+Completed successfully.
+Reconciled files processed: 1
+Games files written: 1
+Total official NHL game rows written: 1
+Historical games files deleted: 0
+Finished: 2026-11-26 04:00:40
+NHL odds transform complete.
+
+Done.
+NHL official schedule pull complete.
+NHL game ID reconciliation complete.
+NHL build_games.py summary
+Started: 2026-11-26 04:00:43
+Input directory: docs\win\hockey\nhl\00_intake\reconciled
+Output directory: docs\win\hockey\nhl\00_intake\games
+Log path: docs\win\hockey\nhl\errors\00_intake\build_games.txt
+Canonical game_id source: official NHL schedule via reconcile_game_ids.py
+Historical games files are retained independently of the currently available reconciled/sportsbook input files.
+
+Processing reconciled file: docs\win\hockey\nhl\00_intake\reconciled\NHL_2026_09_29.csv
+Date: 2026_09_29
+Rows written: 1
+Output file: docs\win\hockey\nhl\00_intake\games\2026_09_29_nhl_games.csv
+
+Completed successfully.
+Reconciled files processed: 1
+Games files written: 1
+Total official NHL game rows written: 1
+Historical games files deleted: 0
+Finished: 2026-11-26 04:00:43
+Fixture test dates: 2025_10_08, 2026_09_29
+Fixture test date: 2025_10_08
+Fixture date passed: 2025_10_08
+official_game_id=2025020004
+sportsbook_event_id=fixture_sb_20251008_001
+output_dir=G:\hockey\docs\win\hockey\nhl\test_output\game_id_reconciliation\2025_10_08
+Fixture test date: 2026_09_29
+Fixture date passed: 2026_09_29
+official_game_id=2026020002
+sportsbook_event_id=fixture_sb_20260929_001
+output_dir=G:\hockey\docs\win\hockey\nhl\test_output\game_id_reconciliation\2026_09_29
+NHL GAME ID RECONCILIATION TEST PASSED
+fixture_dates_tested=2
+[2026-11-26T04:00:43] OK tests\test_game_id_reconciliation.py
+[2026-11-26T04:00:43] START 00_intake\pull_nhl_schedule.py
+NHL official schedule pull complete.
+[2026-11-26T04:00:43] OK 00_intake\pull_nhl_schedule.py
+eligible_game_rows=0
+No regular-season/playoff games today. Stages 00-04 skipped.
+[2026-11-26T04:00:43] START 05_final_scores\transform_final_scores.py
+[2026-11-26T04:00:46] OK 05_final_scores\transform_final_scores.py
+[2026-11-26T04:00:46] START 05_final_scores\01_nhl_results_grade.py
+NHL grading complete.
+[2026-11-26T04:00:48] OK 05_final_scores\01_nhl_results_grade.py
+[2026-11-26T04:00:48] START 05_final_scores\02_nhl_results_analyze.py
+NHL analysis prep complete.
+[2026-11-26T04:00:49] OK 05_final_scores\02_nhl_results_analyze.py
+[2026-11-26T04:00:49] START 05_final_scores\03_nhl_results_reports.py
+NHL reports complete.
+[2026-11-26T04:00:52] OK 05_final_scores\03_nhl_results_reports.py
+[2026-11-26T04:00:52] START 05_final_scores\04_nhl_clv.py
+NHL CLV complete.
+[2026-11-26T04:00:56] OK 05_final_scores\04_nhl_clv.py
+[2026-11-26T04:00:56] START 05_final_scores\05_nhl_results_dashboard.py
+bets: 204 rows
+market_tally: 3 rows
+moneyline_ev: 5 rows
+moneyline_kelly: 3 rows
+moneyline_odds: 3 rows
+moneyline_win_prob: 3 rows
+puckline_ev: 4 rows
+puckline_kelly: 3 rows
+puckline_odds: 2 rows
+puckline_side: 2 rows
+puckline_win_prob: 1 rows
+total_ev: 2 rows
+total_kelly: 2 rows
+total_odds: 2 rows
+total_side: 2 rows
+total_range: 2 rows
+total_win_prob: 2 rows
+NHL dashboard data generated: frontend\data\dashboards\nhl.json (519245 bytes)
+[2026-11-26T04:00:56] OK 05_final_scores\05_nhl_results_dashboard.py
+[2026-11-26T04:00:56] START pipeline_health.py
+NHL pipeline health: healthy
+output: docs\win\hockey\nhl\pipeline_health.json
+frontend: frontend\data\pipeline_health\nhl.json
+[2026-11-26T04:00:56] OK pipeline_health.py

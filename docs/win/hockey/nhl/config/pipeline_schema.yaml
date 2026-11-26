@@ -398,6 +398,17 @@ prediction_model:
   goalie_integration:
     source_root: docs/win/hockey/nhl/sdv/goalie
     source_label: game_goalie_features_asof
+    starting_goalie_intake:
+      source: Daily Faceoff
+      producer_script: docs/win/hockey/nhl/scripts/00_intake/pull_nhl_starting_goalies.py
+      file_pattern: docs/win/hockey/nhl/00_intake/lineups/goalies/<YYYY-MM-DD>_goalies.csv
+      match: game_id, game date, scheduled UTC start, teams and NHL player ID
+      confirmation_fields: [homeConfirmedAt, awayConfirmedAt]
+      eligibility: Confirmed status, resolved player ID, explicit UTC timestamp at or before both snapshot and T-5.
+      live_source: daily_faceoff_confirmation
+      historical_source: daily_faceoff_retrospective_confirmation
+      limitation: A dated file holds only the retained final announcement, not the full announcement history. Historical replay uses published timestamps, not the later capture time.
+      missing_rating: Preserve confirmed identity even if prior GSAx is unavailable; leave GSAx blank and use NHL player ID label when the name is not present in prior SDV data.
     current_file: docs/win/hockey/nhl/sdv/goalie/latest_game_goalie_features_asof.csv
     historical_file_pattern: docs/win/hockey/nhl/sdv/goalie/season_<season>_game_goalie_features_asof.csv
     producer_script: docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py
@@ -428,17 +439,17 @@ prediction_model:
     - confirmed
     - unknown
     current_status_behavior:
-    - The built-in SportsDataverse producer emits projected when prior goalie usage can identify a candidate and unknown otherwise.
-    - The built-in producer does not fabricate expected or confirmed status.
-    - Expected or confirmed may only be supplied by a separately validated timestamped pregame source.
+    - Use an eligible Daily Faceoff confirmed starter before falling back to prior SDV goalie usage.
+    - Without eligible confirmation, emit projected when a prior candidate exists and unknown otherwise.
+    - Never infer confirmation from target-game participation. Backup is the highest-usage remaining goalie.
     as_of_rules:
       gsax: Calculate GSAx only from games strictly earlier than the target game date. The target game and all later games
         are excluded.
-      current: A current goalie snapshot is eligible only when goalie_snapshot_as_of_utc is at or before the fixed T-60 goalie_decision_cutoff_utc.
+      current: A current goalie snapshot is eligible only when goalie_snapshot_as_of_utc is at or before the fixed T-5 goalie_decision_cutoff_utc.
       historical: Historical goalie features are reconstructed only from prior-game play-by-play and evaluated at the fixed
-        T-60 goalie_decision_cutoff_utc.
+        T-5 goalie_decision_cutoff_utc.
       status: Each goalie status must have an observation timestamp at or before goalie_decision_cutoff_utc.
-      canonical_validation: Stage 01 requires the goalie decision cutoff to equal the canonical game start minus 60 minutes
+      canonical_validation: Stage 01 requires the goalie decision cutoff to equal the canonical game start minus 5 minutes (60 for legacy rows)
         and rejects later goalie snapshots or observations.
     starter_projection:
       method: Prior-game goalie appearance count among goalies observed for the team; highest prior appearances is projected
@@ -446,19 +457,20 @@ prediction_model:
       status: projected
       purpose: Leakage-safe fallback only; not a confirmation feed.
     production_cutoff:
-      status: VERIFIED
-      minutes_before_puck_drop: 60
+      status: T5_CONFIGURED
+      minutes_before_puck_drop: 5
+      legacy_snapshot_policy: Valid existing T-60 snapshots retain original cutoff and provenance; prefer T-5 per game, then the later eligible snapshot. Do not relabel old records.
       field: goalie_decision_cutoff_utc
       source_field: goalie_decision_cutoff_source
-      source_value: fixed_60_minutes_before_puck_drop
-      intended_bet_time: 60 minutes before the canonical NHL game start.
+      source_value: fixed_5_minutes_before_puck_drop
+      intended_bet_time: 5 minutes before the canonical NHL game start.
       eligibility_rule: Goalie snapshots and goalie status observations are eligible only when their timestamp is at or before
         goalie_decision_cutoff_utc.
       current_rule: If the current SportsDataverse goalie snapshot is created after goalie_decision_cutoff_utc, no game-level
         goalie feature row is produced for that game.
       historical_rule: Historical goalie features are reconstructed from prior games only and evaluated as of goalie_decision_cutoff_utc;
         later expected or confirmed observations are never backfilled.
-      canonical_validation: Stage 01 requires goalie_decision_cutoff_utc to equal canonical game start minus 60 minutes and
+      canonical_validation: Stage 01 requires goalie_decision_cutoff_utc to equal canonical game start minus 5 minutes (60 for legacy rows) and
         rejects any later goalie snapshot or observation.
       leakage_rule: Later projected, expected, or confirmed observations must never be backfilled into historical pregame
         predictions.

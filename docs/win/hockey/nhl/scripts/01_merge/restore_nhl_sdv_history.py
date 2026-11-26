@@ -127,14 +127,14 @@ def validate_source_row(
         row.get(f"{label}_snapshot_as_of_utc", ""), where
     )
 
-    if cutoff != start - timedelta(minutes=60) or snapshot > cutoff:
-        error(f"Unsafe {label} decision/snapshot cutoff: {where}")
-
-    if (
-        row.get(f"{label}_decision_cutoff_source")
-        != "fixed_60_minutes_before_puck_drop"
-    ):
+    source = row.get(f"{label}_decision_cutoff_source")
+    allowed = {"fixed_60_minutes_before_puck_drop": 60}
+    if family == "goalie":
+        allowed["fixed_5_minutes_before_puck_drop"] = 5
+    if source not in allowed:
         error(f"Invalid {label} production cutoff source: {where}")
+    if cutoff != start - timedelta(minutes=allowed[source]) or snapshot > cutoff:
+        error(f"Unsafe {label} decision/snapshot cutoff: {where}")
 
     for side in ("home", "away"):
         status_key = f"{side}_{label}_status"
@@ -292,6 +292,77 @@ def _same_archived_war(left: str, right: str) -> bool:
         return False
 
 
+def goalie_snapshot_rank(row: dict[str, str]) -> tuple[int, datetime]:
+    return (int(row["goalie_decision_cutoff_source"] == "fixed_5_minutes_before_puck_drop"),
+            utc_stamp(row["goalie_snapshot_as_of_utc"], row["game_id"]))
+
+
+def prefer_goalie_row(prior: dict[str, str], new: dict[str, str], where: str) -> dict[str, str]:
+    if (norm_date(prior["game_date"]) != norm_date(new["game_date"])
+            or prior.get("home_team") != new.get("home_team")
+            or prior.get("away_team") != new.get("away_team")
+            or utc_stamp(prior["pregame_cutoff_utc"], where)
+               != utc_stamp(new["pregame_cutoff_utc"], where)):
+        error(f"Conflicting goalie game identity: {where}")
+    old_rank, new_rank = goalie_snapshot_rank(prior), goalie_snapshot_rank(new)
+    if old_rank == new_rank:
+        if any((prior.get(k) or "") != (new.get(k) or "") for k in set(prior) | set(new)):
+            error(f"Conflicting goalie records at identical cutoff/snapshot: {where}")
+        return prior
+    return new if new_rank > old_rank else prior
+
+
+def prepare_goalie_history(folder: Path, suffix: str, key_fields: tuple[str, ...],
+                           value_fields: tuple[str, ...]) -> None:
+    """Select per game, keeping earlier eligible games on partial-slate reruns.
+
+    Preserve immutable dated archives. Existing T-60 rows retain their cutoff;
+    a valid T-5 row supersedes a T-60 row, then later eligible snapshots win.
+    """
+    latest = folder / f"latest_{suffix}.csv"
+    season_paths = sorted(folder.glob(f"season_*_{suffix}.csv"))
+    archives = sorted(folder.glob(f"*_ET_{suffix}.csv"))
+    pattern = re.compile(rf"^(\d{{4}}_\d{{2}}_\d{{2}})T\d{{6}}_ET_{re.escape(suffix)}\.csv$")
+    columns: list[str] = []
+    winners: dict[tuple[str, ...], dict[str, str]] = {}
+    latest_rows: dict[tuple[str, ...], dict[str, str]] = {}
+    for path in [*season_paths, *archives, *([latest] if latest.is_file() else [])]:
+        match = pattern.fullmatch(path.name)
+        if path in archives and match is None:
+            continue
+        if path in archives and not path.read_text(encoding="utf-8-sig").strip():
+            print(f"SDV empty historical snapshot skipped: {path}")
+            continue
+        header, rows = checked_rows(path, "goalie", key_fields, value_fields,
+                                    match.group(1) if match else "")
+        for column in header:
+            if column not in columns:
+                columns.append(column)
+        for row in rows:
+            key = make_key(row, key_fields)
+            if path == latest:
+                latest_rows[key] = row
+            if key in winners:
+                winners[key] = prefer_goalie_row(winners[key], row, f"{path} {key}")
+            else:
+                winners[key] = row
+    # Partition by calendar year, matching the existing archive restorer.
+    # Leave winning latest rows in latest only; a stale latest never hides a
+    # superior archived/reconstructed row. No dated archives are deleted.
+    by_year: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for key, row in sorted(winners.items()):
+        if latest_rows.get(key) == row:
+            continue
+        by_year[norm_date(row["game_date"])[:4]].append(row)
+    for path in season_paths:
+        year = path.name.removeprefix("season_").split("_", 1)[0]
+        by_year.setdefault(year, [])
+    for year, rows in sorted(by_year.items()):
+        output = folder / f"season_{year}_{suffix}.csv"
+        atomic_csv(output, columns, rows)
+        print(f"SDV history goalie: {len(rows)} historical rows => {output}")
+
+
 def prepare_history() -> None:
     for family, (
         directory, suffix, key_fields, value_fields
@@ -300,6 +371,10 @@ def prepare_history() -> None:
 
         if not folder.is_dir():
             error(f"Missing SDV source folder: {folder}")
+
+        if family == "goalie":
+            prepare_goalie_history(folder, suffix, key_fields, value_fields)
+            continue
 
         latest_path = folder / f"latest_{suffix}.csv"
         latest_dates: set[str] = set()
@@ -535,6 +610,9 @@ def input_index(
 
             key = tuple(identity)
 
+            if family == "goalie" and key in index:
+                index[key] = prefer_goalie_row(index[key], row, f"{path} {key}")
+                continue
             if key in index and index[key] != row:
                 error(
                     f"Conflicting {family} season/latest "

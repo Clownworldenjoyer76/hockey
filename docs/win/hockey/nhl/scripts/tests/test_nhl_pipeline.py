@@ -36,6 +36,7 @@ CORE_PATHS = [
     "docs/win/hockey/nhl/config/juice/nhl_total_juice.csv",
     "docs/win/hockey/nhl/scripts/00_intake/build_games.py",
     "docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py",
+    "docs/win/hockey/nhl/scripts/00_intake/pull_nhl_starting_goalies.py",
     "docs/win/hockey/nhl/scripts/00_intake/transform_hockey_odds.py",
     "docs/win/hockey/nhl/scripts/00_intake/transform_hockey.py",
     "docs/win/hockey/nhl/scripts/01_merge/merge_intake.py",
@@ -3976,6 +3977,7 @@ def test_pull_sdv_goalie_features_use_only_prior_games(
         "docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py"
     )
 
+    monkeypatch.setattr(module, "load_starting_goalies_for_day", lambda day: {})
     monkeypatch.setattr(
         module,
         "official_schedule_cutoff_lookup",
@@ -4124,7 +4126,7 @@ def test_pull_sdv_goalie_features_use_only_prior_games(
             generated_at_utc=module.datetime(
                 2026,
                 1,
-                3,
+                4,
                 20,
                 0,
                 tzinfo=module.UTC,
@@ -4191,31 +4193,32 @@ def test_pull_sdv_goalie_features_use_only_prior_games(
         target[
             "goalie_decision_cutoff_utc"
         ]
-        == "2026-01-03T23:00:00Z"
+        == "2026-01-03T23:55:00Z"
     )
 
     assert (
         target[
             "goalie_snapshot_as_of_utc"
         ]
-        == "2026-01-03T23:00:00Z"
+        == "2026-01-03T23:55:00Z"
     )
 
     assert (
         target[
             "home_goalie_status_observed_at"
         ]
-        == "2026-01-03T23:00:00Z"
+        == "2026-01-03T23:55:00Z"
     )
 
 
-def test_pull_sdv_rejects_current_goalie_snapshot_after_t60_cutoff(
+def test_pull_sdv_rejects_current_goalie_snapshot_after_t5_cutoff(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     module = load_repo_module(
         "docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py"
     )
 
+    monkeypatch.setattr(module, "load_starting_goalies_for_day", lambda day: {})
     monkeypatch.setattr(
         module,
         "official_schedule_cutoff_lookup",
@@ -4329,7 +4332,7 @@ def test_pull_sdv_rejects_current_goalie_snapshot_after_t60_cutoff(
                 1,
                 1,
                 23,
-                0,
+                55,
                 tzinfo=module.UTC,
             ),
         )
@@ -4351,7 +4354,7 @@ def test_pull_sdv_rejects_current_goalie_snapshot_after_t60_cutoff(
                 1,
                 1,
                 23,
-                0,
+                55,
                 1,
                 tzinfo=module.UTC,
             ),
@@ -4373,8 +4376,8 @@ def test_merge_intake_builds_strict_asof_goalie_features() -> None:
             "home_team": "Boston Bruins",
             "away_team": "New York Rangers",
             "pregame_cutoff_utc": "2026-01-02T00:00:00+00:00",
-            "goalie_decision_cutoff_utc": "2026-01-01T23:00:00+00:00",
-            "goalie_decision_cutoff_source": "fixed_60_minutes_before_puck_drop",
+            "goalie_decision_cutoff_utc": "2026-01-01T23:55:00+00:00",
+            "goalie_decision_cutoff_source": "fixed_5_minutes_before_puck_drop",
             "goalie_snapshot_as_of_utc": "2026-01-01T22:00:00+00:00",
             "home_expected_starter": "Jeremy Swayman",
             "away_expected_starter": "Igor Shesterkin",
@@ -4423,7 +4426,7 @@ def test_merge_intake_builds_strict_asof_goalie_features() -> None:
     )
 
 
-def test_merge_intake_accepts_goalie_observation_at_t60_cutoff() -> None:
+def test_merge_intake_accepts_goalie_observation_at_t5_cutoff() -> None:
     module = load_repo_module(
         "docs/win/hockey/nhl/scripts/01_merge/merge_intake.py"
     )
@@ -4435,9 +4438,9 @@ def test_merge_intake_accepts_goalie_observation_at_t60_cutoff() -> None:
             "home_team": "Boston Bruins",
             "away_team": "New York Rangers",
             "pregame_cutoff_utc": "2026-01-02T00:00:00+00:00",
-            "goalie_decision_cutoff_utc": "2026-01-01T23:00:00+00:00",
-            "goalie_decision_cutoff_source": "fixed_60_minutes_before_puck_drop",
-            "goalie_snapshot_as_of_utc": "2026-01-01T23:00:00+00:00",
+            "goalie_decision_cutoff_utc": "2026-01-01T23:55:00+00:00",
+            "goalie_decision_cutoff_source": "fixed_5_minutes_before_puck_drop",
+            "goalie_snapshot_as_of_utc": "2026-01-01T23:55:00+00:00",
             "home_expected_starter": "Jeremy Swayman",
             "away_expected_starter": "Igor Shesterkin",
             "home_starter_gsax": "4.25",
@@ -4447,8 +4450,8 @@ def test_merge_intake_accepts_goalie_observation_at_t60_cutoff() -> None:
             "starter_gsax_differential": "1.5",
             "home_goalie_status": "expected",
             "away_goalie_status": "expected",
-            "home_goalie_status_observed_at": "2026-01-01T23:00:00+00:00",
-            "away_goalie_status_observed_at": "2026-01-01T23:00:00+00:00",
+            "home_goalie_status_observed_at": "2026-01-01T23:55:00+00:00",
+            "away_goalie_status_observed_at": "2026-01-01T23:55:00+00:00",
             "home_goalie_status_source": "fixture_expected",
             "away_goalie_status_source": "fixture_expected",
             "_source_file": "fixture.csv",
@@ -4474,7 +4477,7 @@ def test_merge_intake_accepts_goalie_observation_at_t60_cutoff() -> None:
     )
 
 
-def test_merge_intake_rejects_goalie_observation_after_t60_cutoff() -> None:
+def test_merge_intake_rejects_goalie_observation_after_t5_cutoff() -> None:
     module = load_repo_module(
         "docs/win/hockey/nhl/scripts/01_merge/merge_intake.py"
     )
@@ -4486,8 +4489,8 @@ def test_merge_intake_rejects_goalie_observation_after_t60_cutoff() -> None:
             "home_team": "Boston Bruins",
             "away_team": "New York Rangers",
             "pregame_cutoff_utc": "2026-01-02T00:00:00+00:00",
-            "goalie_decision_cutoff_utc": "2026-01-01T23:00:00+00:00",
-            "goalie_decision_cutoff_source": "fixed_60_minutes_before_puck_drop",
+            "goalie_decision_cutoff_utc": "2026-01-01T23:55:00+00:00",
+            "goalie_decision_cutoff_source": "fixed_5_minutes_before_puck_drop",
             "goalie_snapshot_as_of_utc": "2026-01-01T22:00:00+00:00",
             "home_expected_starter": "Jeremy Swayman",
             "away_expected_starter": "Igor Shesterkin",
@@ -4498,7 +4501,7 @@ def test_merge_intake_rejects_goalie_observation_after_t60_cutoff() -> None:
             "starter_gsax_differential": "1.5",
             "home_goalie_status": "confirmed",
             "away_goalie_status": "projected",
-            "home_goalie_status_observed_at": "2026-01-01T23:00:01+00:00",
+            "home_goalie_status_observed_at": "2026-01-01T23:55:01+00:00",
             "away_goalie_status_observed_at": "2026-01-01T22:00:00+00:00",
             "home_goalie_status_source": "fixture_confirmation",
             "away_goalie_status_source": "fixture_projection",
@@ -6346,3 +6349,95 @@ def test_reporting_revalues_legacy_ev_without_mutating_input(tmp_path, monkeypat
     trail = pd.read_csv(tmp_path / "reports" / "nhl_price_revaluations.csv")
     assert len(trail) == 1
     assert trail.loc[0, "original_decimal"] == pytest.approx(1.45)
+
+
+# Daily Faceoff T-5 goalie integration.
+@pytest.mark.parametrize("confirmation,status,player_id,expected", [
+    ("2026-11-17T23:55:00.000Z", "Confirmed", "11", True),
+    ("2026-11-17T23:55:00.001Z", "Confirmed", "11", False),
+    ("2026-11-17T23:54:00.000Z", "Expected", "11", False),
+    ("2026-11-17T23:54:00.000Z", "Confirmed", "unknown", False),
+    ("2026-11-17T23:54:00", "Confirmed", "11", False),
+])
+def test_dfo_confirmation_eligibility(confirmation, status, player_id, expected):
+    module = load_repo_module("docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py")
+    start = module.datetime(2026, 11, 18, tzinfo=module.UTC)
+    cutoff = start - module.timedelta(minutes=5)
+    game = {"game_id": "2026020333", "game_date": "2026-11-17",
+            "home_team": "BOS", "away_team": "NYR"}
+    row = {"game_id": game["game_id"], "date": game["game_date"],
+           "dateGmt": "2026-11-18T00:00:00Z", "CapturedUTC": "2026-11-20T00:00:00Z",
+           "home_team": "Boston Bruins", "away_team": "New York Rangers",
+           "homeTeamAbbreviation": "BOS", "awayTeamAbbreviation": "NYR",
+           "home_player_id": player_id, "homeNewsStrengthName": status,
+           "homeConfirmedAt": confirmation}
+    result = module.eligible_starting_goalie(row, game, "home", start, cutoff, current=False)
+    assert (result is not None) == expected
+    # A retrospective capture must not masquerade as an actual live snapshot.
+    assert module.eligible_starting_goalie(row, game, "home", start, cutoff, current=True) is None
+
+
+def test_dfo_confirmed_starter_changes_gsax_and_backup(monkeypatch):
+    module = load_repo_module("docs/win/hockey/nhl/scripts/00_intake/pull_sdv.py")
+    monkeypatch.setattr(module, "official_schedule_cutoff_lookup", lambda *a: {})
+    schedule = module.pl.DataFrame({
+        "game_id": ["2026020333"], "game_date": ["2026-11-17"],
+        "game_time": ["19:00"], "home_team_abbr": ["BOS"], "away_team_abbr": ["NYR"],
+    })
+    pbp = module.pl.DataFrame({
+        "game_id": ["2026020300", "2026020301", "2026020302"],
+        "game_date": ["2026-11-10", "2026-11-11", "2026-11-12"],
+        "home_abbr": ["BOS"] * 3, "away_abbr": ["NYR"] * 3,
+        "home_goalie_id": [10, 10, 11], "away_goalie_id": [20, 20, 20],
+        "home_goalie": ["Projected", "Projected", "Confirmed Starter"],
+        "away_goalie": ["Away"] * 3,
+    })
+    monkeypatch.setattr(module.nhl, "nhl_goalie_gsax", lambda *_: module.pl.DataFrame({
+        "player_id": [10, 11, 20], "goalie": ["Projected", "Confirmed Starter", "Away"],
+        "gsax": [1.0, 4.0, 2.0],
+    }))
+    dfo = {"game_id": "2026020333", "date": "2026-11-17", "dateGmt": "2026-11-18T00:00:00Z",
+           "CapturedUTC": "2026-11-17T12:00:00Z", "home_team": "Boston Bruins",
+           "away_team": "New York Rangers", "homeTeamAbbreviation": "BOS", "awayTeamAbbreviation": "NYR",
+           "home_player_id": "11", "away_player_id": "20", "homeNewsStrengthName": "Confirmed",
+           "awayNewsStrengthName": "Confirmed", "homeConfirmedAt": "2026-11-17T23:54:00Z",
+           "awayConfirmedAt": "2026-11-17T23:56:00Z"}
+    monkeypatch.setattr(module, "load_starting_goalies_for_day", lambda day: {dfo["game_id"]: dfo})
+    result = module.build_game_goalie_features_asof(schedule, pbp, module.pl.DataFrame(), current=False,
+        generated_at_utc=module.datetime(2026, 11, 18, 12, tzinfo=module.UTC)).to_dicts()[0]
+    assert result["home_expected_starter"] == "Confirmed Starter"
+    assert result["home_starter_gsax"] == 4.0
+    assert result["home_backup_gsax"] == 1.0
+    assert result["home_goalie_status"] == "confirmed"
+    assert result["home_goalie_status_observed_at"] == dfo["homeConfirmedAt"]
+    assert result["away_goalie_status"] == "projected"
+    assert result["starter_gsax_differential"] == 2.0
+
+
+def test_goalie_history_keeps_early_games_on_partial_rerun(tmp_path, monkeypatch):
+    module = load_repo_module("docs/win/hockey/nhl/scripts/01_merge/restore_nhl_sdv_history.py")
+    folder = tmp_path / "goalie"
+    folder.mkdir()
+    monkeypatch.setattr(module, "SDV", tmp_path)
+    monkeypatch.setattr(module, "FAMILIES", {"goalie": module.FAMILIES["goalie"]})
+    suffix = "game_goalie_features_asof"
+    early = {"game_id": "2026020333", "game_date": "2026-11-17", "home_team": "BOS", "away_team": "NYR",
+             "pregame_cutoff_utc": "2026-11-18T00:00:00Z", "goalie_decision_cutoff_utc": "2026-11-17T23:00:00Z",
+             "goalie_decision_cutoff_source": "fixed_60_minutes_before_puck_drop",
+             "goalie_snapshot_as_of_utc": "2026-11-17T22:00:00Z"}
+    early.update({k: str(v) for k, v in GOALIE_FEATURE_VALUES.items()})
+    for side in ("home", "away"):
+        early[f"{side}_goalie_status_observed_at"] = "2026-11-17T22:00:00Z"
+    later = dict(early, goalie_decision_cutoff_utc="2026-11-17T23:55:00Z",
+                 goalie_decision_cutoff_source="fixed_5_minutes_before_puck_drop",
+                 goalie_snapshot_as_of_utc="2026-11-17T23:54:00Z")
+    other = dict(later, game_id="2026020334")
+    pd.DataFrame([early, other]).to_csv(folder / f"2026_11_17T170000_ET_{suffix}.csv", index=False)
+    pd.DataFrame([later]).to_csv(folder / f"2026_11_17T185400_ET_{suffix}.csv", index=False)
+    pd.DataFrame([other]).to_csv(folder / f"latest_{suffix}.csv", index=False)
+    module.prepare_history()
+    module.prepare_history()
+    actual = pd.read_csv(folder / f"season_2026_{suffix}.csv", dtype=str).to_dict("records")
+    assert len(actual) == 1 and actual[0]["game_id"] == early["game_id"]
+    assert actual[0]["goalie_decision_cutoff_source"] == "fixed_5_minutes_before_puck_drop"
+    assert actual[0]["goalie_snapshot_as_of_utc"] == later["goalie_snapshot_as_of_utc"]

@@ -22,6 +22,7 @@ Current mode never requires a date. It uses the current America/New_York date.
 from __future__ import annotations
 
 import argparse
+import csv
 import importlib.metadata
 import os
 import pickle
@@ -52,6 +53,7 @@ import sportsdataverse.nhl as nhl
 BASE_DIR = Path("docs/win/hockey/nhl")
 ROOT = BASE_DIR / "sdv"
 OFFICIAL_SCHEDULE_DIR = BASE_DIR / "00_intake" / "nhl_schedule"
+STARTING_GOALIE_DIR = BASE_DIR / "00_intake" / "lineups" / "goalies"
 CATEGORIES = (
     "schedule",
     "team-strength",
@@ -190,8 +192,8 @@ GOALIE_GSAX_FIELDS = (
     "gsax_per_60",
 )
 
-GOALIE_PRODUCTION_CUTOFF_MINUTES = 60
-GOALIE_PRODUCTION_CUTOFF_SOURCE = "fixed_60_minutes_before_puck_drop"
+GOALIE_PRODUCTION_CUTOFF_MINUTES = 5
+GOALIE_PRODUCTION_CUTOFF_SOURCE = "fixed_5_minutes_before_puck_drop"
 
 
 LINEUP_PRODUCTION_CUTOFF_MINUTES = 60
@@ -3483,6 +3485,71 @@ def goalie_name(
     ).strip()
 
 
+def load_starting_goalies_for_day(target_day: date) -> dict[str, dict[str, str]]:
+    """Read the daily intake once per run/date. A missing file means no evidence."""
+    path = STARTING_GOALIE_DIR / f"{target_day.isoformat()}_goalies.csv"
+    if not path.is_file():
+        return {}
+    required = {"game_id", "date", "dateGmt", "CapturedUTC"}
+    for side in ("home", "away"):
+        required.update({f"{side}_player_id", f"{side}_team",
+                         f"{side}TeamAbbreviation", f"{side}NewsStrengthName",
+                         f"{side}ConfirmedAt"})
+    index = {}
+    with path.open(encoding="utf-8-sig", newline="") as stream:
+        reader = csv.DictReader(stream)
+        fields = reader.fieldnames or []
+        if len(fields) != len(set(fields)) or not required.issubset(fields):
+            raise ValueError(f"Invalid starting-goalie headers: {path}; missing {sorted(required - set(fields))}")
+        for line, row in enumerate(reader, 2):
+            game_id = str(row.get("game_id") or "").strip()
+            if (None in row or any(value is None for value in row.values())
+                    or len(game_id) != 10 or not game_id.isdecimal()
+                    or game_id in index or row["date"] != target_day.isoformat()):
+                raise ValueError(f"Invalid or duplicate starting-goalie row: {path}:{line}")
+            index[game_id] = row
+    return index
+
+
+def explicit_utc_timestamp(value: Any) -> datetime | None:
+    """DFO timestamps must explicitly identify a timezone."""
+    try:
+        stamp = datetime.fromisoformat(str(value or "").strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return stamp.astimezone(UTC) if stamp.tzinfo is not None else None
+
+
+def eligible_starting_goalie(
+    record: dict[str, str] | None, game: dict[str, Any], side: str,
+    game_start: datetime, snapshot_as_of: datetime, *, current: bool,
+) -> tuple[str, datetime] | None:
+    """Use source confirmation, not capture time or eventual game participation."""
+    if not record:
+        return None
+    if (record["game_id"] != game["game_id"] or record["date"] != game["game_date"]
+            or explicit_utc_timestamp(record["dateGmt"]) != game_start):
+        raise ValueError(f"Starting-goalie game identity/start mismatch: {game['game_id']}")
+    for team_side in ("home", "away"):
+        team = str(game[f"{team_side}_team"]).strip().casefold()
+        if team not in {record[f"{team_side}_team"].strip().casefold(),
+                        record[f"{team_side}TeamAbbreviation"].strip().casefold()}:
+            raise ValueError(f"Starting-goalie team mismatch: {game['game_id']} {team_side}")
+    if record[f"{side}NewsStrengthName"].strip().casefold() != "confirmed":
+        return None
+    observed = explicit_utc_timestamp(record[f"{side}ConfirmedAt"])
+    player_id = record[f"{side}_player_id"].strip()
+    captured = explicit_utc_timestamp(record["CapturedUTC"])
+    if (observed is None or observed > snapshot_as_of or observed >= game_start
+            or captured is None or (current and captured > snapshot_as_of)
+            or not player_id.isdecimal() or int(player_id) <= 0):
+        return None
+    # CapturedUTC is the initial row capture, not the last update. Historical
+    # backfills legitimately have a capture time after the game; use the published
+    # confirmation timestamp, and label that retrospective provenance separately.
+    return player_id, observed
+
+
 def build_game_goalie_features_asof(
     schedule: Any,
     pbp: Any,
@@ -3491,10 +3558,7 @@ def build_game_goalie_features_asof(
     current: bool,
     generated_at_utc: datetime,
 ) -> pl.DataFrame:
-    if (
-        frame_empty(schedule)
-        or frame_empty(pbp)
-    ):
+    if frame_empty(schedule):
         return pl.DataFrame()
 
     games = schedule_games_with_cutoffs(
@@ -3521,6 +3585,7 @@ def build_game_goalie_features_asof(
     rows: list[
         dict[str, Any]
     ] = []
+    starting_goalies_by_day: dict[date, dict[str, dict[str, str]]] = {}
 
     for _, game in games.iterrows():
         game_id = str(
@@ -3578,11 +3643,13 @@ def build_game_goalie_features_asof(
             else production_cutoff
         )
 
-        # Production goalie information is frozen at T-60.
-        # Current runs after T-60 cannot backfill later information
-        # into the game-level goalie feature snapshot.
-        if snapshot_as_of > production_cutoff:
+        # Live snapshots cannot use information after T-5. Historical replay
+        # is limited to games whose scheduled start has already passed.
+        if snapshot_as_of > production_cutoff or (not current and game_start_cutoff > generated_at_utc):
             continue
+        if target_day not in starting_goalies_by_day:
+            starting_goalies_by_day[target_day] = load_starting_goalies_for_day(target_day)
+        dfo_row = starting_goalies_by_day[target_day].get(game_id)
 
         cache_key = target_day.isoformat()
 
@@ -3699,18 +3766,29 @@ def build_game_goalie_features_asof(
                 else None
             )
 
-            status = (
-                "projected"
-                if starter is not None
-                else "unknown"
+            status = "projected" if starter is not None else "unknown"
+            observed_at = snapshot_as_of if starter is not None else None
+            source = ("sportsdataverse_prior_goalie_usage_projection"
+                      if starter is not None else "sportsdataverse_no_pregame_starter_evidence")
+            confirmed = eligible_starting_goalie(
+                dfo_row, row, side, game_start_cutoff, snapshot_as_of, current=current,
             )
+            if confirmed is not None:
+                player_id, observed_at = confirmed
+                starter = next((candidate for candidate in candidates
+                                if candidate["player_id"] == player_id),
+                               {"player_id": player_id})
+                # Never assign the confirmed starter's own GSAx to the backup.
+                backup = next((candidate for candidate in candidates
+                               if candidate["player_id"] != player_id), None)
+                status = "confirmed"
+                source = ("daily_faceoff_confirmation" if current
+                          else "daily_faceoff_retrospective_confirmation")
 
             row[
                 f"{side}_expected_starter"
-            ] = goalie_name(
-                gsax_lookup,
-                starter,
-            )
+            ] = (goalie_name(gsax_lookup, starter)
+                 or (f"NHL player {starter['player_id']}" if status == "confirmed" else ""))
 
             row[
                 f"{side}_starter_gsax"
@@ -3732,17 +3810,11 @@ def build_game_goalie_features_asof(
 
             row[
                 f"{side}_goalie_status_observed_at"
-            ] = utc_iso(
-                snapshot_as_of
-            )
+            ] = utc_iso(observed_at) if observed_at is not None else ""
 
             row[
                 f"{side}_goalie_status_source"
-            ] = (
-                "sportsdataverse_prior_goalie_usage_projection"
-                if status == "projected"
-                else "sportsdataverse_no_pregame_starter_evidence"
-            )
+            ] = source
 
         home_gsax = row.get(
             "home_starter_gsax"

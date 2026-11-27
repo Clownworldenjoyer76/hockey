@@ -79,8 +79,15 @@ GOALIE_STATUS_VALUES = {
     "unknown",
 }
 
-GOALIE_PRODUCTION_CUTOFF_MINUTES = 60
-GOALIE_PRODUCTION_CUTOFF_SOURCE = "fixed_60_minutes_before_puck_drop"
+GOALIE_PRODUCTION_CUTOFF_MINUTES = 5
+GOALIE_PRODUCTION_CUTOFF_SOURCE = "fixed_5_minutes_before_puck_drop"
+
+# Historical goalie rows were written with a 60-minute cutoff; current rows use
+# 5 minutes. Each source string maps to the exact minutes it must equal.
+GOALIE_ALLOWED_CUTOFF_MINUTES_BY_SOURCE = {
+    "fixed_60_minutes_before_puck_drop": 60,
+    GOALIE_PRODUCTION_CUTOFF_SOURCE: GOALIE_PRODUCTION_CUTOFF_MINUTES,
+}
 
 
 LINEUP_PRODUCTION_CUTOFF_MINUTES = 60
@@ -1573,10 +1580,11 @@ def validate_goalie_timestamp_contract(
     source_file: str,
     side: str,
 ) -> None:
-    if (
+    cutoff_minutes = GOALIE_ALLOWED_CUTOFF_MINUTES_BY_SOURCE.get(
         decision_cutoff_source
-        != GOALIE_PRODUCTION_CUTOFF_SOURCE
-    ):
+    )
+
+    if cutoff_minutes is None:
         fail(
             "Invalid SportsDataverse goalie production cutoff source: "
             f"game_id={game_id} side={side} "
@@ -1589,13 +1597,13 @@ def validate_goalie_timestamp_contract(
         == (
             stored_game_start
             - timedelta(
-                minutes=GOALIE_PRODUCTION_CUTOFF_MINUTES
+                minutes=cutoff_minutes
             )
         )
     ):
         fail(
             "SportsDataverse goalie decision cutoff is not "
-            "exactly 60 minutes before the stored game start: "
+            f"exactly {cutoff_minutes} minutes before the stored game start: "
             f"game_id={game_id} side={side} "
             f"decision_cutoff_utc={decision_cutoff.isoformat()} "
             f"game_start_utc={stored_game_start.isoformat()} "
@@ -1650,20 +1658,27 @@ def validate_goalie_timestamp_contract(
             f"file={source_file}"
         )
 
-    if (
-        canonical_decision_cutoff is not None
-        and decision_cutoff
-        != canonical_decision_cutoff
-    ):
-        fail(
-            "SportsDataverse goalie production cutoff does not match "
-            "the canonical T-60 cutoff: "
-            f"game_id={game_id} side={side} "
-            f"stored_decision_cutoff_utc={decision_cutoff.isoformat()} "
-            f"canonical_decision_cutoff_utc="
-            f"{canonical_decision_cutoff.isoformat()} "
-            f"file={source_file}"
+    if canonical_decision_cutoff is not None:
+        expected_canonical_cutoff = (
+            canonical_decision_cutoff
+            + timedelta(
+                minutes=(
+                    GOALIE_PRODUCTION_CUTOFF_MINUTES
+                    - cutoff_minutes
+                )
+            )
         )
+
+        if decision_cutoff != expected_canonical_cutoff:
+            fail(
+                "SportsDataverse goalie production cutoff does not match "
+                f"the canonical T-{cutoff_minutes} cutoff: "
+                f"game_id={game_id} side={side} "
+                f"stored_decision_cutoff_utc={decision_cutoff.isoformat()} "
+                f"canonical_decision_cutoff_utc="
+                f"{expected_canonical_cutoff.isoformat()} "
+                f"file={source_file}"
+            )
 
 
 def load_goalie_index() -> dict[

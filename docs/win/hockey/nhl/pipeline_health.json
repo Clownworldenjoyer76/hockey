@@ -8,21 +8,23 @@
     "selected_bets": 0,
     "sportsbook_games": 0
   },
-  "fatal_errors": [],
-  "game_date_new_york": "2026_11_26",
-  "generated_at_utc": "2026-11-26T13:36:59.008633+00:00",
+  "fatal_errors": [
+    "NHL workflow status is FAILURE"
+  ],
+  "game_date_new_york": "2026_11_27",
+  "generated_at_utc": "2026-11-27T09:00:31.246193+00:00",
   "paths": {
     "games": [],
     "graded": [],
     "merged": [],
     "predictions": [],
     "schedule": [
-      "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_26.csv"
+      "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_27.csv"
     ],
     "selected": [],
     "sportsbook": []
   },
-  "report_date": "2026_11_26",
+  "report_date": "2026_11_27",
   "schema_version": 1,
   "sport": "nhl",
   "stage_status": [
@@ -30,7 +32,7 @@
       "exists": true,
       "name": "Pipeline Tests",
       "path": "docs\\win\\hockey\\nhl\\errors\\nhl_pipeline_tests.txt",
-      "status": "STATUS: LOG PRESENT"
+      "status": "log(\"STATUS: FAILED\")"
     },
     {
       "exists": true,
@@ -39,86 +41,84 @@
       "status": "2026-11-26T13:36:49.230923+00:00 | WROTE OFFICIAL NHL GAME STATUS: G:\\hockey\\docs\\win\\hockey\\nhl\\05_final_scores\\intermediate\\nhl_game_status.csv | rows=675"
     },
     {
-      "exists": true,
-      "matched_files": [
-        "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_26.csv"
-      ],
+      "exists": false,
+      "matched_files": [],
       "name": "Official Schedule",
-      "path": "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_26.csv",
-      "status": "STATUS: OUTPUT PRESENT"
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\nhl_schedule\\NHL_2026_11_27.csv",
+      "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Predictions",
-      "path": "docs\\win\\hockey\\nhl\\00_intake\\predictions\\**\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\predictions\\**\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Sportsbook",
-      "path": "docs\\win\\hockey\\nhl\\00_intake\\sportsbook\\**\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\sportsbook\\**\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Games",
-      "path": "docs\\win\\hockey\\nhl\\00_intake\\games\\**\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\00_intake\\games\\**\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Merge",
-      "path": "docs\\win\\hockey\\nhl\\01_merge\\**\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\01_merge\\**\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Juice",
-      "path": "docs\\win\\hockey\\nhl\\02_juice\\**\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\02_juice\\**\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "EV Kelly",
-      "path": "docs\\win\\hockey\\nhl\\03_edges\\ev_kelly\\**\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\03_edges\\ev_kelly\\**\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Secondary Signals",
-      "path": "docs\\win\\hockey\\nhl\\03_edges\\secondary_signals\\**\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\03_edges\\secondary_signals\\**\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Select",
-      "path": "docs\\win\\hockey\\nhl\\04_select\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\04_select\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Final Scores",
-      "path": "docs\\win\\hockey\\nhl\\05_final_scores\\final_scores\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\05_final_scores\\final_scores\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     },
     {
       "exists": false,
       "matched_files": [],
       "name": "Graded",
-      "path": "docs\\win\\hockey\\nhl\\05_final_scores\\graded\\*2026_11_26*.csv",
+      "path": "docs\\win\\hockey\\nhl\\05_final_scores\\graded\\*2026_11_27*.csv",
       "status": "STATUS: NO OUTPUT"
     }
   ],
-  "status": "healthy",
+  "status": "failed",
   "warnings": [],
   "workflow": {
     "name": "NHL Pipeline",
@@ -126,6 +126,6 @@
     "run_attempt": "",
     "run_id": "",
     "sha": "",
-    "status": "success"
+    "status": "failure"
   }
 }
